@@ -9,6 +9,10 @@ You can use this code:
 - Use it For paid/free apps/games, i don't care...
 - I'm just asking for a small citation somewhere! :)
 
+What you need to see? Just Blitzmax! (it's free/opensource) :
+-------------------------------------------------------------
+https://blitzmax.org/
+
 Description:
 ------------
 Opaline UI is a low-level kernel for creating a graphical interface from scratch (or just a 2D framework able to draw something like box/rect/line/oval/text etc)
