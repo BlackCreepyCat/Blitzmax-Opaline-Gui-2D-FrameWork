@@ -43,10 +43,12 @@ Include "gui_events.bmx"
 Graphics 1920, 1080, 0
 'Graphics 1024, 768, 32,60
 
+TWidget.GuiInit()
 
 ' Create root container that covers the entire screen
 ' All windows will be children of this root container
-Local root:TContainer = New TContainer(GraphicsWidth(), GraphicsHeight())
+Global root:TContainer = New TContainer(GraphicsWidth(), GraphicsHeight())
+TWidget.GuiSetRoot(root)  ' <-- AJOUTER CETTE LIGNE !
 
 ' Create demo windows
 Local win1:TWindow = New TWindow(120, 80, 540, 540, "Opaline Main Window",True,True,False)
@@ -468,7 +470,7 @@ lblComboValue.SetColor(150, 255, 150)
 comboInfoPanel.AddChild lblComboValue
 
 ' --- Note about ComboBox ---
-Local lblComboNote:TLabel = New TLabel(20, 280, 460, 40, "Note: ComboBox uses TListBox internally for the dropdown, with automatic scrollbar when needed!")
+Local lblComboNote:TLabel = New TLabel(20, 280, 460, 40, "Note: ComboBox uses TListBox internally for the dropdown")
 lblComboNote.SetColor(150, 150, 180)
 win6.AddChild lblComboNote
 
@@ -478,8 +480,10 @@ win6.AddChild lblComboNote
 While Not AppTerminate()
     Cls
 
-    ' Update global mouse state (position, buttons, wheel, etc.)
-    GuiMouse.Update()
+    TWidget.GuiUpdate()   ' Mouse + popup + widgets update
+    TWidget.GuiDraw()     ' Widgets draw + popup overlay
+
+
 
     ' =============================================================================
     '                    SLIDER DEMO - Live value display
@@ -543,6 +547,8 @@ While Not AppTerminate()
     ' Show current mouse X percentage
     mouseLabel.SetText("Mouse X: " + Int(mousePercent * 100) + "%")
 
+
+
     ' =============================================================================
     '                    LISTBOX DEMO - Event handling
     ' =============================================================================
@@ -582,12 +588,7 @@ While Not AppTerminate()
         lblComboValue.SetText("Selected: " + comboColor.GetSelectedText())
     EndIf
 
-    ' Update logic and draw the complete GUI hierarchy
-    root.Update(GuiMouse.x, GuiMouse.y)
-    root.Draw()
-    
-    ' Draw active ComboBox dropdown LAST (on top of everything)
-    TComboBox.DrawActivePopup()
+
 
     ' =============================================================================
     '                          EVENT HANDLING
@@ -649,6 +650,8 @@ While Not AppTerminate()
     For Local win:TWindow = EachIn root.children
         ProcessWindowControlEvents(win)
     Next
+
+
     
     ' Clear all pending events at the end of the frame
     ' (prevents events from being processed multiple times)

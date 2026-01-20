@@ -99,7 +99,7 @@ Type TWindow Extends TWidget
 
 
         ' Draw title text with shadow
-        TWidget.GuiDrawText(ax + 8, ay + 8, title, TEXT_STYLE_SHADOW, COLOR_WINDOW_TITLE_R, COLOR_WINDOW_TITLE_G, COLOR_WINDOW_TITLE_B)
+        TWidget.GuiDrawText(ax + 8, ay + 6, title, TEXT_STYLE_SHADOW, COLOR_WINDOW_TITLE_R, COLOR_WINDOW_TITLE_G, COLOR_WINDOW_TITLE_B)
 
         ' Draw client area background
         TWidget.GuiDrawRect(ax, ay + (TITLEBAR_HEIGHT + 1)  , rect.w, rect.h - (TITLEBAR_HEIGHT + 1), 2, red, green, blue)

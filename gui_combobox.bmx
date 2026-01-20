@@ -277,46 +277,24 @@ Type TComboBox Extends TWidget
     End Method
 
     ' -----------------------------------------------------------------------------
-    ' Update / Input Handling
+    ' Update / Input Handling (called by normal widget tree update)
     ' -----------------------------------------------------------------------------
     Method Update:Int(mx:Int, my:Int)
         Local over:Int = ContainsPoint(mx, my)
-        hover = over
         
-        ' If dropdown is open, handle it first
-        If isOpen
-            ' Calculate dropdown position relative to mouse
-            Local dropX:Int = absX
-            Local dropY:Int = absY + rect.h
-            Local dropRelX:Int = GuiMouse.x - dropX
-            Local dropRelY:Int = GuiMouse.y - dropY
-            
-            ' Check if mouse is over dropdown
-            Local overDropdown:Int = (dropRelX >= 0 And dropRelX < dropdownList.rect.w And dropRelY >= 0 And dropRelY < dropdownList.rect.h)
-            
-            ' Update dropdown list
-            If dropdownList.Update(dropRelX, dropRelY)
-                ' Check if item was clicked
-                If dropdownList.ItemClicked()
-                    selectedIndex = dropdownList.GetSelectedIndex()
-                    FireEvent("SelectionChanged")
-                    CloseDropdown()
-                    Return True
-                EndIf
-                Return True
-            EndIf
-
-
-
-            
-            ' Click outside closes dropdown
-            If GuiMouse.Hit()
-                If Not over And Not overDropdown
-                    CloseDropdown()
-                    Return True
-                EndIf
-            EndIf
+        ' If THIS combobox has an open dropdown, don't handle here
+        ' (it's handled by UpdateActivePopup)
+        If isOpen Then Return True
+        
+        ' If ANOTHER popup is active, block hover and clicks completely
+        If g_ActiveComboBox <> Null And g_ActiveComboBox <> Self
+            hover = False
+            pressed = False
+            Return over
         EndIf
+        
+        ' Normal handling - set hover state
+        hover = over
         
         ' Handle button press
         pressed = False
@@ -324,20 +302,69 @@ Type TComboBox Extends TWidget
             pressed = True
         EndIf
         
-        ' Handle click on combobox button
+        ' Handle click on combobox button to open
         If over And GuiMouse.Hit() And draggedWindow = Null
-            ToggleDropdown()
+            OpenDropdown()
             Return True
         EndIf
         
-        Return over Or isOpen
+        Return over
     End Method
     
-    ' Static method to update the active popup (call from main loop)
+    ' -----------------------------------------------------------------------------
+    ' Static method to update the active popup BEFORE other widgets
+    ' Call this at the START of your main loop, BEFORE root.Update()
+    ' Returns True if popup is active
+    ' -----------------------------------------------------------------------------
     Function UpdateActivePopup:Int()
         If g_ActiveComboBox = Null Then Return False
         
-        ' The active combobox handles input in its Update method
+        Local combo:TComboBox = g_ActiveComboBox
+        
+        ' Calculate dropdown bounds in screen coordinates
+        Local dropX:Int = combo.absX
+        Local dropY:Int = combo.absY + combo.rect.h
+        Local dropW:Int = combo.dropdownList.rect.w
+        Local dropH:Int = combo.dropdownList.rect.h
+        
+        ' Calculate relative mouse position for dropdown
+        Local dropRelX:Int = GuiMouse.x - dropX
+        Local dropRelY:Int = GuiMouse.y - dropY
+        
+        ' Check if mouse is over dropdown area
+        Local overDropdown:Int = (dropRelX >= 0 And dropRelX < dropW And dropRelY >= 0 And dropRelY < dropH)
+        
+        ' Check if mouse is over the combobox button itself
+        Local overButton:Int = (GuiMouse.x >= combo.absX And GuiMouse.x < combo.absX + combo.rect.w And GuiMouse.y >= combo.absY And GuiMouse.y < combo.absY + combo.rect.h)
+        
+        ' Update the dropdown list FIRST (before consuming input)
+        ' This allows the ListBox to process the click normally
+        combo.dropdownList.Update(dropRelX, dropRelY)
+        
+        ' Check if an item was clicked in the dropdown
+        If combo.dropdownList.ItemClicked()
+            combo.selectedIndex = combo.dropdownList.GetSelectedIndex()
+            combo.FireEvent("SelectionChanged")
+            combo.CloseDropdown()
+            ' Consume input so other widgets don't react to this click
+            GuiMouse.ConsumeInput()
+            Return True
+        EndIf
+        
+        ' Handle click outside dropdown or on button
+        If GuiMouse.HitRaw()
+            If overButton
+                ' Click on the combobox button itself - close dropdown
+                combo.CloseDropdown()
+            ElseIf Not overDropdown
+                ' Click outside - close dropdown
+                combo.CloseDropdown()
+            EndIf
+            ' Always consume when popup is open and there's a click
+            GuiMouse.ConsumeInput()
+        EndIf
+        
+        ' Popup is still active
         Return True
     End Function
     
@@ -349,6 +376,12 @@ Type TComboBox Extends TWidget
     
     ' Check if any combobox popup is active
     Function IsPopupActive:Int()
+        Return g_ActiveComboBox <> Null
+    End Function
+    
+    ' Check if a click at the given screen position should be blocked by the popup
+    ' Call this from other widgets before processing clicks
+    Function ShouldBlockInput:Int()
         Return g_ActiveComboBox <> Null
     End Function
 

@@ -15,6 +15,12 @@ Type TEvent
     Field eventType:String
 End Type
 
+' =============================================================================
+'                          GLOBAL GUI STATE
+' =============================================================================
+Global Gui_SystemFont:TImageFont
+Global Gui_SystemFontSize:Int = 16
+Global Gui_Root:TContainer = Null  ' Global root container reference
 
 ' =============================================================================
 '                        ABSTRACT WIDGET CLASS
@@ -61,98 +67,201 @@ Type TWidget Abstract
     Method Draw(px:Int=0, py:Int=0) Abstract
     Method Update:Int(mx:Int, my:Int) Abstract
 
-	' Function to constraint the viewport
-	Function GuiSetViewport(Px:Int,Py:Int,Tx:Int,Ty:Int)
-		SetViewport(Px,Py,Tx,Ty)
-	End Function
+    ' =========================================================================
+    '                      STATIC GUI FUNCTIONS
+    ' =========================================================================
+
+    ' Initialize the GUI system
+    ' Call once at startup before creating any widgets
+    Function GuiInit(fontPath:String = "Arial.ttf", fontSize:Int = 16)
+        Gui_SystemFontSize = fontSize
+        Gui_SystemFont = LoadImageFont(fontPath, Gui_SystemFontSize, SMOOTHFONT)
+    End Function
     
-    ' Function to draw gui text
-    Function GuiDrawText(Px:Int,Py:Int,caption:String, style:Int, red:Int,green:Int,blue:Int)
+    ' Set the root container for the GUI
+    ' Call after creating your root TContainer
+    Function GuiSetRoot(root:TContainer)
+        Gui_Root = root
+    End Function
+    
+    ' Get the current root container
+    Function GuiGetRoot:TContainer()
+        Return Gui_Root
+    End Function
+
+    ' =========================================================================
+    '                      MAIN REFRESH METHOD
+    ' =========================================================================
+    ' Call this once per frame in your main loop
+    ' Handles: mouse update, popup priority, widget tree update & draw
+    '
+    ' Usage:
+    '   While Not AppTerminate()
+    '       Cls
+    '       TWidget.GuiRefresh()
+    '       ' ... your game logic and event handling ...
+    '       Flip
+    '   Wend
+    ' =========================================================================
+    Function GuiRefresh()
+        If Gui_Root = Null Then Return
+        
+        ' 1. Update mouse state (position, buttons, wheel)
+        GuiMouse.Update()
+        
+        ' 2. Handle active popup FIRST (ComboBox dropdown has priority)
+        TComboBox.UpdateActivePopup()
+        
+        ' 3. Update widget tree (input handling, state changes)
+        Gui_Root.Update(GuiMouse.x, GuiMouse.y)
+        
+        ' 4. Draw widget tree
+        Gui_Root.Draw()
+        
+        ' 5. Draw popup overlays LAST (on top of everything)
+        TComboBox.DrawActivePopup()
+    End Function
+    
+    ' Alternative: Separate update and draw for more control
+    Function GuiUpdate()
+        If Gui_Root = Null Then Return
+        
+        ' Update mouse state
+        GuiMouse.Update()
+        
+        ' Handle active popup first
+        TComboBox.UpdateActivePopup()
+        
+        ' Update widget tree
+        Gui_Root.Update(GuiMouse.x, GuiMouse.y)
+    End Function
+    
+    Function GuiDraw()
+        If Gui_Root = Null Then Return
+        
+        ' Draw widget tree
+        Gui_Root.Draw()
+        
+        ' Draw popup overlays
+        TComboBox.DrawActivePopup()
+    End Function
+    
+    ' Clear all events in the GUI tree
+    ' Call at the end of your frame after processing events
+    Function GuiClearEvents()
+        If Gui_Root = Null Then Return
+        ClearAllEvents(Gui_Root)
+    End Function
+    
+    ' Process window control events (close, min, max buttons)
+    ' Call in your main loop if you want automatic window control handling
+    Function GuiProcessWindowEvents()
+        If Gui_Root = Null Then Return
+        For Local win:TWindow = EachIn Gui_Root.children
+            ProcessWindowControlEvents(win)
+        Next
+    End Function
+
+    ' =========================================================================
+    '                      DRAWING HELPER FUNCTIONS
+    ' =========================================================================
+
+    ' Constrain the viewport
+    Function GuiSetViewport(Px:Int, Py:Int, Tx:Int, Ty:Int)
+        SetViewport(Px, Py, Tx, Ty)
+    End Function
+    
+    ' Draw GUI text with optional shadow
+    Function GuiDrawText(Px:Int, Py:Int, caption:String, style:Int, red:Int, green:Int, blue:Int, alpha:Float = 1.0)
+        SetBlend(ALPHABLEND)
+        SetImageFont(Gui_SystemFont)
+        SetAlpha(alpha)
+    
         Select style
         
         ' Normal
         Case 1
-
-            SetColor red,green,blue
-            DrawText caption, px,py
+            SetColor red, green, blue
+            DrawText caption, px, py
         
         ' Shadowed
         Case 2
-            
-            'shadow
-            SetColor 5,5,5
-            DrawText caption, px+1,py+1
+            ' Shadow
+            SetColor 5, 5, 5
+            DrawText caption, px + 1, py + 1
                     
-            SetColor red,green,blue
-            DrawText caption, px,py
+            SetColor red, green, blue
+            DrawText caption, px, py
                     
         End Select
         
-        ' Reset color to white after drawing text (good practice)
+        ' Reset
         SetColor 255, 255, 255
+        SetAlpha 1.0
     End Function
     
-    ' Actually draws a filled rectangle with optional embossed/pressed styles
-    Function GuiDrawRect(px:Int,py:Int,tx:Int,ty:Int , style:Int, red:Int,green:Int,blue:Int)
-        Select Style
+    ' Draw filled rectangle with optional embossed/pressed styles
+    Function GuiDrawRect(px:Int, py:Int, tx:Int, ty:Int, style:Int, red:Int, green:Int, blue:Int)
+        Select style
+        
+        ' Flat filled rectangle
         Case 1
-            ' Flat filled rectangle
-            SetColor red,green,blue
-            DrawRect px,py,tx,ty
+            SetColor red, green, blue
+            DrawRect px, py, tx, ty
         
-        ' normal emboss
+        ' Raised/embossed look
         Case 2
-            ' Raised/embossed look
-            SetColor red,green,blue
-            DrawRect px,py,tx,ty
+            SetColor red, green, blue
+            DrawRect px, py, tx, ty
 
-            SetColor red/2,green/2,blue/2	
-            DrawLine px,py+ty,px+tx,py+ty
-            DrawLine px+tx,py,px+tx,py+ty	
+            SetColor red/2, green/2, blue/2	
+            DrawLine px, py + ty, px + tx, py + ty
+            DrawLine px + tx, py, px + tx, py + ty	
                         
-            SetColor red*2,green*2,blue*2	
-            DrawLine px,py,px+tx,py
-            DrawLine px,py,px,py+ty	
+            SetColor red*2, green*2, blue*2	
+            DrawLine px, py, px + tx, py
+            DrawLine px, py, px, py + ty	
         
-        'clicked emboss	
+        ' Pressed/clicked look (inverted bevel)
         Case 3
-            ' Pressed/clicked look (inverted bevel)
-            SetColor red,green,blue
-            DrawRect px,py,tx,ty
+            SetColor red, green, blue
+            DrawRect px, py, tx, ty
 
-            SetColor red*2,green*2,blue*2	
-            DrawLine px,py+ty,px+tx,py+ty
-            DrawLine px+tx,py,px+tx,py+ty	
+            SetColor red*2, green*2, blue*2	
+            DrawLine px, py + ty, px + tx, py + ty
+            DrawLine px + tx, py, px + tx, py + ty	
                         
-            SetColor red/2,green/2,blue/2	
-            DrawLine px,py,px+tx,py
-            DrawLine px,py,px,py+ty		
+            SetColor red/2, green/2, blue/2	
+            DrawLine px, py, px + tx, py
+            DrawLine px, py, px, py + ty		
+            
         End Select
         
-        ' Reset color to white after drawing (good practice)
+        ' Reset color
         SetColor 255, 255, 255
     End Function
     
-    ' Actually draws an oval/circle with optional shadow style
-    Function GuiDrawOval(px:Int,py:Int,RadiusX:Int,RadiusY:Int, style:Int, red:Int,green:Int,blue:Int)
-        Select Style
-        Case 1
-            ' Flat filled oval
-            SetColor red,green,blue
-            DrawOval px, py, RadiusX,RadiusY
+    ' Draw oval/circle with optional shadow
+    Function GuiDrawOval(px:Int, py:Int, RadiusX:Int, RadiusY:Int, style:Int, red:Int, green:Int, blue:Int)
+        Select style
         
-        ' normal shadowed
+        ' Flat filled oval
+        Case 1
+            SetColor red, green, blue
+            DrawOval px, py, RadiusX, RadiusY
+        
+        ' Shadowed
         Case 2
-            ' Shadowed effect (simple offset shadow)
-            SetColor 5,5,5
-            DrawOval px+2, py+2, RadiusX,RadiusY	
+            SetColor 5, 5, 5
+            DrawOval px + 2, py + 2, RadiusX, RadiusY	
             
-            SetColor red,green,blue
-            DrawOval px, py, RadiusX,RadiusY	
+            SetColor red, green, blue
+            DrawOval px, py, RadiusX, RadiusY	
+            
         End Select
         
-        ' Reset color to white after drawing
+        ' Reset color
         SetColor 255, 255, 255
     End Function
-
+    
 End Type

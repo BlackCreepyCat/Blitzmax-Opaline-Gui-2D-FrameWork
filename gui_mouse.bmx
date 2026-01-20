@@ -14,11 +14,17 @@ Type TMouse
     Field wheel:Int = 0            ' Current wheel delta this frame
     Field wheelAccum:Int = 0       ' Accumulated wheel value (for smooth scrolling)
     Field lastWheelZ:Int = 0       ' Previous MouseZ value for delta calculation
+    
+    ' Input consumption (for popup/overlay priority)
+    Field inputConsumed:Int = False  ' Set to True when a popup consumes input
 
     ' Update mouse state - call once per frame
     Method Update()
         x = MouseX()
         y = MouseY()
+        
+        ' Reset input consumed flag at start of each frame
+        inputConsumed = False
 
         ' Check each mouse button (left, middle, right)
         For Local b:Int = 0 Until 3
@@ -39,8 +45,14 @@ Type TMouse
         EndIf
     End Method
 
-    ' Check if button was just pressed
+    ' Check if button was just pressed (respects input consumption)
     Method Hit:Int(button:Int = 1)
+        If inputConsumed Then Return False
+        Return GuiMouseHit[button - 1]
+    End Method
+    
+    ' Check if button was just pressed (ignores input consumption - for popups)
+    Method HitRaw:Int(button:Int = 1)
         Return GuiMouseHit[button - 1]
     End Method
 
@@ -52,6 +64,16 @@ Type TMouse
     ' Check if button was just released
     Method Released:Int(button:Int = 1)
         Return GuiMouseReleased[button - 1]
+    End Method
+    
+    ' Mark input as consumed (call from popups after handling a click)
+    Method ConsumeInput()
+        inputConsumed = True
+    End Method
+    
+    ' Check if input has been consumed this frame
+    Method IsInputConsumed:Int()
+        Return inputConsumed
     End Method
     
     ' Get wheel delta for this frame (positive = up, negative = down)
