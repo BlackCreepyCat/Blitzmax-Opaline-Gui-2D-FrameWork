@@ -134,36 +134,33 @@ Type TComboBox Extends TWidget
     ' Dropdown Control
     ' -----------------------------------------------------------------------------
     
-	Method OpenDropdown()
-		If isOpen Then Return
-		
-		isOpen = True
-		g_ActiveComboBox = Self
-		
-		' NEW: Bring this combobox to the front of its parent's children to prioritize its Update()
-		If parent Then parent.BringToFront(Self)
-		
-		' Calculate dropdown height based on item count
-		Local itemCount:Int = items.Count()
-		Local visibleItems:Int = Min(itemCount, maxVisibleItems)
-		Local dropdownHeight:Int = visibleItems * COMBOBOX_ITEM_HEIGHT + 4
-		
-		' Minimum height
-		If dropdownHeight < COMBOBOX_ITEM_HEIGHT + 4
-			dropdownHeight = COMBOBOX_ITEM_HEIGHT + 4
-		EndIf
-		
-		' Update listbox size
-		dropdownList.rect.w = rect.w
-		dropdownList.rect.h = dropdownHeight
-		dropdownList.UpdateLayout()
-		
-		' Sync selection
-		dropdownList.SetSelectedIndex(selectedIndex)
-		If selectedIndex >= 0
-			dropdownList.EnsureVisible(selectedIndex)
-		EndIf
-	End Method
+    Method OpenDropdown()
+        If isOpen Then Return
+        
+        isOpen = True
+        g_ActiveComboBox = Self
+        
+        ' Calculate dropdown height based on item count
+        Local itemCount:Int = items.Count()
+        Local visibleItems:Int = Min(itemCount, maxVisibleItems)
+        Local dropdownHeight:Int = visibleItems * COMBOBOX_ITEM_HEIGHT + 4
+        
+        ' Minimum height
+        If dropdownHeight < COMBOBOX_ITEM_HEIGHT + 4
+            dropdownHeight = COMBOBOX_ITEM_HEIGHT + 4
+        EndIf
+        
+        ' Update listbox size
+        dropdownList.rect.w = rect.w
+        dropdownList.rect.h = dropdownHeight
+        dropdownList.UpdateLayout()
+        
+        ' Sync selection
+        dropdownList.SetSelectedIndex(selectedIndex)
+        If selectedIndex >= 0
+            dropdownList.EnsureVisible(selectedIndex)
+        EndIf
+    End Method
     
     Method CloseDropdown()
         If Not isOpen Then Return
