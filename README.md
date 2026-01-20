@@ -27,6 +27,7 @@ Language maybe compatible:
 - Monkey2?
 - PureBasic?
 - Java?
+- SDL/SDL2?
 
 Forum Link:
 -----------
