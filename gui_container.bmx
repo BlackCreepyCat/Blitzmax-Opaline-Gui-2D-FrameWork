@@ -1,0 +1,33 @@
+' =============================================================================
+'                           ROOT CONTAINER
+' =============================================================================
+' Top-level container that holds all windows
+' =============================================================================
+
+Type TContainer Extends TWidget
+    Method New(w:Int, h:Int)
+        Super.New(0, 0, w, h)
+    End Method
+
+    ' Draw all child windows
+    Method Draw(px:Int=0, py:Int=0)
+        For Local c:TWidget = EachIn children
+            c.Draw(rect.x, rect.y)
+        Next
+    End Method
+
+    ' Update all child windows (reverse order for proper z-order handling)
+    Method Update:Int(mx:Int, my:Int)
+        Local rev:TList = New TList
+
+        For Local c:TWidget = EachIn children
+            rev.AddFirst(c)
+        Next
+
+        For Local c:TWidget = EachIn rev
+            If c.Update(mx, my) Then Return True
+        Next
+
+        Return False
+    End Method
+End Type
