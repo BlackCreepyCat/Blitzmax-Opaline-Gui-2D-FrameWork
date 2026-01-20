@@ -30,6 +30,10 @@ Maybe compatible or can be converted for:
 - Raylib?
 - SDL/SDL2?
 
+The GUI is really ugly! :) But that's intentional... This way, only the GUI's behavior (the most important part) is coded; all the other graphical improvements take up code and make it less readable.
+
+It's a kernel, very, very low level...
+
 Forum Link:
 -----------
 https://www.syntaxboom.net/forum/blitzmax-ng/code-archives-ad/1116-short-gui-kernel-skeleton
