@@ -21,4 +21,4 @@ Forum Link:
 -----------
 https://www.syntaxboom.net/forum/blitzmax-ng/code-archives-ad/1116-short-gui-kernel-skeleton
 
-<img width="1922" height="1108" alt="image" src="https://github.com/user-attachments/assets/e3d36604-cb18-4391-a8f3-68d7ec2c9c4f" />
+<img width="1922" height="1106" alt="image" src="https://github.com/user-attachments/assets/57675070-09d3-4657-991a-14a48b6c22f2" />
