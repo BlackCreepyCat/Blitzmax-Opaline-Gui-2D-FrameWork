@@ -16,7 +16,7 @@ What you need to see? Just Blitzmax! (it's free/opensource) :
 
 Description:
 ------------
-Opaline UI is a low-level kernel for creating a graphical interface from scratch. I believe it can be easily converted to other languages, only if they allow linked lists. It need also includes some basic graphical functions like:
+Opaline UI is a low-level kernel for creating a graphical interface from scratch. I believe it can be easily converted to other languages, only if they allow linked lists.No complex external dependencies; it's self-contained. It need also includes some basic graphical functions like:
 
 - Text/Box/Rect/Line/Oval/Circle/SetViewport/StringWidth (see the class: gui_core.bmx).
 
