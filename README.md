@@ -13,8 +13,8 @@ Description:
 ------------
 Opaline UI is a low-level kernel for creating a graphical interface from scratch (or just a 2D framework able to draw something like box/rect/line/oval/text etc)
 
-I believe it can be easily converted to other languages, provided they allow 
-for linked lists. It also includes some basic graphical functions like:
+I believe it can be easily converted to other languages, only if they allow 
+linked lists. It need also includes some basic graphical functions like:
 - Text/Box/Rect/Line/Oval/Circle/SetViewport/StringWidth (see the class: gui_core.bmx).
 
 Forum Link:
