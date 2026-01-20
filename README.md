@@ -1,15 +1,13 @@
-' =============================================================================
-'                  Simple GUI Framework - BlitzMax NG
-'                              Opaline UI
-' =============================================================================
-' By Creepy Cat (C)2025/2026 : https://github.com/BlackCreepyCat
-'
-' You can use this code:
-' - However you wish, but you are prohibited from selling it...
-' - You can convert it into another language! Do not hesitate!
-' - Use it For paid/free apps/games, i don't care...
-' - I'm just asking for a small citation somewhere! :)
-' =============================================================================
+                 Simple GUI Framework - BlitzMax NG
+                             Opaline UI
+
+By Creepy Cat (C)2025/2026 : https://github.com/BlackCreepyCat
+
+You can use this code:
+- However you wish, but you are prohibited from selling it...
+- You can convert it into another language! Do not hesitate!
+- Use it For paid/free apps/games, i don't care...
+- I'm just asking for a small citation somewhere! :)
 
 Description:
 ------------
