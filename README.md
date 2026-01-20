@@ -20,8 +20,8 @@ Opaline UI is a low-level kernel for creating a graphical interface from scratch
 
 - Text/Box/Rect/Line/Oval/Circle/SetViewport/StringWidth (see the class: gui_core.bmx).
 
-Language maybe compatible:
---------------------------
+Maybe compatible/converted with:
+--------------------------------
 - FreeBasic?
 - Monkey?
 - Monkey2?
