@@ -97,11 +97,13 @@ Type TWindow Extends TWidget
             TWidget.GuiDrawRect(ax, ay, rect.w, TITLEBAR_HEIGHT, 2, COLOR_TITLEBAR_INACTIVE_R, COLOR_TITLEBAR_INACTIVE_G, COLOR_TITLEBAR_INACTIVE_B)
         EndIf
 
+
         ' Draw title text with shadow
         TWidget.GuiDrawText(ax + 8, ay + 8, title, TEXT_STYLE_SHADOW, COLOR_WINDOW_TITLE_R, COLOR_WINDOW_TITLE_G, COLOR_WINDOW_TITLE_B)
 
         ' Draw client area background
         TWidget.GuiDrawRect(ax, ay + (TITLEBAR_HEIGHT + 1)  , rect.w, rect.h - (TITLEBAR_HEIGHT + 1), 2, red, green, blue)
+
 
         ' First draw title bar buttons (they should appear on top of title bar)
         For Local c:TWidget = EachIn children

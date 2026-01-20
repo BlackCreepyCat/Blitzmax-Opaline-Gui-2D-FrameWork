@@ -75,15 +75,17 @@ Type TButton Extends TWidget
 
         EndIf
 
-        ' Draw button background with current style and color
+        ' Draw button background with current style and color and restrict the viewport
         TWidget.GuiDrawRect(ax, ay, rect.w, rect.h, style, red, green, blue)
+		TWidget.GuiSetViewport(ax + 2, ay, rect.w - 4, rect.h)
 
         ' Draw centered text with shadow
         Local textX:Int = ax + (rect.w - TextWidth(caption)) / 2
         Local textY:Int = ay + (rect.h - TextHeight(caption)) / 2 + 2
 
         TWidget.GuiDrawText(textX, textY, caption, TEXT_STYLE_SHADOW, COLOR_BUTTON_TEXT_R, COLOR_BUTTON_TEXT_G, COLOR_BUTTON_TEXT_B)
-
+		TWidget.GuiSetViewport(0, 0, GraphicsWidth(), GraphicsHeight()) ' Reset viewport
+		
         ' Draw children (if any)
         For Local c:TWidget = EachIn children
             c.Draw(ax, ay)
