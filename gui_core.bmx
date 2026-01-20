@@ -35,6 +35,12 @@ Type TWidget Abstract
     Field red:Int 
     Field green:Int
     Field blue:Int
+    
+    ' Visibility and state management
+    Field visible:Int = True          ' Current visibility (combined state)
+    Field enabled:Int = True          ' Whether widget accepts input
+    Field visibleByUser:Int = True    ' User-controlled visibility (manual Show/Hide)
+    Field visibleByTabber:Int = True  ' Tabber-controlled visibility
 
     Method New(x:Int, y:Int, w:Int, h:Int)
         rect.x = x
@@ -61,6 +67,65 @@ Type TWidget Abstract
     ' Helper: Check if a point is inside this widget's rectangle
     Method ContainsPoint:Int(x:Int, y:Int)
         Return x >= 0 And x < rect.w And y >= 0 And y < rect.h
+    End Method
+
+    ' =========================================================================
+    '                      VISIBILITY & STATE MANAGEMENT
+    ' =========================================================================
+    
+    ' Show the widget (user action)
+    Method Show()
+        visibleByUser = True
+        UpdateVisibility()
+    End Method
+    
+    ' Hide the widget (user action)
+    Method Hide()
+        visibleByUser = False
+        UpdateVisibility()
+    End Method
+    
+    ' Set visibility directly (user action)
+    Method SetVisible(vis:Int)
+        visibleByUser = vis
+        UpdateVisibility()
+    End Method
+    
+    ' Check if widget is visible
+    Method IsVisible:Int()
+        Return visible
+    End Method
+    
+    ' Enable the widget (accepts input)
+    Method Enable()
+        enabled = True
+    End Method
+    
+    ' Disable the widget (ignores input)
+    Method Disable()
+        enabled = False
+    End Method
+    
+    ' Set enabled state
+    Method SetEnabled(state:Int)
+        enabled = state
+    End Method
+    
+    ' Check if widget is enabled
+    Method IsEnabled:Int()
+        Return enabled
+    End Method
+    
+    ' Called by TTabber to control visibility without affecting user preference
+    Method SetVisibleByTabber(vis:Int)
+        visibleByTabber = vis
+        UpdateVisibility()
+    End Method
+    
+    ' Update the combined visibility state
+    ' Widget is visible only if BOTH user AND tabber want it visible
+    Method UpdateVisibility()
+        visible = visibleByUser And visibleByTabber
     End Method
 
     ' Abstract methods - must be implemented by subclasses

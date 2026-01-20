@@ -34,6 +34,7 @@ Include "gui_slider.bmx"
 Include "gui_textinput.bmx"
 Include "gui_listbox.bmx"
 Include "gui_combobox.bmx"
+Include "gui_tabber.bmx"
 Include "gui_events.bmx"
 
 ' =============================================================================
@@ -57,6 +58,7 @@ Local win3:TWindow = New TWindow(1400, 80, 450, 800, "Progress Demo",False,False
 Local win4:TWindow = New TWindow(700, 400, 450, 350, "Text Input Demo",False,False,False)
 Local win5:TWindow = New TWindow(700, 50, 650, 340, "ListBox Demo",True,True,True)
 Local win6:TWindow = New TWindow(100, 650, 500, 350, "ComboBox Demo",True,True,True)
+Local win7:TWindow = New TWindow(620, 450, 500, 400, "Tabber Demo",True,True,True)
 
 root.AddChild win1
 root.AddChild win2
@@ -64,6 +66,7 @@ root.AddChild win3
 root.AddChild win4
 root.AddChild win5
 root.AddChild win6
+root.AddChild win7
 
 ' =============================================================================
 '                         WINDOW 1 - LABELS & PANELS DEMO
@@ -475,6 +478,181 @@ lblComboNote.SetColor(150, 150, 180)
 win6.AddChild lblComboNote
 
 ' =============================================================================
+'                         WINDOW 7 - TABBER DEMO
+' =============================================================================
+
+Local tabberTitle:TLabel = New TLabel(20, 10, 460, 24, "Tabber Demo - Tab Control Widget", LABEL_ALIGN_CENTER)
+tabberTitle.SetColor(255, 200, 100)
+win7.AddChild tabberTitle
+
+' Create the tabber widget
+Local tabber:TTabber = New TTabber(20, 40, 460, 320)
+win7.AddChild tabber
+
+' Add tabs
+tabber.AddTab("General")
+tabber.AddTab("Graphics")
+tabber.AddTab("Audio")
+tabber.AddTab("Controls")
+
+' --- TAB 1: General Settings ---
+Local lblGeneralTitle:TLabel = New TLabel(20, 20, 200, 24, "General Settings")
+lblGeneralTitle.SetColor(200, 220, 255)
+tabber.AddChild lblGeneralTitle
+tabber.AddWidgetToTab(0, lblGeneralTitle)
+
+Local chkAutoStart:TCheckBox = New TCheckBox(20, 55, 200, 24, "Start on system boot", False)
+tabber.AddChild chkAutoStart
+tabber.AddWidgetToTab(0, chkAutoStart)
+
+Local chkUpdates:TCheckBox = New TCheckBox(20, 85, 200, 24, "Check for updates", True)
+tabber.AddChild chkUpdates
+tabber.AddWidgetToTab(0, chkUpdates)
+
+Local chkNotify:TCheckBox = New TCheckBox(20, 115, 200, 24, "Show notifications", True)
+tabber.AddChild chkNotify
+tabber.AddWidgetToTab(0, chkNotify)
+
+Local lblLanguage:TLabel = New TLabel(20, 160, 100, 24, "Language:")
+tabber.AddChild lblLanguage
+tabber.AddWidgetToTab(0, lblLanguage)
+
+Local comboLang:TComboBox = New TComboBox(130, 158, 150, 28)
+comboLang.SetPlaceholder("Select...")
+comboLang.AddItem("English")
+comboLang.AddItem("French")
+comboLang.AddItem("German")
+comboLang.AddItem("Spanish")
+comboLang.AddItem("Japanese")
+comboLang.SetSelectedIndex(0)
+tabber.AddChild comboLang
+tabber.AddWidgetToTab(0, comboLang)
+
+Local btnSaveGeneral:TButton = New TButton(20, 220, 120, 35, "Save Settings")
+tabber.AddChild btnSaveGeneral
+tabber.AddWidgetToTab(0, btnSaveGeneral)
+
+' --- TAB 2: Graphics Settings ---
+Local lblGraphicsTitle:TLabel = New TLabel(20, 20, 200, 24, "Graphics Settings")
+lblGraphicsTitle.SetColor(200, 255, 200)
+tabber.AddChild lblGraphicsTitle
+tabber.AddWidgetToTab(1, lblGraphicsTitle)
+
+Local lblResolution:TLabel = New TLabel(20, 55, 100, 24, "Resolution:")
+tabber.AddChild lblResolution
+tabber.AddWidgetToTab(1, lblResolution)
+
+Local comboResolution:TComboBox = New TComboBox(130, 53, 150, 28)
+comboResolution.AddItem("1920x1080")
+comboResolution.AddItem("1600x900")
+comboResolution.AddItem("1280x720")
+comboResolution.AddItem("1024x768")
+comboResolution.SetSelectedIndex(0)
+tabber.AddChild comboResolution
+tabber.AddWidgetToTab(1, comboResolution)
+
+Local chkFullscreen:TCheckBox = New TCheckBox(20, 95, 200, 24, "Fullscreen mode", False)
+tabber.AddChild chkFullscreen
+tabber.AddWidgetToTab(1, chkFullscreen)
+
+Local chkVSync:TCheckBox = New TCheckBox(20, 125, 200, 24, "V-Sync enabled", True)
+tabber.AddChild chkVSync
+tabber.AddWidgetToTab(1, chkVSync)
+
+Local lblBrightness:TLabel = New TLabel(20, 165, 100, 24, "Brightness:")
+tabber.AddChild lblBrightness
+tabber.AddWidgetToTab(1, lblBrightness)
+
+Local sliderBrightness:TSlider = New TSlider(130, 163, 200, 24, 0.7, SLIDER_STYLE_HORIZONTAL)
+tabber.AddChild sliderBrightness
+tabber.AddWidgetToTab(1, sliderBrightness)
+
+Local lblBrightnessVal:TLabel = New TLabel(340, 165, 50, 24, "70%")
+tabber.AddChild lblBrightnessVal
+tabber.AddWidgetToTab(1, lblBrightnessVal)
+
+' --- TAB 3: Audio Settings ---
+Local lblAudioTitle:TLabel = New TLabel(20, 20, 200, 24, "Audio Settings")
+lblAudioTitle.SetColor(255, 200, 200)
+tabber.AddChild lblAudioTitle
+tabber.AddWidgetToTab(2, lblAudioTitle)
+
+Local lblMasterVol:TLabel = New TLabel(20, 55, 100, 24, "Master:")
+tabber.AddChild lblMasterVol
+tabber.AddWidgetToTab(2, lblMasterVol)
+
+Local sliderMaster:TSlider = New TSlider(130, 53, 200, 24, 0.8, SLIDER_STYLE_HORIZONTAL)
+tabber.AddChild sliderMaster
+tabber.AddWidgetToTab(2, sliderMaster)
+
+Local lblMasterVal:TLabel = New TLabel(340, 55, 50, 24, "80%")
+tabber.AddChild lblMasterVal
+tabber.AddWidgetToTab(2, lblMasterVal)
+
+Local lblMusicVol:TLabel = New TLabel(20, 95, 100, 24, "Music:")
+tabber.AddChild lblMusicVol
+tabber.AddWidgetToTab(2, lblMusicVol)
+
+Local sliderMusic:TSlider = New TSlider(130, 93, 200, 24, 0.6, SLIDER_STYLE_HORIZONTAL)
+tabber.AddChild sliderMusic
+tabber.AddWidgetToTab(2, sliderMusic)
+
+Local lblMusicVal:TLabel = New TLabel(340, 95, 50, 24, "60%")
+tabber.AddChild lblMusicVal
+tabber.AddWidgetToTab(2, lblMusicVal)
+
+Local lblSfxVol:TLabel = New TLabel(20, 135, 100, 24, "Effects:")
+tabber.AddChild lblSfxVol
+tabber.AddWidgetToTab(2, lblSfxVol)
+
+Local sliderSfx:TSlider = New TSlider(130, 133, 200, 24, 0.9, SLIDER_STYLE_HORIZONTAL)
+tabber.AddChild sliderSfx
+tabber.AddWidgetToTab(2, sliderSfx)
+
+Local lblSfxVal:TLabel = New TLabel(340, 135, 50, 24, "90%")
+tabber.AddChild lblSfxVal
+tabber.AddWidgetToTab(2, lblSfxVal)
+
+Local chkMute:TCheckBox = New TCheckBox(20, 180, 200, 24, "Mute all audio", False)
+tabber.AddChild chkMute
+tabber.AddWidgetToTab(2, chkMute)
+
+' --- TAB 4: Controls Settings ---
+Local lblControlsTitle:TLabel = New TLabel(20, 20, 200, 24, "Control Settings")
+lblControlsTitle.SetColor(200, 200, 255)
+tabber.AddChild lblControlsTitle
+tabber.AddWidgetToTab(3, lblControlsTitle)
+
+Local lblMouseSens:TLabel = New TLabel(20, 55, 120, 24, "Mouse Sensitivity:")
+tabber.AddChild lblMouseSens
+tabber.AddWidgetToTab(3, lblMouseSens)
+
+Local sliderMouseSens:TSlider = New TSlider(150, 53, 180, 24, 0.5, SLIDER_STYLE_HORIZONTAL)
+tabber.AddChild sliderMouseSens
+tabber.AddWidgetToTab(3, sliderMouseSens)
+
+Local lblMouseSensVal:TLabel = New TLabel(340, 55, 50, 24, "50%")
+tabber.AddChild lblMouseSensVal
+tabber.AddWidgetToTab(3, lblMouseSensVal)
+
+Local chkInvertY:TCheckBox = New TCheckBox(20, 95, 200, 24, "Invert Y axis", False)
+tabber.AddChild chkInvertY
+tabber.AddWidgetToTab(3, chkInvertY)
+
+Local chkVibration:TCheckBox = New TCheckBox(20, 125, 200, 24, "Controller vibration", True)
+tabber.AddChild chkVibration
+tabber.AddWidgetToTab(3, chkVibration)
+
+Local btnResetControls:TButton = New TButton(20, 180, 150, 35, "Reset to Default")
+tabber.AddChild btnResetControls
+tabber.AddWidgetToTab(3, btnResetControls)
+
+' --- Info label for tab changes ---
+Local lblTabInfo:TLabel = New TLabel(20, 365, 460, 20, "Current tab: General")
+lblTabInfo.SetColor(150, 200, 255)
+win7.AddChild lblTabInfo
+
+' =============================================================================
 '                              MAIN LOOP
 ' =============================================================================
 While Not AppTerminate()
@@ -587,6 +765,23 @@ While Not AppTerminate()
         lblComboInfo.SetText("Color changed!")
         lblComboValue.SetText("Selected: " + comboColor.GetSelectedText())
     EndIf
+
+    ' =============================================================================
+    '                    TABBER DEMO - Event handling
+    ' =============================================================================
+    
+    ' Update tab info label when tab changes
+    If tabber.TabChanged()
+        Local tabNames:String[] = ["General", "Graphics", "Audio", "Controls"]
+        lblTabInfo.SetText("Current tab: " + tabNames[tabber.GetActiveTab()])
+    EndIf
+    
+    ' Update slider value labels in Tabber
+    lblBrightnessVal.SetText(Int(sliderBrightness.GetPercent()) + "%")
+    lblMasterVal.SetText(Int(sliderMaster.GetPercent()) + "%")
+    lblMusicVal.SetText(Int(sliderMusic.GetPercent()) + "%")
+    lblSfxVal.SetText(Int(sliderSfx.GetPercent()) + "%")
+    lblMouseSensVal.SetText(Int(sliderMouseSens.GetPercent()) + "%")
 
 
 

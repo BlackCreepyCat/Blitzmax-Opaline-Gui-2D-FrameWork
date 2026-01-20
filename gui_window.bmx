@@ -62,7 +62,7 @@ Type TWindow Extends TWidget
         EndIf
         
         If showMax
-            maxBtn = New TButton(Right - TITLE_BUTTON_SIZE, btnY, TITLE_BUTTON_SIZE, TITLE_BUTTON_SIZE, "[]")
+            maxBtn = New TButton(Right - TITLE_BUTTON_SIZE, btnY, TITLE_BUTTON_SIZE, TITLE_BUTTON_SIZE, "Ξ")
             maxBtn.isTitleButton = True
             maxBtn.buttonType = BTN_TYPE_MAXIMIZE
             maxBtn.id = "window_maximize"
@@ -87,6 +87,8 @@ Type TWindow Extends TWidget
     End Method
 
     Method Draw(px:Int=0, py:Int=0)
+        If Not visible Then Return
+        
         Local ax:Int = px + rect.x
         Local ay:Int = py + rect.y
 
@@ -121,6 +123,8 @@ Type TWindow Extends TWidget
     End Method
 
     Method Update:Int(mx:Int, my:Int)
+        If Not visible Then Return False
+        
         Local lx:Int = mx - rect.x
         Local ly:Int = my - rect.y
 

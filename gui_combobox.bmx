@@ -183,6 +183,8 @@ Type TComboBox Extends TWidget
     ' Drawing
     ' -----------------------------------------------------------------------------
     Method Draw(px:Int=0, py:Int=0)
+        If Not visible Then Return
+        
         Local ax:Int = px + rect.x
         Local ay:Int = py + rect.y
         
@@ -280,6 +282,9 @@ Type TComboBox Extends TWidget
     ' Update / Input Handling (called by normal widget tree update)
     ' -----------------------------------------------------------------------------
     Method Update:Int(mx:Int, my:Int)
+        If Not visible Then Return False
+        If Not enabled Then Return ContainsPoint(mx, my)
+        
         Local over:Int = ContainsPoint(mx, my)
         
         ' If THIS combobox has an open dropdown, don't handle here

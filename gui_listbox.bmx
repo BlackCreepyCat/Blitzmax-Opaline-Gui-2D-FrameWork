@@ -372,6 +372,8 @@ Type TListBox Extends TWidget
     ' Drawing
     ' -----------------------------------------------------------------------------
     Method Draw(px:Int=0, py:Int=0)
+        If Not visible Then Return
+        
         Local ax:Int = px + rect.x
         Local ay:Int = py + rect.y
         
@@ -551,6 +553,9 @@ Type TListBox Extends TWidget
     ' Update / Input Handling
     ' -----------------------------------------------------------------------------
     Method Update:Int(mx:Int, my:Int)
+        If Not visible Then Return False
+        If Not enabled Then Return ContainsPoint(mx, my)
+        
         Local over:Int = ContainsPoint(mx, my)
         
         ' Update vertical scrollbar

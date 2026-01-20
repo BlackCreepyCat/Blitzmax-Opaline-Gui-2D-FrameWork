@@ -269,3 +269,42 @@ Const COLOR_COMBOBOX_BUTTON_B:Int = 160
 Const COLOR_COMBOBOX_HOVER_R:Int = 90
 Const COLOR_COMBOBOX_HOVER_G:Int = 120
 Const COLOR_COMBOBOX_HOVER_B:Int = 180
+
+' -----------------------------------------------------------------------------
+' Tabber Constants
+' -----------------------------------------------------------------------------
+Const TABBER_TAB_HEIGHT:Int = 28
+Const TABBER_TAB_PADDING:Int = 12
+Const TABBER_TAB_SPACING:Int = 2
+Const TABBER_TAB_MIN_WIDTH:Int = 60
+
+' -----------------------------------------------------------------------------
+' Tabber Colors
+' -----------------------------------------------------------------------------
+Const COLOR_TABBER_BG_R:Int = 50
+Const COLOR_TABBER_BG_G:Int = 50
+Const COLOR_TABBER_BG_B:Int = 70
+
+Const COLOR_TABBER_CONTENT_R:Int = 40
+Const COLOR_TABBER_CONTENT_G:Int = 40
+Const COLOR_TABBER_CONTENT_B:Int = 60
+
+Const COLOR_TABBER_TAB_ACTIVE_R:Int = 90
+Const COLOR_TABBER_TAB_ACTIVE_G:Int = 130
+Const COLOR_TABBER_TAB_ACTIVE_B:Int = 210
+
+Const COLOR_TABBER_TAB_INACTIVE_R:Int = 60
+Const COLOR_TABBER_TAB_INACTIVE_G:Int = 60
+Const COLOR_TABBER_TAB_INACTIVE_B:Int = 80
+
+Const COLOR_TABBER_TAB_HOVER_R:Int = 75
+Const COLOR_TABBER_TAB_HOVER_G:Int = 95
+Const COLOR_TABBER_TAB_HOVER_B:Int = 145
+
+Const COLOR_TABBER_TEXT_ACTIVE_R:Int = 255
+Const COLOR_TABBER_TEXT_ACTIVE_G:Int = 255
+Const COLOR_TABBER_TEXT_ACTIVE_B:Int = 255
+
+Const COLOR_TABBER_TEXT_INACTIVE_R:Int = 180
+Const COLOR_TABBER_TEXT_INACTIVE_G:Int = 180
+Const COLOR_TABBER_TEXT_INACTIVE_B:Int = 200

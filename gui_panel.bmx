@@ -42,6 +42,8 @@ Type TPanel Extends TWidget
     End Method
 
     Method Draw(px:Int=0, py:Int=0)
+        If Not visible Then Return
+        
         ' Absolute screen position
         Local ax:Int = px + rect.x
         Local ay:Int = py + rect.y
@@ -84,6 +86,8 @@ Type TPanel Extends TWidget
     End Method
 
     Method Update:Int(mx:Int, my:Int)
+        If Not visible Then Return False
+        
         ' Early exit if mouse is outside this panel
         If Not ContainsPoint(mx, my)
             Return False

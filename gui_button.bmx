@@ -29,6 +29,8 @@ Type TButton Extends TWidget
     End Method
 
     Method Draw(px:Int=0, py:Int=0)
+        If Not visible Then Return
+        
         Local ax:Int = px + rect.x
         Local ay:Int = py + rect.y
 
@@ -94,6 +96,9 @@ Type TButton Extends TWidget
     End Method
 
     Method Update:Int(mx:Int, my:Int)
+        If Not visible Then Return False
+        If Not enabled Then Return ContainsPoint(mx, my)
+        
         ' Check if mouse is over this button
         Local over:Int = ContainsPoint(mx, my)
         hover = over

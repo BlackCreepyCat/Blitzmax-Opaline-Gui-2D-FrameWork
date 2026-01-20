@@ -11,6 +11,8 @@ Type TContainer Extends TWidget
 
     ' Draw all child windows
     Method Draw(px:Int=0, py:Int=0)
+        If Not visible Then Return
+        
         For Local c:TWidget = EachIn children
             c.Draw(rect.x, rect.y)
         Next
@@ -18,6 +20,8 @@ Type TContainer Extends TWidget
 
     ' Update all child windows (reverse order for proper z-order handling)
     Method Update:Int(mx:Int, my:Int)
+        If Not visible Then Return False
+        
         Local rev:TList = New TList
 
         For Local c:TWidget = EachIn children

@@ -47,6 +47,8 @@ Type TProgressBar Extends TWidget
     ' Rendering
     ' ────────────────────────────────────────────────────────────────
     Method Draw(px:Int=0, py:Int=0)
+        If Not visible Then Return
+        
         Local ax:Int = px + rect.x
         Local ay:Int = py + rect.y
         
@@ -103,6 +105,8 @@ Type TProgressBar Extends TWidget
     ' Input handling
     ' ────────────────────────────────────────────────────────────────
     Method Update:Int(mx:Int, my:Int)
+        If Not visible Then Return False
+        
         ' Progress bar usually doesn't react to mouse input
         ' We just forward to children (very uncommon case)
         For Local c:TWidget = EachIn children

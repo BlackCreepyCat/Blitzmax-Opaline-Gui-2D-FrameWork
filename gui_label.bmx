@@ -28,6 +28,8 @@ Type TLabel Extends TWidget
     End Method
 
     Method Draw(px:Int=0, py:Int=0)
+        If Not visible Then Return
+        
         ' Calculate absolute screen position
         Local ax:Int = px + rect.x
         Local ay:Int = py + rect.y
@@ -56,6 +58,8 @@ Type TLabel Extends TWidget
     End Method
 
     Method Update:Int(mx:Int, my:Int)
+        If Not visible Then Return False
+        
         ' Labels usually don't react to mouse input themselves,
         ' but we still propagate update to possible children
         For Local c:TWidget = EachIn children
