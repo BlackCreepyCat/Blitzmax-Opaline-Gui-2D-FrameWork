@@ -43,6 +43,7 @@ Include "gui_events.bmx"
 Graphics 1920, 1080, 0
 'Graphics 1024, 768, 32,60
 
+
 ' Create root container that covers the entire screen
 ' All windows will be children of this root container
 Local root:TContainer = New TContainer(GraphicsWidth(), GraphicsHeight())

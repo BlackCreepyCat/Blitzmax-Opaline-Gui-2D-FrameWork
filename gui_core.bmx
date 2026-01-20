@@ -15,6 +15,7 @@ Type TEvent
     Field eventType:String
 End Type
 
+
 ' =============================================================================
 '                        ABSTRACT WIDGET CLASS
 ' =============================================================================
@@ -67,7 +68,6 @@ Type TWidget Abstract
     
     ' Function to draw gui text
     Function GuiDrawText(Px:Int,Py:Int,caption:String, style:Int, red:Int,green:Int,blue:Int)
-    
         Select style
         
         ' Normal
@@ -90,7 +90,6 @@ Type TWidget Abstract
         
         ' Reset color to white after drawing text (good practice)
         SetColor 255, 255, 255
-        
     End Function
     
     ' Actually draws a filled rectangle with optional embossed/pressed styles
@@ -132,7 +131,6 @@ Type TWidget Abstract
         
         ' Reset color to white after drawing (good practice)
         SetColor 255, 255, 255
-        
     End Function
     
     ' Actually draws an oval/circle with optional shadow style
@@ -155,6 +153,6 @@ Type TWidget Abstract
         
         ' Reset color to white after drawing
         SetColor 255, 255, 255
-        
     End Function
+
 End Type
