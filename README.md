@@ -32,7 +32,7 @@ Maybe compatible or can be converted for:
 
 The GUI is really ugly! :) But that's intentional... This way, only the GUI's behavior (the most important part) is coded; all the other graphical improvements take up code and make it less readable.
 
-It's a kernel, very, very low level...
+It's a kernel, very, very low level... But once the core of the GUI is converted, you're free to improve it! At least the behaviors (numerous, but invisible to GUI users) are there.
 
 Forum Link:
 -----------
