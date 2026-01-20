@@ -1,3 +1,17 @@
+' =============================================================================
+'                  Simple GUI Framework - BlitzMax NG
+'                           MAIN FILE : Opaline UI
+' =============================================================================
+' By Creepy Cat (C)2025/2026
+' https://github.com/BlackCreepyCat
+'
+' You can use this code:
+' - However you wish, but you are prohibited from selling it...
+' - You can convert it into another language! Do not hesitate!
+' - Use it For paid/free apps/games, i don't care...
+' - I'm just asking for a small citation somewhere! :)
+' =============================================================================
+
 SuperStrict
 Import BRL.GLMax2D
 Import BRL.LinkedList
@@ -28,16 +42,17 @@ TWidget.GuiInit()
 Global root:TContainer = New TContainer(GraphicsWidth(), GraphicsHeight())
 TWidget.GuiSetRoot(root)
 
-Local win:TWindow = New TWindow(100, 100, 600, 400, "Opaline Demo 01", True, True, True)
+Local win:TWindow = New TWindow(100, 100, 600, 400, "Opaline Demo Button (check console)", True, True, True)
 root.AddChild win
 
 Local btn:TButton = New TButton(20, 20, 200, 40, "Click me!")
 win.AddChild btn
 
+' Main loop
 While Not KeyDown(KEY_ESCAPE)
     Cls
 	
-	' Gui refresh
+	' Refresh
     TWidget.GuiUpdate()   
     TWidget.GuiDraw()     
 	
