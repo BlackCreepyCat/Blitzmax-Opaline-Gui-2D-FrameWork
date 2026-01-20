@@ -138,8 +138,8 @@ Type TWidget Abstract
 
     ' Initialize the GUI system
     ' Call once at startup before creating any widgets
-    Function GuiInit(fontPath:String = "Arial.ttf", fontSize:Int = 16)
-        Gui_SystemFontSize = fontSize
+    Function GuiInit(fontPath:String = "Arial.ttf", FontSize:Int = 16)
+        Gui_SystemFontSize = FontSize
         Gui_SystemFont = LoadImageFont(fontPath, Gui_SystemFontSize, SMOOTHFONT)
     End Function
     
@@ -256,8 +256,7 @@ Type TWidget Abstract
             DrawText caption, px + 1, py + 1
                     
             SetColor red, green, blue
-            DrawText caption, px, py
-                    
+            DrawText caption, px, py           
         End Select
         
         ' Reset
@@ -266,7 +265,10 @@ Type TWidget Abstract
     End Function
     
     ' Draw filled rectangle with optional embossed/pressed styles
-    Function GuiDrawRect(px:Int, py:Int, tx:Int, ty:Int, style:Int, red:Int, green:Int, blue:Int)
+    Function GuiDrawRect(px:Int, py:Int, tx:Int, ty:Int, style:Int, red:Int, green:Int, blue:Int, alpha:Float=1.0)
+		SetBlend(ALPHABLEND)
+		SetAlpha(alpha)
+		
         Select style
         
         ' Flat filled rectangle
@@ -299,15 +301,18 @@ Type TWidget Abstract
             SetColor red/2, green/2, blue/2	
             DrawLine px, py, px + tx, py
             DrawLine px, py, px, py + ty		
-            
         End Select
         
         ' Reset color
         SetColor 255, 255, 255
+		SetAlpha 1.0
     End Function
     
     ' Draw oval/circle with optional shadow
-    Function GuiDrawOval(px:Int, py:Int, RadiusX:Int, RadiusY:Int, style:Int, red:Int, green:Int, blue:Int)
+    Function GuiDrawOval(px:Int, py:Int, RadiusX:Int, RadiusY:Int, style:Int, red:Int, green:Int, blue:Int, alpha:Float=1.0)
+		SetBlend(ALPHABLEND)
+		SetAlpha(alpha)
+				
         Select style
         
         ' Flat filled oval
@@ -321,12 +326,38 @@ Type TWidget Abstract
             DrawOval px + 2, py + 2, RadiusX, RadiusY	
             
             SetColor red, green, blue
-            DrawOval px, py, RadiusX, RadiusY	
-            
+            DrawOval px, py, RadiusX, RadiusY	 
         End Select
         
         ' Reset color
         SetColor 255, 255, 255
+		SetAlpha 1.0
+    End Function
+
+    ' Draw oval/circle with optional shadow
+    Function GuiDrawLine(px:Int, py:Int, Tx:Int, Ty:Int, style:Int, red:Int, green:Int, blue:Int, alpha:Float=1.0)
+		SetBlend(ALPHABLEND)
+		SetAlpha(alpha)
+				
+        Select style
+        
+        ' Flat line
+        Case 1
+            SetColor red, green, blue
+            DrawLine px, py, tx, ty	
+        
+        ' Fat Line
+        Case 2
+            SetColor red, green, blue
+
+			SetLineWidth(3)
+            DrawLine px, py, tx, ty	
+			SetLineWidth(1)	
+        End Select
+        
+        ' Reset color
+        SetColor 255, 255, 255
+		SetAlpha 1.0
     End Function
     
 End Type

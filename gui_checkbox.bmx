@@ -54,9 +54,9 @@ Type TCheckBox Extends TWidget
 
         ' Draw check mark if checked
         If checked
-            SetColor COLOR_CHECKBOX_MARK_R, COLOR_CHECKBOX_MARK_G, COLOR_CHECKBOX_MARK_B
-            DrawLine ax + 4, ay + 4, ax + rect.h - 4, ay + rect.h - 4
-            DrawLine ax + rect.h - 4, ay + 4, ax + 4, ay + rect.h - 4
+			TWidget.GuiDrawLine(ax + 4, ay + 4, ax + rect.h - 4, ay + rect.h - 4, 2, COLOR_CHECKBOX_MARK_R, COLOR_CHECKBOX_MARK_G, COLOR_CHECKBOX_MARK_B)
+			TWidget.GuiDrawLine(ax + rect.h - 4, ay + 4, ax + 4, ay + rect.h - 4, 2, COLOR_CHECKBOX_MARK_R, COLOR_CHECKBOX_MARK_G, COLOR_CHECKBOX_MARK_B)
+
         EndIf
 
         ' Draw label text with shadow

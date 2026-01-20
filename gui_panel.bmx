@@ -66,8 +66,7 @@ Type TPanel Extends TWidget
         ' Draw optional title bar
         If title.Length > 0
             ' Title background
-            SetColor COLOR_PANEL_BORDER_R, COLOR_PANEL_BORDER_G, COLOR_PANEL_BORDER_B
-            DrawRect ax + 2, ay + 2, rect.w - 4, titleHeight
+			TWidget.GuiDrawRect(ax + 2, ay + 2, rect.w - 4, titleHeight, 1, COLOR_PANEL_BORDER_R, COLOR_PANEL_BORDER_G, COLOR_PANEL_BORDER_B)
             
             ' Draw title text with shadow effect
             Local textX:Int = ax + padding
@@ -75,8 +74,7 @@ Type TPanel Extends TWidget
             TWidget.GuiDrawText(textX, textY, title, TEXT_STYLE_SHADOW, COLOR_PANEL_TITLE_R, COLOR_PANEL_TITLE_G, COLOR_PANEL_TITLE_B)
             
             ' Thin separator line under title
-            SetColor COLOR_PANEL_BORDER_R + 30, COLOR_PANEL_BORDER_G + 30, COLOR_PANEL_BORDER_B + 30
-            DrawLine ax + 2, ay + titleHeight + 2, ax + rect.w - 2, ay + titleHeight + 2
+			TWidget.GuiDrawLine(ax + 2, ay + titleHeight + 2, ax + rect.w - 2, ay + titleHeight + 2, 1 , COLOR_PANEL_BORDER_R + 30, COLOR_PANEL_BORDER_G + 30, COLOR_PANEL_BORDER_B + 30)
         EndIf
 
         ' Draw all child widgets below the title area

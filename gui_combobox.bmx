@@ -229,21 +229,21 @@ Type TComboBox Extends TWidget
         ' Draw arrow (triangle pointing down, or up if open)
         Local arrowX:Int = btnX + COMBOBOX_BUTTON_WIDTH / 2
         Local arrowY:Int = ay + rect.h / 2
-        
-        SetColor COLOR_COMBOBOX_ARROW_R, COLOR_COMBOBOX_ARROW_G, COLOR_COMBOBOX_ARROW_B
-        
+
         If isOpen
             ' Arrow pointing up
-            DrawLine arrowX - 5, arrowY + 2, arrowX, arrowY - 3
-            DrawLine arrowX, arrowY - 3, arrowX + 5, arrowY + 2
-            DrawLine arrowX - 5, arrowY + 3, arrowX, arrowY - 2
-            DrawLine arrowX, arrowY - 2, arrowX + 5, arrowY + 3
+			TWidget.GuiDrawLine(arrowX - 5, arrowY + 2, arrowX, arrowY - 3, 1 , COLOR_COMBOBOX_ARROW_R, COLOR_COMBOBOX_ARROW_G, COLOR_COMBOBOX_ARROW_B)
+			TWidget.GuiDrawLine(arrowX, arrowY - 3, arrowX + 5, arrowY + 2, 1 , COLOR_COMBOBOX_ARROW_R, COLOR_COMBOBOX_ARROW_G, COLOR_COMBOBOX_ARROW_B)
+			TWidget.GuiDrawLine(arrowX - 5, arrowY + 3, arrowX, arrowY - 2, 1 , COLOR_COMBOBOX_ARROW_R, COLOR_COMBOBOX_ARROW_G, COLOR_COMBOBOX_ARROW_B)
+			TWidget.GuiDrawLine(arrowX, arrowY - 2, arrowX + 5, arrowY + 3, 1 , COLOR_COMBOBOX_ARROW_R, COLOR_COMBOBOX_ARROW_G, COLOR_COMBOBOX_ARROW_B)
+
         Else
             ' Arrow pointing down
-            DrawLine arrowX - 5, arrowY - 2, arrowX, arrowY + 3
-            DrawLine arrowX, arrowY + 3, arrowX + 5, arrowY - 2
-            DrawLine arrowX - 5, arrowY - 3, arrowX, arrowY + 2
-            DrawLine arrowX, arrowY + 2, arrowX + 5, arrowY - 3
+			TWidget.GuiDrawLine(arrowX - 5, arrowY - 2, arrowX, arrowY + 3, 1 , COLOR_COMBOBOX_ARROW_R, COLOR_COMBOBOX_ARROW_G, COLOR_COMBOBOX_ARROW_B)
+			TWidget.GuiDrawLine(arrowX, arrowY + 3, arrowX + 5, arrowY - 2, 1 , COLOR_COMBOBOX_ARROW_R, COLOR_COMBOBOX_ARROW_G, COLOR_COMBOBOX_ARROW_B)
+			TWidget.GuiDrawLine(arrowX - 5, arrowY - 3, arrowX, arrowY + 2, 1 , COLOR_COMBOBOX_ARROW_R, COLOR_COMBOBOX_ARROW_G, COLOR_COMBOBOX_ARROW_B)
+			TWidget.GuiDrawLine(arrowX, arrowY + 2, arrowX + 5, arrowY - 3, 1 , COLOR_COMBOBOX_ARROW_R, COLOR_COMBOBOX_ARROW_G, COLOR_COMBOBOX_ARROW_B)
+
         EndIf
         
         ' Draw selected text or placeholder

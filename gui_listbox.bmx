@@ -445,8 +445,7 @@ Type TListBox Extends TWidget
             
             ' Column separator
             If showGrid
-                SetColor COLOR_LISTBOX_GRID_R + 20, COLOR_LISTBOX_GRID_G + 20, COLOR_LISTBOX_GRID_B + 20
-                DrawLine headerX + col.width - 1, headerY + 2, headerX + col.width - 1, headerY + headerHeight - 2
+				 TWidget.GuiDrawLine(headerX + col.width - 1, headerY + 2, headerX + col.width - 1, headerY + headerHeight - 2, 1, COLOR_LISTBOX_GRID_R + 20, COLOR_LISTBOX_GRID_G + 20, COLOR_LISTBOX_GRID_B + 20)
             EndIf
             
             headerX :+ col.width
@@ -522,8 +521,7 @@ Type TListBox Extends TWidget
                         
                         ' Vertical grid line
                         If showGrid
-                            SetColor COLOR_LISTBOX_GRID_R, COLOR_LISTBOX_GRID_G, COLOR_LISTBOX_GRID_B
-                            DrawLine cellX + col.width - 1, drawY, cellX + col.width - 1, drawY + itemHeight
+							TWidget.GuiDrawLine(cellX + col.width - 1, drawY, cellX + col.width - 1, drawY + itemHeight, 1, COLOR_LISTBOX_GRID_R, COLOR_LISTBOX_GRID_G, COLOR_LISTBOX_GRID_B)
                         EndIf
                         
                         cellX :+ col.width
@@ -539,8 +537,7 @@ Type TListBox Extends TWidget
                 
                 ' Horizontal grid line
                 If showGrid
-                    SetColor COLOR_LISTBOX_GRID_R, COLOR_LISTBOX_GRID_G, COLOR_LISTBOX_GRID_B
-                    DrawLine clipX - scrollOffsetX, drawY + itemHeight - 1, clipX - scrollOffsetX + contentWidth, drawY + itemHeight - 1
+					 TWidget.GuiDrawLine(clipX - scrollOffsetX, drawY + itemHeight - 1, clipX - scrollOffsetX + contentWidth, drawY + itemHeight - 1, 1, COLOR_LISTBOX_GRID_R, COLOR_LISTBOX_GRID_G, COLOR_LISTBOX_GRID_B)
                 EndIf
             EndIf
             
