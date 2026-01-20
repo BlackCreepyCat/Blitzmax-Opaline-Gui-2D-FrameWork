@@ -48,7 +48,7 @@ Type TWindow Extends TWidget
         Local Right:Int = rect.w - TITLE_BUTTON_MARGIN
         
         If showClose
-            closeBtn = New TButton(Right - TITLE_BUTTON_SIZE, btnY, TITLE_BUTTON_SIZE, TITLE_BUTTON_SIZE, "X")
+            closeBtn = New TButton(Right - TITLE_BUTTON_SIZE, btnY, TITLE_BUTTON_SIZE, TITLE_BUTTON_SIZE, "Ω") ' 
             closeBtn.isTitleButton = True
             closeBtn.buttonType = BTN_TYPE_CLOSE
             closeBtn.id = "window_close"

@@ -49,7 +49,7 @@ TWidget.GuiInit()
 ' Create root container that covers the entire screen
 ' All windows will be children of this root container
 Global root:TContainer = New TContainer(GraphicsWidth(), GraphicsHeight())
-TWidget.GuiSetRoot(root)  ' <-- AJOUTER CETTE LIGNE !
+TWidget.GuiSetRoot(root)  ' <-- IMPORTANT !
 
 ' Create demo windows
 Local win1:TWindow = New TWindow(120, 80, 540, 540, "Opaline Main Window",True,True,False)
