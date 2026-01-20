@@ -28,9 +28,26 @@ Type TContainer Extends TWidget
             rev.AddFirst(c)
         Next
 
-        For Local c:TWidget = EachIn rev
-            If c.Update(mx, my) Then Return True
-        Next
+    '   For Local c:TWidget = EachIn rev
+' If c.Update(mx, my) Then Return True
+    '    Next
+
+For Local c:TWidget = EachIn rev
+
+    ' -------------------------------------------------
+    ' BLOCK UPDATE FOR WIDGETS UNDER COMBOBOX POPUP
+    ' -------------------------------------------------
+    If TComboBox.IsPopupActive()
+        If c <> g_ActiveComboBox
+            ' Ne pas appeler Update → pas de hover, pas de highlight
+            Continue
+        EndIf
+    EndIf
+
+    If c.Update(mx, my) Then Return True
+Next
+
+
 
         Return False
     End Method
