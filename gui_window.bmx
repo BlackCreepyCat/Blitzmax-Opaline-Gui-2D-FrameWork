@@ -2,7 +2,13 @@
 '                              WINDOW WIDGET
 ' =============================================================================
 ' Draggable window with title bar, control buttons, and optional status bar
+' Supports MODAL windows that block input to other windows
 ' =============================================================================
+
+' -----------------------------------------------------------------------------
+' Global Modal Window Tracking
+' -----------------------------------------------------------------------------
+Global g_ModalWindow:TWindow = Null  ' Currently active modal window
 
 ' -----------------------------------------------------------------------------
 ' Status Bar Section - represents one section of the status bar
@@ -45,6 +51,11 @@ Type TWindow Extends TWidget
     Field showStatusBar:Int = False
     Field statusSections:TList = New TList  ' List of TStatusSection
     Field statusText:String = ""            ' Simple single-text mode
+
+    ' =========================================================================
+    '                         MODAL SUPPORT
+    ' =========================================================================
+    Field isModal:Int = False              ' Is this a modal window?
 
     ' Constructor - creates window with title bar and optional status bar
     ' Parameters:
@@ -117,6 +128,48 @@ Type TWindow Extends TWidget
         EndIf
 
     End Method
+
+    ' =========================================================================
+    '                         MODAL METHODS
+    ' =========================================================================
+    
+    ' Set this window as modal (blocks input to all other windows)
+    ' Only one modal window can be active at a time
+    Method SetModalState(modal:Int = True)
+        If modal
+            ' If another modal is already active, close it first (or deny)
+            If g_ModalWindow <> Null And g_ModalWindow <> Self
+                ' Option: You could print a warning or handle this differently
+                Print "Warning: Another modal window is already active!"
+            EndIf
+            
+            isModal = True
+            g_ModalWindow = Self
+            
+            ' Bring this window to front
+            If parent Then parent.BringToFront(Self)
+        Else
+            isModal = False
+            If g_ModalWindow = Self
+                g_ModalWindow = Null
+            EndIf
+        EndIf
+    End Method
+    
+    ' Check if this window is modal
+    Method GetModalState:Int()
+        Return isModal
+    End Method
+    
+    ' Static function to check if any modal window is active
+    Function IsAnyModalActive:Int()
+        Return g_ModalWindow <> Null
+    End Function
+    
+    ' Static function to get the current modal window
+    Function GetActiveModalWindow:TWindow()
+        Return g_ModalWindow
+    End Function
 
     ' =========================================================================
     '                         STATUS BAR METHODS
@@ -240,7 +293,8 @@ Type TWindow Extends TWidget
         Local ay:Int = py + rect.y
 
         ' Draw title bar with different color depending on active/inactive state
-        If IsTopWindow()
+        ' Modal windows are ALWAYS drawn as active
+        If IsTopWindow() Or isModal
             TWidget.GuiDrawRect(ax, ay, rect.w, TITLEBAR_HEIGHT, 2, COLOR_TITLEBAR_ACTIVE_R, COLOR_TITLEBAR_ACTIVE_G, COLOR_TITLEBAR_ACTIVE_B)
         Else
             TWidget.GuiDrawRect(ax, ay, rect.w, TITLEBAR_HEIGHT, 2, COLOR_TITLEBAR_INACTIVE_R, COLOR_TITLEBAR_INACTIVE_G, COLOR_TITLEBAR_INACTIVE_B)
@@ -366,7 +420,8 @@ Type TWindow Extends TWidget
             If GuiMouse.Down()
                 rect.x = mx - dragOffsetX
                 rect.y = my - dragOffsetY
-                If parent Then parent.BringToFront(Self)
+                ' Modal windows are always on top, no need to BringToFront
+                If parent And Not isModal Then parent.BringToFront(Self)
                 Return True
             ElseIf GuiMouse.Released()
                 isDragging = False
@@ -385,7 +440,8 @@ Type TWindow Extends TWidget
                 If maxBtn And lx >= maxBtn.rect.x And lx < maxBtn.rect.x + maxBtn.rect.w And ly >= maxBtn.rect.y And ly < maxBtn.rect.y + maxBtn.rect.h Then overButton = True
 
                 If Not overButton
-                    If parent Then parent.BringToFront(Self)
+                    ' Modal windows stay on top, don't allow other windows to come to front
+                    If parent And Not isModal Then parent.BringToFront(Self)
                     isDragging = True
                     dragOffsetX = lx
                     dragOffsetY = ly
@@ -414,8 +470,8 @@ Type TWindow Extends TWidget
         Local clientBottom:Int = rect.h
         If showStatusBar Then clientBottom :- STATUSBAR_HEIGHT
 
-        ' Update client area children only if this is the top window and mouse is in client area
-        If IsTopWindow() And ly >= clientTop And ly < clientBottom
+        ' Update client area children only if this is the top window (or modal) and mouse is in client area
+        If (IsTopWindow() Or isModal) And ly >= clientTop And ly < clientBottom
             Local clientX:Int = lx
             Local clientY:Int = ly - TITLEBAR_HEIGHT
 
@@ -434,9 +490,10 @@ Type TWindow Extends TWidget
         EndIf
 
         ' If clicked anywhere in the window (but not handled above), bring to front
+        ' But NOT if a modal window is active and this is not the modal
         If draggedWindow = Null And GuiMouse.Hit()
             If lx >= 0 And lx < rect.w And ly >= 0 And ly < rect.h
-                If parent Then parent.BringToFront(Self)
+                If parent And Not isModal Then parent.BringToFront(Self)
                 Return True
             EndIf
         EndIf
@@ -446,6 +503,12 @@ Type TWindow Extends TWidget
 
     ' Closes the window - removes it from parent and clears children
     Method Close()
+        ' If this was the modal window, clear the global reference
+        If g_ModalWindow = Self
+            g_ModalWindow = Null
+            isModal = False
+        EndIf
+        
         children.Clear()
         If parent
             parent.children.Remove(Self)

@@ -158,7 +158,7 @@ Type TWidget Abstract
     '                      MAIN REFRESH METHOD
     ' =========================================================================
     ' Call this once per frame in your main loop
-    ' Handles: mouse update, popup priority, widget tree update & draw
+    ' Handles: mouse update, popup priority, widget tree update & draw, window controls
     '
     ' Usage:
     '   While Not AppTerminate()
@@ -191,6 +191,9 @@ Type TWidget Abstract
         
         ' 6. Draw popup overlays LAST (on top of everything)
         TComboBox.DrawActivePopup()
+        
+        ' 7. Handle window control buttons (close / min / max) automatically
+        GuiProcessWindowEvents()
     End Function
     
     ' Alternative: Separate update and draw for more control
@@ -211,6 +214,9 @@ Type TWidget Abstract
         
         ' Update widget tree
         Gui_Root.Update(GuiMouse.x, GuiMouse.y)
+        
+        ' Handle window control buttons automatically
+        GuiProcessWindowEvents()
     End Function
     
     Function GuiDraw()

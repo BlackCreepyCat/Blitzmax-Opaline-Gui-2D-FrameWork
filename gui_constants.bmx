@@ -321,3 +321,11 @@ Const COLOR_TABBER_TEXT_ACTIVE_B:Int = 255
 Const COLOR_TABBER_TEXT_INACTIVE_R:Int = 180
 Const COLOR_TABBER_TEXT_INACTIVE_G:Int = 180
 Const COLOR_TABBER_TEXT_INACTIVE_B:Int = 200
+
+' -----------------------------------------------------------------------------
+' Modal Window Overlay Colors
+' -----------------------------------------------------------------------------
+Const COLOR_MODAL_OVERLAY_R:Int = 0
+Const COLOR_MODAL_OVERLAY_G:Int = 0
+Const COLOR_MODAL_OVERLAY_B:Int = 0
+Const COLOR_MODAL_OVERLAY_ALPHA:Float = 0.5

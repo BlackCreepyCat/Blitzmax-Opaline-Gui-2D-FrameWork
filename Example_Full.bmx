@@ -81,6 +81,13 @@ Local win6:TWindow = New TWindow(100, 650, 500, 350, "ComboBox Demo",True,True,T
 Local win7:TWindow = New TWindow(620, 450, 500, 400, "Tabber Demo",True,True,True)
 Local win8:TWindow = New TWindow(1200, 500, 400, 450, "ImageBox Demo",True,True,True, True)
 
+' =============================================================================
+'                         MODAL WINDOW DEMO
+' =============================================================================
+' Create a modal "About" window - it will block all other windows
+Global winModal:TWindow = New TWindow(GraphicsWidth()/2 - 200, GraphicsHeight()/2 - 150, 400, 250, "About - MODAL WINDOW", True, False, False)
+winModal.SetModalState(True)  ' <-- Set this window as MODAL
+
 root.AddChild win1
 root.AddChild win2
 root.AddChild win3
@@ -89,6 +96,35 @@ root.AddChild win5
 root.AddChild win6
 root.AddChild win7
 root.AddChild win8
+root.AddChild winModal  ' Modal window added last (will be on top)
+
+' =============================================================================
+'                         MODAL WINDOW CONTENT
+' =============================================================================
+' Add content to the modal window
+Local modalTitle:TLabel = New TLabel(20, 20, 360, 30, "Opaline GUI Framework", LABEL_ALIGN_CENTER)
+modalTitle.SetColor(255, 220, 100)  ' Gold color
+winModal.AddChild modalTitle
+
+Local modalVersion:TLabel = New TLabel(20, 55, 360, 20, "Version 1.0 - Modal Window Demo", LABEL_ALIGN_CENTER)
+modalVersion.SetColor(200, 200, 220)
+winModal.AddChild modalVersion
+
+Local modalAuthor:TLabel = New TLabel(20, 85, 360, 20, "By Creepy Cat (C)2025/2026", LABEL_ALIGN_CENTER)
+modalAuthor.SetColor(180, 180, 200)
+winModal.AddChild modalAuthor
+
+Local modalInfo:TLabel = New TLabel(20, 120, 360, 40, "This is a MODAL window. It blocks all", LABEL_ALIGN_CENTER)
+modalInfo.SetColor(150, 200, 255)
+winModal.AddChild modalInfo
+
+Local modalInfo2:TLabel = New TLabel(20, 145, 360, 40, "input to other windows until closed.", LABEL_ALIGN_CENTER)
+modalInfo2.SetColor(150, 200, 255)
+winModal.AddChild modalInfo2
+
+' OK button to close the modal
+Global btnModalOK:TButton = New TButton(150, 190, 100, 35, "OK")
+winModal.AddChild btnModalOK
 
 ' =============================================================================
 '                         WINDOW 1 - LABELS & PANELS DEMO
@@ -993,11 +1029,18 @@ While Not AppTerminate()
         Print "Auto-save: " + chk4.IsChecked()
     EndIf
 
-    ' Handle window control buttons (close / min / max)
-    For Local win:TWindow = EachIn root.children
-        ProcessWindowControlEvents(win)
-    Next
-
+    ' =============================================================================
+    '                    MODAL WINDOW - Event handling
+    ' =============================================================================
+    ' Close the modal window when OK button is clicked
+    If winModal <> Null And btnModalOK <> Null
+        If btnModalOK.WasClicked()
+            Print "Modal window closed!"
+            winModal.Close()
+            winModal = Null
+            btnModalOK = Null
+        EndIf
+    EndIf
 
     
     ' Clear all pending events at the end of the frame
