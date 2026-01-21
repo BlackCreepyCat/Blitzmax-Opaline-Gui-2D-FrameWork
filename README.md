@@ -35,7 +35,9 @@ Maybe compatible or can be converted for:
 - PureBasic?
 - Java?
 - Raylib?
-- SDL/SDL2?
+- SDL/SDL2/C/C++?
+
+![Nouveau projet](https://github.com/user-attachments/assets/be24bc48-856e-46c1-9d74-2a4adb5eb43a)
 
 The GUI is really ugly! :) But that's intentional... This way, only the GUI's behavior (the most important part) is coded; all the other graphical improvements take up code and make it less readable.
 
