@@ -174,28 +174,42 @@ Type TWidget Abstract
         ' 1. Update mouse state (position, buttons, wheel)
         GuiMouse.Update()
         
-        ' 2. Handle active popup FIRST (ComboBox dropdown has priority)
+        ' 2. Handle context menu FIRST (highest priority overlay)
+        If TContextMenu.UpdateActiveMenu() Then
+            ' Context menu consumed the input, skip other updates
+            Gui_Root.Draw()
+            TComboBox.DrawActivePopup()
+            TContextMenu.DrawActiveMenu()
+            Return
+        EndIf
+        
+        ' 3. Handle active popup (ComboBox dropdown has priority)
         TComboBox.UpdateActivePopup()
         
-        ' 3. IMPORTANT: Always update focused TextInput for keyboard handling
+        ' 4. IMPORTANT: Always update focused TextInput/TextArea for keyboard handling
         ' This ensures keyboard input is processed even if mouse is elsewhere
         If g_FocusedTextInput <> Null And g_FocusedTextInput.focused
             g_FocusedTextInput.HandleKeyboard()
+        ElseIf g_FocusedTextArea <> Null And g_FocusedTextArea.focused
+            g_FocusedTextArea.HandleKeyboard()
         EndIf
         
-        ' 4. Update widget tree (input handling, state changes)
+        ' 5. Update widget tree (input handling, state changes)
         Gui_Root.Update(GuiMouse.x, GuiMouse.y)
         
-        ' 5. Draw widget tree
+        ' 6. Draw widget tree
         Gui_Root.Draw()
         
-        ' 6. Draw popup overlays LAST (on top of everything)
+        ' 7. Draw popup overlays LAST (on top of everything)
         TComboBox.DrawActivePopup()
         
-        ' 7. Handle window control buttons (close / min / max) automatically
+        ' 8. Draw context menu on top of everything
+        TContextMenu.DrawActiveMenu()
+        
+        ' 9. Handle window control buttons (close / min / max) automatically
         GuiProcessWindowEvents()
         
-        ' 8. Handle active MessageBox buttons
+        ' 10. Handle active MessageBox buttons
         TMessageBox.UpdateActiveMessageBox()
     End Function
     
@@ -206,13 +220,18 @@ Type TWidget Abstract
         ' Update mouse state
         GuiMouse.Update()
         
+        ' Handle context menu first
+        If TContextMenu.UpdateActiveMenu() Then Return
+        
         ' Handle active popup first
         TComboBox.UpdateActivePopup()
         
-        ' IMPORTANT: Always update focused TextInput for keyboard handling
+        ' IMPORTANT: Always update focused TextInput/TextArea for keyboard handling
         ' This ensures keyboard input is processed even if mouse is elsewhere
         If g_FocusedTextInput <> Null And g_FocusedTextInput.focused
             g_FocusedTextInput.HandleKeyboard()
+        ElseIf g_FocusedTextArea <> Null And g_FocusedTextArea.focused
+            g_FocusedTextArea.HandleKeyboard()
         EndIf
         
         ' Update widget tree
@@ -233,6 +252,9 @@ Type TWidget Abstract
         
         ' Draw popup overlays
         TComboBox.DrawActivePopup()
+        
+        ' Draw context menu on top
+        TContextMenu.DrawActiveMenu()
     End Function
     
     ' Clear all events in the GUI tree

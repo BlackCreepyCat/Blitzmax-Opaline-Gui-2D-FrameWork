@@ -32,11 +32,13 @@ Include "gui_panel.bmx"
 Include "gui_progressbar.bmx"
 Include "gui_slider.bmx"
 Include "gui_textinput.bmx"
+Include "gui_textarea.bmx"
 Include "gui_listbox.bmx"
 Include "gui_combobox.bmx"
 Include "gui_tabber.bmx"
 Include "gui_imagebox.bmx"
 Include "gui_messagebox.bmx"
+Include "gui_contextmenu.bmx"
 Include "gui_events.bmx"
 
 ' =============================================================================
@@ -81,6 +83,7 @@ Local win5:TWindow = New TWindow(700, 50, 650, 340, "ListBox Demo",True,True,Tru
 Local win6:TWindow = New TWindow(100, 650, 500, 350, "ComboBox Demo",True,True,True)
 Local win7:TWindow = New TWindow(620, 450, 500, 400, "Tabber Demo",True,True,True)
 Local win8:TWindow = New TWindow(1200, 500, 400, 450, "ImageBox Demo",True,True,True, True)
+Local win9:TWindow = New TWindow(50, 400, 500, 300, "TextArea Demo",True,True,True)
 
 ' =============================================================================
 '                         MODAL WINDOW DEMO
@@ -97,6 +100,7 @@ root.AddChild win5
 root.AddChild win6
 root.AddChild win7
 root.AddChild win8
+root.AddChild win9
 root.AddChild winModal  ' Modal window added last (will be on top)
 
 ' =============================================================================
@@ -114,9 +118,63 @@ root.AddChild btnScreenTest
 Global btnShowMsgBox:TButton = New TButton(200, 85, 180, 35, "Show MessageBox")
 root.AddChild btnShowMsgBox
 
-Global lblScreenStatus:TLabel = New TLabel(10, 130, 400, 20, "Click the buttons above!")
+Global lblScreenStatus:TLabel = New TLabel(10, 130, 400, 20, "Click the buttons above! Right-click anywhere for context menu.")
 lblScreenStatus.SetColor(150, 255, 150)
 root.AddChild lblScreenStatus
+
+' =============================================================================
+'                         CONTEXT MENU SETUP
+' =============================================================================
+' Create a context menu that appears on right-click
+Global contextMenu:TContextMenu = New TContextMenu()
+contextMenu.AddItemWithShortcut("Cut", "Ctrl+X", "cut")
+contextMenu.AddItemWithShortcut("Copy", "Ctrl+C", "copy")
+contextMenu.AddItemWithShortcut("Paste", "Ctrl+V", "paste")
+contextMenu.AddSeparator()
+contextMenu.AddItem("Select All", "selectall")
+contextMenu.AddSeparator()
+contextMenu.AddCheckbox("Show Grid", False, "grid")
+contextMenu.AddCheckbox("Snap to Grid", True, "snap")
+contextMenu.AddSeparator()
+contextMenu.AddDisabledItem("Disabled Item", "disabled")
+contextMenu.AddItem("Properties...", "properties")
+
+' =============================================================================
+'                         TEXTAREA DEMO (win9)
+' =============================================================================
+Local lblTextAreaTitle:TLabel = New TLabel(10, 10, 480, 20, "Multi-line Text Editor (TTextArea)", LABEL_ALIGN_CENTER)
+lblTextAreaTitle.SetColor(100, 200, 255)
+win9.AddChild lblTextAreaTitle
+
+' Create the TextArea with some initial text
+Local sampleCode:String = "' Welcome to TTextArea!~n"
+sampleCode :+ "' This is a multi-line text editor.~n"
+sampleCode :+ "~n"
+sampleCode :+ "Function HelloWorld()~n"
+sampleCode :+ "    Print ~qHello, World!~q~n"
+sampleCode :+ "End Function~n"
+sampleCode :+ "~n"
+sampleCode :+ "' Features:~n"
+sampleCode :+ "' - Multi-line editing~n"
+sampleCode :+ "' - Selection with mouse/keyboard~n"
+sampleCode :+ "' - Copy/Cut/Paste (Ctrl+C/X/V)~n"
+sampleCode :+ "' - Line numbers (optional)~n"
+sampleCode :+ "' - Scroll support~n"
+
+Global textArea:TTextArea = New TTextArea(10, 35, 480, 180, sampleCode)
+textArea.SetShowLineNumbers(True)
+win9.AddChild textArea
+
+' Options panel
+Local chkLineNumbers:TCheckBox = New TCheckBox(10, 225, 150, 20, "Line Numbers", True)
+win9.AddChild chkLineNumbers
+
+Local chkReadOnly:TCheckBox = New TCheckBox(170, 225, 150, 20, "Read Only", False)
+win9.AddChild chkReadOnly
+
+Local lblLineInfo:TLabel = New TLabel(10, 250, 480, 20, "Line: 1  Col: 1  Lines: " + textArea.GetLineCount())
+lblLineInfo.SetColor(150, 150, 180)
+win9.AddChild lblLineInfo
 
 ' =============================================================================
 '                         MESSAGEBOX CALLBACK FUNCTION
@@ -1087,6 +1145,65 @@ While Not AppTerminate()
     If btnShowMsgBox.WasClicked()
         Print "Showing MessageBox..."
         TMessageBox.ShowYesNoCancel("Confirm Action", "Do you want to save your changes?", OnMessageBoxResult)
+    EndIf
+    
+    ' =============================================================================
+    '                    CONTEXT MENU - Right-click handling
+    ' =============================================================================
+    ' Show context menu on right-click (when no modal/messagebox is active)
+    If GuiMouse.Hit(2) And Not TWindow.IsAnyModalActive() And Not TContextMenu.IsAnyMenuActive()
+        contextMenu.Show(GuiMouse.x, GuiMouse.y)
+    EndIf
+    
+    ' Handle context menu item selection
+    If contextMenu.WasItemSelected()
+        Local selectedId:String = contextMenu.GetSelectedId()
+        Print "Context menu: " + selectedId + " selected"
+        
+        Select selectedId
+            Case "cut"
+                lblScreenStatus.SetText("Context Menu: Cut")
+                lblScreenStatus.SetColor(255, 200, 100)
+            Case "copy"
+                lblScreenStatus.SetText("Context Menu: Copy")
+                lblScreenStatus.SetColor(255, 200, 100)
+            Case "paste"
+                lblScreenStatus.SetText("Context Menu: Paste")
+                lblScreenStatus.SetColor(255, 200, 100)
+            Case "selectall"
+                lblScreenStatus.SetText("Context Menu: Select All")
+                lblScreenStatus.SetColor(255, 200, 100)
+            Case "grid"
+                Local item:TMenuItem = contextMenu.GetItem("grid")
+                lblScreenStatus.SetText("Show Grid: " + item.checked)
+                lblScreenStatus.SetColor(100, 200, 255)
+            Case "snap"
+                Local item:TMenuItem = contextMenu.GetItem("snap")
+                lblScreenStatus.SetText("Snap to Grid: " + item.checked)
+                lblScreenStatus.SetColor(100, 200, 255)
+            Case "properties"
+                lblScreenStatus.SetText("Context Menu: Properties")
+                lblScreenStatus.SetColor(200, 150, 255)
+        End Select
+        
+        contextMenu.ClearSelection()
+    EndIf
+
+    ' =============================================================================
+    '                    TEXTAREA DEMO - Event handling
+    ' =============================================================================
+    ' Update line/column info
+    If textArea <> Null
+        lblLineInfo.SetText("Line: " + (textArea.cursorLine + 1) + "  Col: " + (textArea.cursorCol + 1) + "  Lines: " + textArea.GetLineCount())
+        
+        ' Handle checkbox changes
+        If chkLineNumbers.StateChanged()
+            textArea.SetShowLineNumbers(chkLineNumbers.IsChecked())
+        EndIf
+        
+        If chkReadOnly.StateChanged()
+            textArea.SetReadOnlyMode(chkReadOnly.IsChecked())
+        EndIf
     EndIf
 
     ' =============================================================================

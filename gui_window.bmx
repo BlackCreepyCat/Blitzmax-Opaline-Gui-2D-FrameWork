@@ -9,6 +9,7 @@
 ' Global Modal Window Tracking
 ' -----------------------------------------------------------------------------
 Global g_ModalWindow:TWindow = Null  ' Currently active modal window
+Global g_DesktopActive:Int = False   ' True when user clicked on desktop (no window active)
 
 ' -----------------------------------------------------------------------------
 ' Status Bar Section - represents one section of the status bar
@@ -277,10 +278,27 @@ Type TWindow Extends TWidget
     End Method
 
     ' Returns True if this window is the topmost (last in parent's children list)
+    ' Returns False if desktop is active (user clicked on empty area)
     Method IsTopWindow:Int()
+        If g_DesktopActive Then Return False  ' Desktop is active, no window is "top"
         If parent = Null Return False
         Return parent.children.Last() = Self
     End Method
+    
+    ' Static function to deselect all windows (activate desktop)
+    Function DeselectAll()
+        g_DesktopActive = True
+        ' Also unfocus any text input
+        If g_FocusedTextInput <> Null
+            g_FocusedTextInput.focused = False
+            g_FocusedTextInput = Null
+        EndIf
+    End Function
+    
+    ' Static function to check if desktop is active
+    Function IsDesktopActive:Int()
+        Return g_DesktopActive
+    End Function
 
     ' =========================================================================
     '                         DRAWING
@@ -442,6 +460,7 @@ Type TWindow Extends TWidget
                 If Not overButton
                     ' Modal windows stay on top, don't allow other windows to come to front
                     If parent And Not isModal Then parent.BringToFront(Self)
+                    g_DesktopActive = False  ' A window is now active
                     isDragging = True
                     dragOffsetX = lx
                     dragOffsetY = ly
@@ -494,6 +513,7 @@ Type TWindow Extends TWidget
         If draggedWindow = Null And GuiMouse.Hit()
             If lx >= 0 And lx < rect.w And ly >= 0 And ly < rect.h
                 If parent And Not isModal Then parent.BringToFront(Self)
+                g_DesktopActive = False  ' A window is now active
                 Return True
             EndIf
         EndIf

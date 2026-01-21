@@ -128,6 +128,11 @@ Type TContainer Extends TWidget
                 If c.Update(lx, ly) Then Return True
             EndIf
         Next
+        
+        ' PRIORITY 5: Click on empty screen area - deselect all windows (like Windows desktop)
+        If GuiMouse.Hit()
+            TWindow.DeselectAll()
+        EndIf
 
         Return False
     End Method
