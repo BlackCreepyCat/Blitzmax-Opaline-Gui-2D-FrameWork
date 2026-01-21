@@ -252,19 +252,26 @@ Type TWidget Abstract
         ' 1. Update mouse state (position, buttons, wheel)
         GuiMouse.Update()
         
-        ' 2. Handle context menu FIRST (highest priority overlay)
+        ' 2. Auto-initialize TaskBar if not already done
+        If g_TaskBar = Null
+            g_TaskBar = New TTaskBar(GraphicsWidth(), GraphicsHeight())
+        EndIf
+        
+        ' 3. Handle context menu FIRST (highest priority overlay)
         If TContextMenu.UpdateActiveMenu() Then
             ' Context menu consumed the input, skip other updates
             Gui_Root.Draw()
             TComboBox.DrawActivePopup()
             TContextMenu.DrawActiveMenu()
+            ' Draw taskbar on top
+            If g_TaskBar <> Null Then g_TaskBar.Draw()
             Return
         EndIf
         
-        ' 3. Handle active popup (ComboBox dropdown has priority)
+        ' 4. Handle active popup (ComboBox dropdown has priority)
         TComboBox.UpdateActivePopup()
         
-        ' 4. IMPORTANT: Always update focused TextInput/TextArea for keyboard handling
+        ' 5. IMPORTANT: Always update focused TextInput/TextArea for keyboard handling
         ' This ensures keyboard input is processed even if mouse is elsewhere
         If g_FocusedTextInput <> Null And g_FocusedTextInput.focused
             g_FocusedTextInput.HandleKeyboard()
@@ -272,22 +279,35 @@ Type TWidget Abstract
             g_FocusedTextArea.HandleKeyboard()
         EndIf
         
-        ' 5. Update widget tree (input handling, state changes)
-        Gui_Root.Update(GuiMouse.x, GuiMouse.y)
+        ' 6. Update TaskBar (always update for auto-hide timer, but only consume clicks when appropriate)
+        Local taskbarConsumed:Int = False
+        If g_TaskBar <> Null
+            taskbarConsumed = g_TaskBar.Update(GuiMouse.x, GuiMouse.y)
+        EndIf
         
-        ' 6. Draw widget tree
+        ' 7. Update widget tree (input handling, state changes) - only if taskbar didn't consume the click
+        If Not taskbarConsumed
+            Gui_Root.Update(GuiMouse.x, GuiMouse.y)
+        EndIf
+        
+        ' 8. Draw widget tree
         Gui_Root.Draw()
         
-        ' 7. Draw popup overlays LAST (on top of everything)
+        ' 9. Draw TaskBar on top of windows but below popups
+        If g_TaskBar <> Null
+            g_TaskBar.Draw()
+        EndIf
+        
+        ' 10. Draw popup overlays LAST (on top of everything)
         TComboBox.DrawActivePopup()
         
-        ' 8. Draw context menu on top of everything
+        ' 11. Draw context menu on top of everything
         TContextMenu.DrawActiveMenu()
         
-        ' 9. Handle window control buttons (close / min / max) automatically
+        ' 12. Handle window control buttons (close / min / max) automatically
         GuiProcessWindowEvents()
         
-        ' 10. Handle active MessageBox buttons
+        ' 13. Handle active MessageBox buttons
         TMessageBox.UpdateActiveMessageBox()
     End Function
     
@@ -297,6 +317,11 @@ Type TWidget Abstract
         
         ' Update mouse state
         GuiMouse.Update()
+        
+        ' Auto-initialize TaskBar if not already done
+        If g_TaskBar = Null
+            g_TaskBar = New TTaskBar(GraphicsWidth(), GraphicsHeight())
+        EndIf
         
         ' Handle context menu first
         If TContextMenu.UpdateActiveMenu() Then Return
@@ -312,8 +337,16 @@ Type TWidget Abstract
             g_FocusedTextArea.HandleKeyboard()
         EndIf
         
-        ' Update widget tree
-        Gui_Root.Update(GuiMouse.x, GuiMouse.y)
+        ' Update TaskBar (always update for auto-hide timer)
+        Local taskbarConsumed:Int = False
+        If g_TaskBar <> Null
+            taskbarConsumed = g_TaskBar.Update(GuiMouse.x, GuiMouse.y)
+        EndIf
+        
+        ' Update widget tree - only if taskbar didn't consume the click
+        If Not taskbarConsumed
+            Gui_Root.Update(GuiMouse.x, GuiMouse.y)
+        EndIf
         
         ' Handle window control buttons automatically
         GuiProcessWindowEvents()
@@ -327,6 +360,11 @@ Type TWidget Abstract
         
         ' Draw widget tree
         Gui_Root.Draw()
+        
+        ' Draw TaskBar
+        If g_TaskBar <> Null
+            g_TaskBar.Draw()
+        EndIf
         
         ' Draw popup overlays
         TComboBox.DrawActivePopup()

@@ -2,6 +2,7 @@
 '                            CHECKBOX WIDGET
 ' =============================================================================
 ' Toggleable checkbox with label and hover state
+' Supports custom colors that persist across states
 ' =============================================================================
 
 Type TCheckBox Extends TWidget
@@ -12,6 +13,12 @@ Type TCheckBox Extends TWidget
     Field clickedOnMe:Int = False
     Field events:TList = New TList
     Field lastDown:Int = False
+    
+    ' Base colors (user-defined, used as reference for state variations)
+    Field baseR:Int = COLOR_CHECKBOX_NORMAL_R
+    Field baseG:Int = COLOR_CHECKBOX_NORMAL_G
+    Field baseB:Int = COLOR_CHECKBOX_NORMAL_B
+    Field useCustomColor:Int = False
 
     ' Constructor - initializes position, size, label and initial checked state
     Method New(x:Int, y:Int, w:Int, h:Int, Text:String, initialState:Int = False)
@@ -19,10 +26,29 @@ Type TCheckBox Extends TWidget
         caption = Text
         checked = initialState
 
-        red = COLOR_CHECKBOX_NORMAL_R
-        green = COLOR_CHECKBOX_NORMAL_G
-        blue = COLOR_CHECKBOX_NORMAL_B
+        baseR = COLOR_CHECKBOX_NORMAL_R
+        baseG = COLOR_CHECKBOX_NORMAL_G
+        baseB = COLOR_CHECKBOX_NORMAL_B
         
+        red = baseR
+        green = baseG
+        blue = baseB
+    End Method
+    
+    ' Set custom checkbox color
+    Method SetColor(r:Int, g:Int, b:Int)
+        baseR = r
+        baseG = g
+        baseB = b
+        useCustomColor = True
+    End Method
+    
+    ' Reset to default theme colors
+    Method ResetColor()
+        useCustomColor = False
+        baseR = COLOR_CHECKBOX_NORMAL_R
+        baseG = COLOR_CHECKBOX_NORMAL_G
+        baseB = COLOR_CHECKBOX_NORMAL_B
     End Method
 
     Method Draw(px:Int=0, py:Int=0)
@@ -33,30 +59,53 @@ Type TCheckBox Extends TWidget
 
         ' Determine current visual style and color based on state
         Local style:Int = 2
+        Local drawR:Int, drawG:Int, drawB:Int
         
         If pressed
-            red = COLOR_CHECKBOX_PRESSED_R
-            green = COLOR_CHECKBOX_PRESSED_G
-            blue = COLOR_CHECKBOX_PRESSED_B
             style = 3
+            If useCustomColor
+                drawR = Max(0, baseR - 30)
+                drawG = Max(0, baseG - 30)
+                drawB = Max(0, baseB - 30)
+            Else
+                drawR = COLOR_CHECKBOX_PRESSED_R
+                drawG = COLOR_CHECKBOX_PRESSED_G
+                drawB = COLOR_CHECKBOX_PRESSED_B
+            EndIf
         ElseIf hover
-            red = COLOR_CHECKBOX_HOVER_R
-            green = COLOR_CHECKBOX_HOVER_G
-            blue = COLOR_CHECKBOX_HOVER_B
+            If useCustomColor
+                drawR = Min(255, baseR + 20)
+                drawG = Min(255, baseG + 20)
+                drawB = Min(255, baseB + 20)
+            Else
+                drawR = COLOR_CHECKBOX_HOVER_R
+                drawG = COLOR_CHECKBOX_HOVER_G
+                drawB = COLOR_CHECKBOX_HOVER_B
+            EndIf
         Else
-            red = COLOR_CHECKBOX_NORMAL_R
-            green = COLOR_CHECKBOX_NORMAL_G
-            blue = COLOR_CHECKBOX_NORMAL_B
+            If useCustomColor
+                drawR = baseR
+                drawG = baseG
+                drawB = baseB
+            Else
+                drawR = COLOR_CHECKBOX_NORMAL_R
+                drawG = COLOR_CHECKBOX_NORMAL_G
+                drawB = COLOR_CHECKBOX_NORMAL_B
+            EndIf
         EndIf
+        
+        ' Store for external access
+        red = drawR
+        green = drawG
+        blue = drawB
  
         ' Draw the checkbox background/rectangle
-        TWidget.GuiDrawRect(ax, ay, rect.h, rect.h, style, red, green, blue)
+        TWidget.GuiDrawRect(ax, ay, rect.h, rect.h, style, drawR, drawG, drawB)
 
         ' Draw check mark if checked
         If checked
-			TWidget.GuiDrawLine(ax + 4, ay + 4, ax + rect.h - 4, ay + rect.h - 4, 2, COLOR_CHECKBOX_MARK_R, COLOR_CHECKBOX_MARK_G, COLOR_CHECKBOX_MARK_B)
-			TWidget.GuiDrawLine(ax + rect.h - 4, ay + 4, ax + 4, ay + rect.h - 4, 2, COLOR_CHECKBOX_MARK_R, COLOR_CHECKBOX_MARK_G, COLOR_CHECKBOX_MARK_B)
-
+            TWidget.GuiDrawLine(ax + 4, ay + 4, ax + rect.h - 4, ay + rect.h - 4, 2, COLOR_CHECKBOX_MARK_R, COLOR_CHECKBOX_MARK_G, COLOR_CHECKBOX_MARK_B)
+            TWidget.GuiDrawLine(ax + rect.h - 4, ay + 4, ax + 4, ay + rect.h - 4, 2, COLOR_CHECKBOX_MARK_R, COLOR_CHECKBOX_MARK_G, COLOR_CHECKBOX_MARK_B)
         EndIf
 
         ' Draw label text with shadow

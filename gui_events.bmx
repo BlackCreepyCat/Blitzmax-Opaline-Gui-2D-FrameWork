@@ -10,19 +10,34 @@ Function ProcessWindowControlEvents(widget:TWidget)
         
         ' Only handle window control buttons
         If TWindow(widget.parent) And btn.WasClicked()
+            Local win:TWindow = TWindow(widget.parent)
+            
             Select btn.buttonType
                 Case BTN_TYPE_CLOSE
-                    Print "Closing window..."
-
+                    Print "Closing window: " + win.title
+                    
+                    ' Remove from taskbar if minimized
+                    If g_TaskBar <> Null
+                        g_TaskBar.RemoveWindow(win)
+                    EndIf
+                    
                     ' Ferme la fenêtre parente
-                    TWindow(widget.parent).Close()
+                    win.Close()
                     btn.ClearEvents()
                     Return
                 
                 Case BTN_TYPE_MINIMIZE
-                    Print "Minimize clicked (not implemented yet)"
-                    ' Future: TWindow(widget.parent).Minimize()
-                    ' À implémenter : minimisation de la fenêtre
+                    Print "Minimizing window: " + win.title
+                    
+                    ' Minimize to taskbar
+                    If g_TaskBar <> Null
+                        TaskBarMinimizeWindow(win)
+                    Else
+                        ' Fallback: just hide the window
+                        win.Hide()
+                    EndIf
+                    btn.ClearEvents()
+                    Return
                 
                 Case BTN_TYPE_MAXIMIZE
                     Print "Maximize clicked (not implemented yet)"

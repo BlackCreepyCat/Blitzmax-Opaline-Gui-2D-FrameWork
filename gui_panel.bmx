@@ -143,6 +143,13 @@ Type TPanel Extends TWidget
     Method SetShowBackground(show:Int)
         showBackground = show
     End Method
+    
+    ' Set panel background color
+    Method SetColor(r:Int, g:Int, b:Int)
+        red = r
+        green = g
+        blue = b
+    End Method
 
     ' -----------------------------------------------------------------------------
     ' Helper methods for layout / positioning children inside content area

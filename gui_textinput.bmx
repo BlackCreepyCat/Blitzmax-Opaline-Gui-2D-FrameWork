@@ -8,6 +8,10 @@
 ' Global reference to the currently focused TextInput
 Global g_FocusedTextInput:TTextInput = Null
 
+' Key repeat constants
+Const KEY_REPEAT_DELAY:Int = 500      ' Initial delay before repeat starts (ms)
+Const KEY_REPEAT_INTERVAL:Int = 50    ' Interval between repeats (ms)
+
 Type TTextInput Extends TWidget
     Field text:String = ""
     Field cursorPos:Int = 0
@@ -25,6 +29,12 @@ Type TTextInput Extends TWidget
     Field passwordMode:Int = False
     Field placeholder:String = ""
     Field events:TList = New TList
+    
+    ' Key repeat state for arrow keys
+    Field keyRepeatKey:Int = 0           ' Currently repeating key (0 = none)
+    Field keyRepeatStartTime:Int = 0     ' Time when key was first pressed
+    Field keyRepeatLastTime:Int = 0      ' Time of last repeat
+    Field keyRepeatActive:Int = False    ' Is repeat currently active?
     
     ' Background and text colors (customizable but default to theme constants)
     Field bgR:Int = COLOR_TEXTINPUT_BG_R
@@ -200,6 +210,7 @@ Type TTextInput Extends TWidget
     Method HandleKeyboard()
         Local ctrl:Int = KeyDown(KEY_LCONTROL) Or KeyDown(KEY_RCONTROL)
         Local shift:Int = KeyDown(KEY_LSHIFT) Or KeyDown(KEY_RSHIFT)
+        Local currentTime:Int = MilliSecs()
         
         If ctrl And KeyHit(KEY_A)
             SelectAll()
@@ -222,107 +233,126 @@ Type TTextInput Extends TWidget
             Return
         EndIf
         
-        If KeyHit(KEY_BACKSPACE)
-            If HasSelection()
-                DeleteSelection()
-            ElseIf cursorPos > 0
-                text = text[..cursorPos-1] + text[cursorPos..]
-                cursorPos :- 1
-                OnTextChanged()
-            EndIf
-            ResetCursorBlink()
-            Return
-        EndIf
-        
-        If KeyHit(KEY_DELETE)
-            If HasSelection()
-                DeleteSelection()
-            ElseIf cursorPos < text.Length
-                text = text[..cursorPos] + text[cursorPos+1..]
-                OnTextChanged()
-            EndIf
-            ResetCursorBlink()
-            Return
-        EndIf
-        
-        ' Arrow keys navigation with selection support
-        If KeyHit(KEY_LEFT)
-            If shift
-                If selectionStart = -1
-                    selectionStart = cursorPos
-                    selectionEnd = cursorPos
-                EndIf
-                If cursorPos > 0
-                    cursorPos :- 1
-                    selectionEnd = cursorPos
-                EndIf
-            Else
+        ' Backspace with repeat support
+        If KeyDown(KEY_BACKSPACE)
+            If KeyHit(KEY_BACKSPACE) Or CheckKeyRepeat(KEY_BACKSPACE, currentTime)
                 If HasSelection()
-                    cursorPos = MinInt(selectionStart, selectionEnd)
-                    ClearSelection()
+                    DeleteSelection()
                 ElseIf cursorPos > 0
+                    text = text[..cursorPos-1] + text[cursorPos..]
                     cursorPos :- 1
+                    OnTextChanged()
                 EndIf
+                ResetCursorBlink()
             EndIf
-            EnsureCursorVisible()
-            ResetCursorBlink()
             Return
         EndIf
         
-        If KeyHit(KEY_RIGHT)
-            If shift
-                If selectionStart = -1
-                    selectionStart = cursorPos
-                    selectionEnd = cursorPos
-                EndIf
-                If cursorPos < text.Length
-                    cursorPos :+ 1
-                    selectionEnd = cursorPos
-                EndIf
-            Else
+        ' Delete with repeat support
+        If KeyDown(KEY_DELETE)
+            If KeyHit(KEY_DELETE) Or CheckKeyRepeat(KEY_DELETE, currentTime)
                 If HasSelection()
-                    cursorPos = MaxInt(selectionStart, selectionEnd)
-                    ClearSelection()
+                    DeleteSelection()
                 ElseIf cursorPos < text.Length
-                    cursorPos :+ 1
+                    text = text[..cursorPos] + text[cursorPos+1..]
+                    OnTextChanged()
                 EndIf
+                ResetCursorBlink()
             EndIf
-            EnsureCursorVisible()
-            ResetCursorBlink()
             Return
         EndIf
         
-        If KeyHit(KEY_HOME)
-            If shift
-                If selectionStart = -1
-                    selectionStart = cursorPos
-                    selectionEnd = cursorPos
+        ' Arrow keys navigation with selection support AND KEY REPEAT
+        If KeyDown(KEY_LEFT)
+            If KeyHit(KEY_LEFT) Or CheckKeyRepeat(KEY_LEFT, currentTime)
+                If shift
+                    If selectionStart = -1
+                        selectionStart = cursorPos
+                        selectionEnd = cursorPos
+                    EndIf
+                    If cursorPos > 0
+                        cursorPos :- 1
+                        selectionEnd = cursorPos
+                    EndIf
+                Else
+                    If HasSelection()
+                        cursorPos = MinInt(selectionStart, selectionEnd)
+                        ClearSelection()
+                    ElseIf cursorPos > 0
+                        cursorPos :- 1
+                    EndIf
                 EndIf
-                cursorPos = 0
-                selectionEnd = 0
-            Else
-                cursorPos = 0
-                ClearSelection()
+                EnsureCursorVisible()
+                ResetCursorBlink()
             EndIf
-            EnsureCursorVisible()
-            ResetCursorBlink()
             Return
         EndIf
         
-        If KeyHit(KEY_END)
-            If shift
-                If selectionStart = -1
-                    selectionStart = cursorPos
-                    selectionEnd = cursorPos
+        If KeyDown(KEY_RIGHT)
+            If KeyHit(KEY_RIGHT) Or CheckKeyRepeat(KEY_RIGHT, currentTime)
+                If shift
+                    If selectionStart = -1
+                        selectionStart = cursorPos
+                        selectionEnd = cursorPos
+                    EndIf
+                    If cursorPos < text.Length
+                        cursorPos :+ 1
+                        selectionEnd = cursorPos
+                    EndIf
+                Else
+                    If HasSelection()
+                        cursorPos = MaxInt(selectionStart, selectionEnd)
+                        ClearSelection()
+                    ElseIf cursorPos < text.Length
+                        cursorPos :+ 1
+                    EndIf
                 EndIf
-                cursorPos = text.Length
-                selectionEnd = text.Length
-            Else
-                cursorPos = text.Length
-                ClearSelection()
+                EnsureCursorVisible()
+                ResetCursorBlink()
             EndIf
-            EnsureCursorVisible()
-            ResetCursorBlink()
+            Return
+        EndIf
+        
+        ' Reset key repeat if no navigation key is held
+        If Not KeyDown(KEY_LEFT) And Not KeyDown(KEY_RIGHT) And Not KeyDown(KEY_BACKSPACE) And Not KeyDown(KEY_DELETE) And Not KeyDown(KEY_HOME) And Not KeyDown(KEY_END)
+            ResetKeyRepeat()
+        EndIf
+        
+        If KeyDown(KEY_HOME)
+            If KeyHit(KEY_HOME) Or CheckKeyRepeat(KEY_HOME, currentTime)
+                If shift
+                    If selectionStart = -1
+                        selectionStart = cursorPos
+                        selectionEnd = cursorPos
+                    EndIf
+                    cursorPos = 0
+                    selectionEnd = 0
+                Else
+                    cursorPos = 0
+                    ClearSelection()
+                EndIf
+                EnsureCursorVisible()
+                ResetCursorBlink()
+            EndIf
+            Return
+        EndIf
+        
+        If KeyDown(KEY_END)
+            If KeyHit(KEY_END) Or CheckKeyRepeat(KEY_END, currentTime)
+                If shift
+                    If selectionStart = -1
+                        selectionStart = cursorPos
+                        selectionEnd = cursorPos
+                    EndIf
+                    cursorPos = text.Length
+                    selectionEnd = text.Length
+                Else
+                    cursorPos = text.Length
+                    ClearSelection()
+                EndIf
+                EnsureCursorVisible()
+                ResetCursorBlink()
+            EndIf
             Return
         EndIf
         
@@ -555,6 +585,7 @@ Type TTextInput Extends TWidget
             focused = True
             g_FocusedTextInput = Self
             ResetCursorBlink()
+            ResetKeyRepeat()
             
             ' Clear keyboard buffer to avoid ghost characters
             FlushKeys()
@@ -587,6 +618,46 @@ Type TTextInput Extends TWidget
     ' Clears all pending events for this widget
     Method ClearEvents()
         events.Clear()
+    End Method
+    
+    ' =========================================================================
+    '                         KEY REPEAT METHODS
+    ' =========================================================================
+    
+    ' Check if a key should repeat (returns True if action should be performed)
+    Method CheckKeyRepeat:Int(key:Int, currentTime:Int)
+        ' If this is a new key, start tracking it
+        If keyRepeatKey <> key
+            keyRepeatKey = key
+            keyRepeatStartTime = currentTime
+            keyRepeatLastTime = currentTime
+            keyRepeatActive = False
+            Return False  ' First press handled by KeyHit
+        EndIf
+        
+        ' Check if we're past the initial delay
+        Local elapsed:Int = currentTime - keyRepeatStartTime
+        If elapsed < KEY_REPEAT_DELAY
+            Return False  ' Still in initial delay
+        EndIf
+        
+        ' We're in repeat mode - check if enough time has passed since last repeat
+        Local timeSinceLastRepeat:Int = currentTime - keyRepeatLastTime
+        If timeSinceLastRepeat >= KEY_REPEAT_INTERVAL
+            keyRepeatLastTime = currentTime
+            keyRepeatActive = True
+            Return True  ' Trigger repeat action
+        EndIf
+        
+        Return False
+    End Method
+    
+    ' Reset key repeat state (call when key is released or focus lost)
+    Method ResetKeyRepeat()
+        keyRepeatKey = 0
+        keyRepeatStartTime = 0
+        keyRepeatLastTime = 0
+        keyRepeatActive = False
     End Method
     
     ' Helper: returns the smaller of two integers

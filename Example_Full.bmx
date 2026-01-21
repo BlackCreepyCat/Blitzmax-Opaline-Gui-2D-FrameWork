@@ -93,20 +93,23 @@ root.AddChild winModal  ' Modal window added last (will be on top)
 '                    SCREEN WIDGETS (directly on root, not in a window)
 ' =============================================================================
 ' These widgets are placed directly on the screen, behind all windows
-
 Global lblScreenInfo:TLabel = New TLabel(10, 60, 400, 20, "Screen widgets (not in any window):")
 lblScreenInfo.SetColor(255, 200, 100)
 root.AddChild lblScreenInfo
 
-Global btnScreenTest:TButton = New TButton(10, 85, 180, 35, "Screen Button")
-root.AddChild btnScreenTest
-
-Global btnShowMsgBox:TButton = New TButton(200, 85, 180, 35, "Show MessageBox")
-root.AddChild btnShowMsgBox
-
 Global lblScreenStatus:TLabel = New TLabel(10, 130, 400, 20, "Click the buttons above! Right-click anywhere for context menu.")
 lblScreenStatus.SetColor(150, 255, 150)
 root.AddChild lblScreenStatus
+
+Global btnScreenTest:TButton = New TButton(15, 85, 120, 35, "Screen Button")
+root.AddChild btnScreenTest
+
+Global btnShowMsgBox:TButton = New TButton(15, 175, 120, 35, "Show MessageBox")
+root.AddChild btnShowMsgBox
+
+
+
+
 
 ' =============================================================================
 '                         CONTEXT MENU SETUP

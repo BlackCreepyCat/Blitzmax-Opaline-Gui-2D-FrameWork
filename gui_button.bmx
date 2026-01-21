@@ -3,6 +3,7 @@
 ' =============================================================================
 ' Clickable button with hover and pressed states
 ' Supports both normal buttons and special title bar buttons (close, min, max)
+' Supports custom colors that persist across states
 ' =============================================================================
 
 Type TButton Extends TWidget
@@ -15,6 +16,12 @@ Type TButton Extends TWidget
     Field events:TList = New TList
     Field clickedOnMe:Int = False
     Field isTitleButton:Int = False
+    
+    ' Base colors (user-defined, used as reference for state variations)
+    Field baseR:Int = COLOR_BUTTON_NORMAL_R
+    Field baseG:Int = COLOR_BUTTON_NORMAL_G
+    Field baseB:Int = COLOR_BUTTON_NORMAL_B
+    Field useCustomColor:Int = False  ' True if user set custom colors
 
     ' Constructor
     Method New(x:Int, y:Int, w:Int, h:Int, Text:String)
@@ -22,10 +29,29 @@ Type TButton Extends TWidget
         caption = Text
 
         ' Default color = normal state
-        red = COLOR_BUTTON_NORMAL_R
-        green = COLOR_BUTTON_NORMAL_G
-        blue = COLOR_BUTTON_NORMAL_B
+        baseR = COLOR_BUTTON_NORMAL_R
+        baseG = COLOR_BUTTON_NORMAL_G
+        baseB = COLOR_BUTTON_NORMAL_B
         
+        red = baseR
+        green = baseG
+        blue = baseB
+    End Method
+    
+    ' Set custom button color (this color will be used as base for all states)
+    Method SetColor(r:Int, g:Int, b:Int)
+        baseR = r
+        baseG = g
+        baseB = b
+        useCustomColor = True
+    End Method
+    
+    ' Reset to default theme colors
+    Method ResetColor()
+        useCustomColor = False
+        baseR = COLOR_BUTTON_NORMAL_R
+        baseG = COLOR_BUTTON_NORMAL_G
+        baseB = COLOR_BUTTON_NORMAL_B
     End Method
 
     Method Draw(px:Int=0, py:Int=0)
@@ -35,59 +61,76 @@ Type TButton Extends TWidget
         Local ay:Int = py + rect.y
 
         Local style:Int = 2
+        Local drawR:Int, drawG:Int, drawB:Int
         
         ' Determine colors and style based on state
         If pressed
-
-            If buttonType = BTN_TYPE_CLOSE
-                red = COLOR_BUTTON_CLOSE_PRESSED_R
-                green = COLOR_BUTTON_CLOSE_PRESSED_G
-                blue = COLOR_BUTTON_CLOSE_PRESSED_B
+            style = 3   ' Pressed/clicked emboss style
+            
+            If useCustomColor
+                ' Darken custom color for pressed state
+                drawR = Max(0, baseR - 30)
+                drawG = Max(0, baseG - 30)
+                drawB = Max(0, baseB - 30)
+            ElseIf buttonType = BTN_TYPE_CLOSE
+                drawR = COLOR_BUTTON_CLOSE_PRESSED_R
+                drawG = COLOR_BUTTON_CLOSE_PRESSED_G
+                drawB = COLOR_BUTTON_CLOSE_PRESSED_B
             Else
-                red = COLOR_BUTTON_PRESSED_R  
-                green = COLOR_BUTTON_PRESSED_G    
-                blue = COLOR_BUTTON_PRESSED_B  
+                drawR = COLOR_BUTTON_PRESSED_R  
+                drawG = COLOR_BUTTON_PRESSED_G    
+                drawB = COLOR_BUTTON_PRESSED_B  
             EndIf
 
-            style = 3   ' Pressed/clicked emboss style
-
         ElseIf hover
-
-            If buttonType = BTN_TYPE_CLOSE
-                red = COLOR_BUTTON_CLOSE_HOVER_R
-                green = COLOR_BUTTON_CLOSE_HOVER_G
-                blue = COLOR_BUTTON_CLOSE_HOVER_B
+            If useCustomColor
+                ' Lighten custom color for hover state
+                drawR = Min(255, baseR + 20)
+                drawG = Min(255, baseG + 20)
+                drawB = Min(255, baseB + 20)
+            ElseIf buttonType = BTN_TYPE_CLOSE
+                drawR = COLOR_BUTTON_CLOSE_HOVER_R
+                drawG = COLOR_BUTTON_CLOSE_HOVER_G
+                drawB = COLOR_BUTTON_CLOSE_HOVER_B
             Else
-				red = COLOR_BUTTON_HOVER_R
-				green = COLOR_BUTTON_HOVER_G
-				blue = COLOR_BUTTON_HOVER_B
+                drawR = COLOR_BUTTON_HOVER_R
+                drawG = COLOR_BUTTON_HOVER_G
+                drawB = COLOR_BUTTON_HOVER_B
             EndIf
 
         Else
-
-            If buttonType = BTN_TYPE_CLOSE
-                red = COLOR_BUTTON_CLOSE_NORMAL_R
-                green = COLOR_BUTTON_CLOSE_NORMAL_G
-                blue = COLOR_BUTTON_CLOSE_NORMAL_B
+            ' Normal state
+            If useCustomColor
+                drawR = baseR
+                drawG = baseG
+                drawB = baseB
+            ElseIf buttonType = BTN_TYPE_CLOSE
+                drawR = COLOR_BUTTON_CLOSE_NORMAL_R
+                drawG = COLOR_BUTTON_CLOSE_NORMAL_G
+                drawB = COLOR_BUTTON_CLOSE_NORMAL_B
             Else
-				red = COLOR_BUTTON_NORMAL_R
-				green = COLOR_BUTTON_NORMAL_G
-				blue = COLOR_BUTTON_NORMAL_B
+                drawR = COLOR_BUTTON_NORMAL_R
+                drawG = COLOR_BUTTON_NORMAL_G
+                drawB = COLOR_BUTTON_NORMAL_B
             EndIf
-
         EndIf
 
+        ' Store for external access if needed
+        red = drawR
+        green = drawG
+        blue = drawB
+
         ' Draw button background with current style and color and restrict the viewport
-        TWidget.GuiDrawRect(ax, ay, rect.w, rect.h, style, red, green, blue)
-		TWidget.GuiSetViewport(ax + 2, ay, rect.w - 4, rect.h)
+        TWidget.GuiDrawRect(ax, ay, rect.w, rect.h, style, drawR, drawG, drawB)
+        TWidget.GuiSetViewport(ax + 2, ay, rect.w - 4, rect.h)
 
         ' Draw centered text with shadow
         Local textX:Int = ax + (rect.w - TextWidth(caption)) / 2
         Local textY:Int = ay + (rect.h - TextHeight(caption)) / 2 + 2
 
         TWidget.GuiDrawText(textX, textY, caption, TEXT_STYLE_SHADOW, COLOR_BUTTON_TEXT_R, COLOR_BUTTON_TEXT_G, COLOR_BUTTON_TEXT_B)
-		TWidget.GuiSetViewport(0, 0, GraphicsWidth(), GraphicsHeight()) ' Reset viewport
-		
+        TWidget.GuiSetViewport(0, 0, GraphicsWidth(), GraphicsHeight()) ' Reset viewport
+        
         ' Draw children (if any)
         For Local c:TWidget = EachIn children
             c.Draw(ax, ay)

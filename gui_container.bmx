@@ -111,10 +111,12 @@ Type TContainer Extends TWidget
             rev.AddFirst(c)
         Next
         
-        ' Check windows first - find if mouse is over any window
+        ' Check windows first - find if mouse is over any VISIBLE window
         For Local c:TWidget = EachIn rev
             If TWindow(c)
                 Local win:TWindow = TWindow(c)
+                ' Skip invisible (minimized) windows
+                If Not win.visible Then Continue
                 ' Mouse is over this window?
                 If mx >= win.rect.x And mx < win.rect.x + win.rect.w And my >= win.rect.y And my < win.rect.y + win.rect.h
                     ' Yes - this window gets the input
@@ -126,6 +128,8 @@ Type TContainer Extends TWidget
         ' PRIORITY 4: Mouse is NOT over any window - check screen widgets
         For Local c:TWidget = EachIn rev
             If Not TWindow(c)
+                ' Skip invisible widgets
+                If Not c.visible Then Continue
                 ' For screen widgets, pass absolute mouse coords
                 ' The widget's Update expects coords relative to parent (which is root at 0,0)
                 Local lx:Int = mx - c.rect.x

@@ -55,6 +55,25 @@ Const COMBOBOX_ITEM_HEIGHT:Int = 24
 ' =============================================================================
 
 ' -----------------------------------------------------------------------------
+' TaskBar Constants
+' -----------------------------------------------------------------------------
+Const TASKBAR_HEIGHT:Int = 40
+Const TASKBAR_BUTTON_MIN_WIDTH:Int = 80
+Const TASKBAR_BUTTON_MAX_WIDTH:Int = 180
+Const TASKBAR_BUTTON_HEIGHT:Int = 30
+Const TASKBAR_BUTTON_MARGIN:Int = 5
+Const TASKBAR_CLOCK_WIDTH:Int = 70
+
+' TaskBar Colors
+Const COLOR_TASKBAR_BG_R:Int = 35
+Const COLOR_TASKBAR_BG_G:Int = 35
+Const COLOR_TASKBAR_BG_B:Int = 50
+
+Const COLOR_TASKBAR_CLOCK_R:Int = 200
+Const COLOR_TASKBAR_CLOCK_G:Int = 220
+Const COLOR_TASKBAR_CLOCK_B:Int = 255
+
+' -----------------------------------------------------------------------------
 ' Window Colors
 ' -----------------------------------------------------------------------------
 Const COLOR_TITLEBAR_ACTIVE_R:Int = 90

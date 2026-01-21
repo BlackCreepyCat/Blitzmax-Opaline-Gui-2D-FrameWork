@@ -2,6 +2,7 @@
 '                          RADIO BUTTON WIDGET
 ' =============================================================================
 ' Mutually exclusive selection button with group support
+' Supports custom colors for the selection indicator
 ' =============================================================================
 
 Type TRadio Extends TWidget
@@ -25,6 +26,20 @@ Type TRadio Extends TWidget
         ' Automatically add this radio button to the group if provided
         If group Then group.AddLast(Self)
     End Method
+    
+    ' Set custom selection indicator color
+    Method SetColor(r:Int, g:Int, b:Int)
+        red = r
+        green = g
+        blue = b
+    End Method
+    
+    ' Reset to default theme color
+    Method ResetColor()
+        red = COLOR_RADIO_SELECTED_R
+        green = COLOR_RADIO_SELECTED_G
+        blue = COLOR_RADIO_SELECTED_B
+    End Method
 
     Method Draw(px:Int=0, py:Int=0)
         If Not visible Then Return
@@ -42,7 +57,7 @@ Type TRadio Extends TWidget
 
         ' Draw filled circle if selected
         If selected
-            TWidget.GuiDrawOval(ax + 4, ay + 4, rect.w - 8, rect.h - 8, 1, red,green,blue)
+            TWidget.GuiDrawOval(ax + 4, ay + 4, rect.w - 8, rect.h - 8, 1, red, green, blue)
         EndIf
 
         ' Draw label text with shadow

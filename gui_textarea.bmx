@@ -7,6 +7,10 @@
 
 Global g_FocusedTextArea:TTextArea = Null
 
+' Key repeat constants for TextArea (same as TextInput)
+Const TEXTAREA_KEY_REPEAT_DELAY:Int = 500      ' Initial delay before repeat starts (ms)
+Const TEXTAREA_KEY_REPEAT_INTERVAL:Int = 50    ' Interval between repeats (ms)
+
 Type TTextArea Extends TWidget
     ' Text storage - each line is a separate string
     Field lines:TList = New TList
@@ -43,6 +47,12 @@ Type TTextArea Extends TWidget
     Field draggingVScroll:Int = False
     Field draggingHScroll:Int = False
     Field scrollDragOffset:Int = 0
+    
+    ' Key repeat state for arrow keys
+    Field keyRepeatKey:Int = 0           ' Currently repeating key (0 = none)
+    Field keyRepeatStartTime:Int = 0     ' Time when key was first pressed
+    Field keyRepeatLastTime:Int = 0      ' Time of last repeat
+    Field keyRepeatActive:Int = False    ' Is repeat currently active?
     
     ' Options
     Field isReadOnly:Int = False
@@ -567,151 +577,178 @@ Type TTextArea Extends TWidget
             Return
         EndIf
         
-        ' Arrow keys
-        If KeyHit(KEY_UP)
-            If Not shift Then ClearSelection()
-            If cursorLine > 0
-                If shift Then StartSelection()
-                cursorLine :- 1
-                cursorCol = Min(cursorCol, GetLine(cursorLine).Length)
-                If shift Then UpdateSelection()
-            EndIf
-            EnsureCursorVisible()
-            ResetCursorBlink()
-            Return
-        EndIf
+        Local currentTime:Int = MilliSecs()
         
-        If KeyHit(KEY_DOWN)
-            If Not shift Then ClearSelection()
-            If cursorLine < lines.Count() - 1
-                If shift Then StartSelection()
-                cursorLine :+ 1
-                cursorCol = Min(cursorCol, GetLine(cursorLine).Length)
-                If shift Then UpdateSelection()
-            EndIf
-            EnsureCursorVisible()
-            ResetCursorBlink()
-            Return
-        EndIf
-        
-        If KeyHit(KEY_LEFT)
-            If shift Then StartSelection() Else If HasSelection() Then ClearSelection()
-            
-            If cursorCol > 0
-                cursorCol :- 1
-            ElseIf cursorLine > 0
-                cursorLine :- 1
-                cursorCol = GetLine(cursorLine).Length
-            EndIf
-            
-            If shift Then UpdateSelection()
-            EnsureCursorVisible()
-            ResetCursorBlink()
-            Return
-        EndIf
-        
-        If KeyHit(KEY_RIGHT)
-            If shift Then StartSelection() Else If HasSelection() Then ClearSelection()
-            
-            Local lineLen:Int = GetLine(cursorLine).Length
-            If cursorCol < lineLen
-                cursorCol :+ 1
-            ElseIf cursorLine < lines.Count() - 1
-                cursorLine :+ 1
-                cursorCol = 0
-            EndIf
-            
-            If shift Then UpdateSelection()
-            EnsureCursorVisible()
-            ResetCursorBlink()
-            Return
-        EndIf
-        
-        ' Home/End
-        If KeyHit(KEY_HOME)
-            If shift Then StartSelection() Else ClearSelection()
-            If ctrl
-                cursorLine = 0
-            EndIf
-            cursorCol = 0
-            If shift Then UpdateSelection()
-            EnsureCursorVisible()
-            ResetCursorBlink()
-            Return
-        EndIf
-        
-        If KeyHit(KEY_END)
-            If shift Then StartSelection() Else ClearSelection()
-            If ctrl
-                cursorLine = lines.Count() - 1
-            EndIf
-            cursorCol = GetLine(cursorLine).Length
-            If shift Then UpdateSelection()
-            EnsureCursorVisible()
-            ResetCursorBlink()
-            Return
-        EndIf
-        
-        ' Page Up/Down
-        If KeyHit(KEY_PAGEUP)
-            If shift Then StartSelection() Else ClearSelection()
-            cursorLine = Max(0, cursorLine - visibleLines)
-            cursorCol = Min(cursorCol, GetLine(cursorLine).Length)
-            If shift Then UpdateSelection()
-            EnsureCursorVisible()
-            ResetCursorBlink()
-            Return
-        EndIf
-        
-        If KeyHit(KEY_PAGEDOWN)
-            If shift Then StartSelection() Else ClearSelection()
-            cursorLine = Min(lines.Count() - 1, cursorLine + visibleLines)
-            cursorCol = Min(cursorCol, GetLine(cursorLine).Length)
-            If shift Then UpdateSelection()
-            EnsureCursorVisible()
-            ResetCursorBlink()
-            Return
-        EndIf
-        
-        ' Backspace
-        If KeyHit(KEY_BACKSPACE) And Not isReadOnly
-            If HasSelection()
-                DeleteSelection()
-            ElseIf cursorCol > 0
-                Local line:String = GetLine(cursorLine)
-                SetLine(cursorLine, line[..cursorCol-1] + line[cursorCol..])
-                cursorCol :- 1
-            ElseIf cursorLine > 0
-                Local prevLine:String = GetLine(cursorLine - 1)
-                Local currentLine:String = GetLine(cursorLine)
-                cursorCol = prevLine.Length
-                SetLine(cursorLine - 1, prevLine + currentLine)
-                RemoveLineAt(cursorLine)
-                cursorLine :- 1
-            EndIf
-            EnsureCursorVisible()
-            ResetCursorBlink()
-            AfterTextEdit()
-            Return
-        EndIf
-        
-        ' Delete
-        If KeyHit(KEY_DELETE) And Not isReadOnly
-            If HasSelection()
-                DeleteSelection()
-            Else
-                Local line:String = GetLine(cursorLine)
-                If cursorCol < line.Length
-                    SetLine(cursorLine, line[..cursorCol] + line[cursorCol+1..])
-                ElseIf cursorLine < lines.Count() - 1
-                    Local nextLine:String = GetLine(cursorLine + 1)
-                    SetLine(cursorLine, line + nextLine)
-                    RemoveLineAt(cursorLine + 1)
+        ' Arrow keys with KEY REPEAT support
+        If KeyDown(KEY_UP)
+            If KeyHit(KEY_UP) Or CheckKeyRepeat(KEY_UP, currentTime)
+                If Not shift Then ClearSelection()
+                If cursorLine > 0
+                    If shift Then StartSelection()
+                    cursorLine :- 1
+                    cursorCol = Min(cursorCol, GetLine(cursorLine).Length)
+                    If shift Then UpdateSelection()
                 EndIf
+                EnsureCursorVisible()
+                ResetCursorBlink()
+            EndIf
+            Return
+        EndIf
+        
+        If KeyDown(KEY_DOWN)
+            If KeyHit(KEY_DOWN) Or CheckKeyRepeat(KEY_DOWN, currentTime)
+                If Not shift Then ClearSelection()
+                If cursorLine < lines.Count() - 1
+                    If shift Then StartSelection()
+                    cursorLine :+ 1
+                    cursorCol = Min(cursorCol, GetLine(cursorLine).Length)
+                    If shift Then UpdateSelection()
+                EndIf
+                EnsureCursorVisible()
+                ResetCursorBlink()
+            EndIf
+            Return
+        EndIf
+        
+        If KeyDown(KEY_LEFT)
+            If KeyHit(KEY_LEFT) Or CheckKeyRepeat(KEY_LEFT, currentTime)
+                If shift Then StartSelection() Else If HasSelection() Then ClearSelection()
+                
+                If cursorCol > 0
+                    cursorCol :- 1
+                ElseIf cursorLine > 0
+                    cursorLine :- 1
+                    cursorCol = GetLine(cursorLine).Length
+                EndIf
+                
+                If shift Then UpdateSelection()
+                EnsureCursorVisible()
+                ResetCursorBlink()
+            EndIf
+            Return
+        EndIf
+        
+        If KeyDown(KEY_RIGHT)
+            If KeyHit(KEY_RIGHT) Or CheckKeyRepeat(KEY_RIGHT, currentTime)
+                If shift Then StartSelection() Else If HasSelection() Then ClearSelection()
+                
+                Local lineLen:Int = GetLine(cursorLine).Length
+                If cursorCol < lineLen
+                    cursorCol :+ 1
+                ElseIf cursorLine < lines.Count() - 1
+                    cursorLine :+ 1
+                    cursorCol = 0
+                EndIf
+                
+                If shift Then UpdateSelection()
+                EnsureCursorVisible()
+                ResetCursorBlink()
+            EndIf
+            Return
+        EndIf
+        
+        ' Reset key repeat if no navigation key is held
+        If Not KeyDown(KEY_LEFT) And Not KeyDown(KEY_RIGHT) And Not KeyDown(KEY_UP) And Not KeyDown(KEY_DOWN) And Not KeyDown(KEY_BACKSPACE) And Not KeyDown(KEY_DELETE) And Not KeyDown(KEY_HOME) And Not KeyDown(KEY_END) And Not KeyDown(KEY_PAGEUP) And Not KeyDown(KEY_PAGEDOWN)
+            ResetKeyRepeat()
+        EndIf
+        
+        ' Home/End with repeat
+        If KeyDown(KEY_HOME)
+            If KeyHit(KEY_HOME) Or CheckKeyRepeat(KEY_HOME, currentTime)
+                If shift Then StartSelection() Else ClearSelection()
+                If ctrl
+                    cursorLine = 0
+                EndIf
+                cursorCol = 0
+                If shift Then UpdateSelection()
+                EnsureCursorVisible()
+                ResetCursorBlink()
+            EndIf
+            Return
+        EndIf
+        
+        If KeyDown(KEY_END)
+            If KeyHit(KEY_END) Or CheckKeyRepeat(KEY_END, currentTime)
+                If shift Then StartSelection() Else ClearSelection()
+                If ctrl
+                    cursorLine = lines.Count() - 1
+                EndIf
+                cursorCol = GetLine(cursorLine).Length
+                If shift Then UpdateSelection()
+                EnsureCursorVisible()
+                ResetCursorBlink()
+            EndIf
+            Return
+        EndIf
+        
+        ' Page Up/Down with repeat
+        If KeyDown(KEY_PAGEUP)
+            If KeyHit(KEY_PAGEUP) Or CheckKeyRepeat(KEY_PAGEUP, currentTime)
+                If shift Then StartSelection() Else ClearSelection()
+                cursorLine = Max(0, cursorLine - visibleLines)
+                cursorCol = Min(cursorCol, GetLine(cursorLine).Length)
+                If shift Then UpdateSelection()
+                EnsureCursorVisible()
+                ResetCursorBlink()
+            EndIf
+            Return
+        EndIf
+        
+        If KeyDown(KEY_PAGEDOWN)
+            If KeyHit(KEY_PAGEDOWN) Or CheckKeyRepeat(KEY_PAGEDOWN, currentTime)
+                If shift Then StartSelection() Else ClearSelection()
+                cursorLine = Min(lines.Count() - 1, cursorLine + visibleLines)
+                cursorCol = Min(cursorCol, GetLine(cursorLine).Length)
+                If shift Then UpdateSelection()
             EndIf
             EnsureCursorVisible()
             ResetCursorBlink()
-            AfterTextEdit()
+            Return
+        EndIf
+        
+        ' Backspace with repeat support
+        If KeyDown(KEY_BACKSPACE) And Not isReadOnly
+            If KeyHit(KEY_BACKSPACE) Or CheckKeyRepeat(KEY_BACKSPACE, currentTime)
+                If HasSelection()
+                    DeleteSelection()
+                ElseIf cursorCol > 0
+                    Local line:String = GetLine(cursorLine)
+                    SetLine(cursorLine, line[..cursorCol-1] + line[cursorCol..])
+                    cursorCol :- 1
+                ElseIf cursorLine > 0
+                    Local prevLine:String = GetLine(cursorLine - 1)
+                    Local currentLine:String = GetLine(cursorLine)
+                    cursorCol = prevLine.Length
+                    SetLine(cursorLine - 1, prevLine + currentLine)
+                    RemoveLineAt(cursorLine)
+                    cursorLine :- 1
+                EndIf
+                EnsureCursorVisible()
+                ResetCursorBlink()
+                AfterTextEdit()
+            EndIf
+            Return
+        EndIf
+        
+        ' Delete with repeat support
+        If KeyDown(KEY_DELETE) And Not isReadOnly
+            If KeyHit(KEY_DELETE) Or CheckKeyRepeat(KEY_DELETE, currentTime)
+                If HasSelection()
+                    DeleteSelection()
+                Else
+                    Local line:String = GetLine(cursorLine)
+                    If cursorCol < line.Length
+                        SetLine(cursorLine, line[..cursorCol] + line[cursorCol+1..])
+                    ElseIf cursorLine < lines.Count() - 1
+                        Local nextLine:String = GetLine(cursorLine + 1)
+                        SetLine(cursorLine, line + nextLine)
+                        RemoveLineAt(cursorLine + 1)
+                    EndIf
+                EndIf
+                EnsureCursorVisible()
+                ResetCursorBlink()
+                AfterTextEdit()
+            EndIf
             Return
         EndIf
         
@@ -1204,5 +1241,45 @@ Type TTextArea Extends TWidget
     
     Method SetShowVScrollbar(show:Int)
         showVScrollbar = show
+    End Method
+    
+    ' =========================================================================
+    '                         KEY REPEAT METHODS
+    ' =========================================================================
+    
+    ' Check if a key should repeat (returns True if action should be performed)
+    Method CheckKeyRepeat:Int(key:Int, currentTime:Int)
+        ' If this is a new key, start tracking it
+        If keyRepeatKey <> key
+            keyRepeatKey = key
+            keyRepeatStartTime = currentTime
+            keyRepeatLastTime = currentTime
+            keyRepeatActive = False
+            Return False  ' First press handled by KeyHit
+        EndIf
+        
+        ' Check if we're past the initial delay
+        Local elapsed:Int = currentTime - keyRepeatStartTime
+        If elapsed < TEXTAREA_KEY_REPEAT_DELAY
+            Return False  ' Still in initial delay
+        EndIf
+        
+        ' We're in repeat mode - check if enough time has passed since last repeat
+        Local timeSinceLastRepeat:Int = currentTime - keyRepeatLastTime
+        If timeSinceLastRepeat >= TEXTAREA_KEY_REPEAT_INTERVAL
+            keyRepeatLastTime = currentTime
+            keyRepeatActive = True
+            Return True  ' Trigger repeat action
+        EndIf
+        
+        Return False
+    End Method
+    
+    ' Reset key repeat state (call when key is released or focus lost)
+    Method ResetKeyRepeat()
+        keyRepeatKey = 0
+        keyRepeatStartTime = 0
+        keyRepeatLastTime = 0
+        keyRepeatActive = False
     End Method
 End Type

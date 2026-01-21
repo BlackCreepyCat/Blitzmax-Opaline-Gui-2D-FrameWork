@@ -18,5 +18,7 @@ Include "gui_tabber.bmx"
 Include "gui_imagebox.bmx"
 Include "gui_messagebox.bmx"
 Include "gui_contextmenu.bmx"
+Include "gui_taskbar.bmx"
 Include "gui_events.bmx"
+
 
