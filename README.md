@@ -14,6 +14,11 @@ What you need to see? Just Blitzmax! (it's free/opensource) :
 - https://blitzmax.org/
 - https://github.com/bmx-ng
 
+You want to use VS Code? You can!
+---------------------------------
+- https://code.visualstudio.com/download
+- https://marketplace.visualstudio.com/items?itemName=Hezkore.blitzmax
+
 Description:
 ------------
 Opaline UI is a low-level kernel for creating a graphical interface from scratch. I believe it can be easily converted to other languages, only if they allow linked lists. No complex external dependencies (it's self-contained). It need also includes some basic graphical functions like:
