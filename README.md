@@ -27,6 +27,10 @@ Opaline UI is a low-level kernel for creating a graphical interface from scratch
 
 - Text/Box/Rect/Line/Oval/Circle/SetViewport/StringWidth (see the class: gui_core.bmx).
 
+Example with the gui_core.bmx to C++ class convertion and SDL:
+<img width="769" height="951" alt="image" src="https://github.com/user-attachments/assets/bf825650-8f07-4f63-8436-756594d7c10a" />
+
+
 Maybe compatible or can be converted for:
 -----------------------------------------
 - FreeBasic?
