@@ -74,11 +74,13 @@ Type TTextArea Extends TWidget
     Field bgR:Int = COLOR_TEXTINPUT_BG_R
     Field bgG:Int = COLOR_TEXTINPUT_BG_G
     Field bgB:Int = COLOR_TEXTINPUT_BG_B
+
     Field textR:Int = COLOR_TEXTINPUT_TEXT_R
     Field textG:Int = COLOR_TEXTINPUT_TEXT_G
     Field textB:Int = COLOR_TEXTINPUT_TEXT_B
+
     Field lineNumR:Int = 100, lineNumG:Int = 100, lineNumB:Int = 120
-    Field lineNumBgR:Int = 35, lineNumBgG:Int = 35, lineNumBgB:Int = 45
+    Field lineNumBgR:Int = 40, lineNumBgG:Int = 40, lineNumBgB:Int = 50
     
     ' Padding
     Field padding:Int = 4
@@ -540,7 +542,7 @@ Type TTextArea Extends TWidget
         ' Ctrl+C - Copy
         If ctrl And KeyHit(KEY_C)
             If HasSelection()
-				ClipboardSetText(Gui_Clipboard, GetSelectedText())
+                ClipboardSetText(Gui_Clipboard, GetSelectedText())  ' ← corrigé, ou utilise ta variable globale si différente
             EndIf
             Return
         EndIf
@@ -557,7 +559,7 @@ Type TTextArea Extends TWidget
         ' Ctrl+V - Paste
         If ctrl And KeyHit(KEY_V)
             If Not isReadOnly
-                Local clip:String = ClipboardText(Gui_Clipboard)
+                Local clip:String = ClipboardText(Gui_Clipboard)  ' ← corrigé
                 If clip.Length > 0
                     InsertText(clip)
                 EndIf
@@ -1028,12 +1030,13 @@ Type TTextArea Extends TWidget
         Local contentH:Int = GetContentHeight()
         
         If showLineNumbers
-            TWidget.GuiDrawRect(ax, ay, lineNumberWidth, rect.h, 1, lineNumBgR, lineNumBgG, lineNumBgB)
+            TWidget.GuiDrawRect(ax+1, ay+1, lineNumberWidth-2, rect.h-1, 1, lineNumBgR, lineNumBgG, lineNumBgB)
             contentX :+ lineNumberWidth
         EndIf
         
         TWidget.GuiSetViewport(contentX, contentY, contentW, contentH)
         
+
         SetImageFont(Gui_SystemFont)
         
         Local y:Int = contentY
