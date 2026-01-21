@@ -36,6 +36,7 @@ Include "gui_listbox.bmx"
 Include "gui_combobox.bmx"
 Include "gui_tabber.bmx"
 Include "gui_imagebox.bmx"
+Include "gui_messagebox.bmx"
 Include "gui_events.bmx"
 
 ' =============================================================================
@@ -97,6 +98,51 @@ root.AddChild win6
 root.AddChild win7
 root.AddChild win8
 root.AddChild winModal  ' Modal window added last (will be on top)
+
+' =============================================================================
+'                    SCREEN WIDGETS (directly on root, not in a window)
+' =============================================================================
+' These widgets are placed directly on the screen, behind all windows
+
+Global lblScreenInfo:TLabel = New TLabel(10, 60, 400, 20, "Screen widgets (not in any window):")
+lblScreenInfo.SetColor(255, 200, 100)
+root.AddChild lblScreenInfo
+
+Global btnScreenTest:TButton = New TButton(10, 85, 180, 35, "Screen Button")
+root.AddChild btnScreenTest
+
+Global btnShowMsgBox:TButton = New TButton(200, 85, 180, 35, "Show MessageBox")
+root.AddChild btnShowMsgBox
+
+Global lblScreenStatus:TLabel = New TLabel(10, 130, 400, 20, "Click the buttons above!")
+lblScreenStatus.SetColor(150, 255, 150)
+root.AddChild lblScreenStatus
+
+' =============================================================================
+'                         MESSAGEBOX CALLBACK FUNCTION
+' =============================================================================
+' This function is called when a MessageBox button is clicked
+Function OnMessageBoxResult:Int(result:Int)
+    Select result
+        Case MSGBOX_RESULT_OK
+            Print "MessageBox: OK clicked"
+            lblScreenStatus.SetText("MessageBox result: OK")
+            lblScreenStatus.SetColor(100, 255, 100)
+        Case MSGBOX_RESULT_CANCEL
+            Print "MessageBox: Cancel clicked"
+            lblScreenStatus.SetText("MessageBox result: CANCEL")
+            lblScreenStatus.SetColor(255, 150, 100)
+        Case MSGBOX_RESULT_YES
+            Print "MessageBox: Yes clicked"
+            lblScreenStatus.SetText("MessageBox result: YES")
+            lblScreenStatus.SetColor(100, 255, 100)
+        Case MSGBOX_RESULT_NO
+            Print "MessageBox: No clicked"
+            lblScreenStatus.SetText("MessageBox result: NO")
+            lblScreenStatus.SetColor(255, 100, 100)
+    End Select
+    Return 0
+End Function
 
 ' =============================================================================
 '                         MODAL WINDOW CONTENT
@@ -1030,6 +1076,20 @@ While Not AppTerminate()
     EndIf
 
     ' =============================================================================
+    '                    SCREEN WIDGETS - Event handling
+    ' =============================================================================
+    If btnScreenTest.WasClicked()
+        Print "Screen button clicked!"
+        lblScreenStatus.SetText("Screen Button was clicked!")
+        lblScreenStatus.SetColor(100, 200, 255)
+    EndIf
+    
+    If btnShowMsgBox.WasClicked()
+        Print "Showing MessageBox..."
+        TMessageBox.ShowYesNoCancel("Confirm Action", "Do you want to save your changes?", OnMessageBoxResult)
+    EndIf
+
+    ' =============================================================================
     '                    MODAL WINDOW - Event handling
     ' =============================================================================
     ' Close the modal window when OK button is clicked
@@ -1042,6 +1102,9 @@ While Not AppTerminate()
         EndIf
     EndIf
 
+    ' NOTE: Window control buttons (close/min/max) are now handled 
+    ' automatically by GuiRefresh() - no need for manual loop!
+    ' NOTE: MessageBox buttons are also handled automatically!
     
     ' Clear all pending events at the end of the frame
     ' (prevents events from being processed multiple times)

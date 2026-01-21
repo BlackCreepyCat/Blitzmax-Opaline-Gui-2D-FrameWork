@@ -194,6 +194,9 @@ Type TWidget Abstract
         
         ' 7. Handle window control buttons (close / min / max) automatically
         GuiProcessWindowEvents()
+        
+        ' 8. Handle active MessageBox buttons
+        TMessageBox.UpdateActiveMessageBox()
     End Function
     
     ' Alternative: Separate update and draw for more control
@@ -217,6 +220,9 @@ Type TWidget Abstract
         
         ' Handle window control buttons automatically
         GuiProcessWindowEvents()
+        
+        ' Handle active MessageBox buttons
+        TMessageBox.UpdateActiveMessageBox()
     End Function
     
     Function GuiDraw()
