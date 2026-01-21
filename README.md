@@ -18,6 +18,8 @@ Description:
 ------------
 Opaline UI is a low-level kernel for creating a graphical interface from scratch. I believe it can be easily converted to other languages, only if they allow linked lists. No complex external dependencies (it's self-contained). It need also includes some basic graphical functions like:
 
+![Nouveau projet](https://github.com/user-attachments/assets/683bac95-20f1-45cf-886b-0f82e0447ae0)
+
 - Text/Box/Rect/Line/Oval/Circle/SetViewport/StringWidth (see the class: gui_core.bmx).
 
 Maybe compatible or can be converted for:
@@ -39,6 +41,9 @@ Forum Link:
 https://www.syntaxboom.net/forum/blitzmax-ng/code-archives-ad/1116-short-gui-kernel-skeleton
 
 <img width="1923" height="1106" alt="image" src="https://github.com/user-attachments/assets/f24759a5-2068-41df-a099-b03371c72829" />
+
+
+
 
 
 # 🎨 Opaline GUI Framework
