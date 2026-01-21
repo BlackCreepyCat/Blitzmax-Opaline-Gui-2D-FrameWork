@@ -37,9 +37,9 @@ Type TImageBox Extends TWidget
     Field borderB:Int = COLOR_BUTTON_NORMAL_B
     
     ' Background color (shown when no image or image has transparency)
-    Field bgR:Int = 30
-    Field bgG:Int = 30
-    Field bgB:Int = 40
+    Field red:Int = 30
+    Field green:Int = 30
+    Field blue:Int = 40
 
     ' =========================================================================
     '                         CONSTRUCTOR
@@ -114,7 +114,7 @@ Type TImageBox Extends TWidget
             TWidget.GuiDrawRect(ax, ay, rect.w, rect.h, drawStyle, bR, bG, bB)
         Else
             ' Draw background only (flat)
-            TWidget.GuiDrawRect(ax, ay, rect.w, rect.h, 1, bgR, bgG, bgB)
+            TWidget.GuiDrawRect(ax, ay, rect.w, rect.h, 1, red, green, blue)
         EndIf
         
         ' Draw the image if available
@@ -291,9 +291,9 @@ Type TImageBox Extends TWidget
     
     ' Set background color
     Method SetBackgroundColor(r:Int, g:Int, b:Int)
-        bgR = r
-        bgG = g
-        bgB = b
+        red = r
+        green = g
+        blue = b
     End Method
     
     ' Enable/disable click handling

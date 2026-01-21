@@ -242,9 +242,14 @@ Local buttonPanel:TPanel = New TPanel(20, 90, 240, 140, "Actions", PANEL_STYLE_R
 win1.AddChild buttonPanel
 
 Local btn1:TButton = New TButton(20, 30, 200, 35, "New Project")
-Local btn2:TButton = New TButton(20, 75, 200, 35, "Open File")
 buttonPanel.AddChild btn1
+btn1.SetColor(200, 80,30)
+
+
+
+Local btn2:TButton = New TButton(20, 75, 200, 35, "Open File")
 buttonPanel.AddChild btn2
+btn2.SetColor(30, 200,20)
 
 ' --- Panel with radio buttons ---
 Local optionsPanel:TPanel = New TPanel(280, 90, 240, 140, "Display Mode", PANEL_STYLE_RAISED)
