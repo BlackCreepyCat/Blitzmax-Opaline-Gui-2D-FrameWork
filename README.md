@@ -482,6 +482,7 @@ gui_combobox.bmx      ' TComboBox widget
 gui_tabber.bmx        ' TTabber widget
 gui_imagebox.bmx      ' TImageBox widget
 gui_messagebox.bmx    ' TMessageBox widget
+gui_taskbar.bmx       ' TTaskbar widget
 gui_contextmenu.bmx   ' TContextMenu widget
 ```
 
