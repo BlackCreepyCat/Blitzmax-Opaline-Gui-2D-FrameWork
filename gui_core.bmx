@@ -22,6 +22,8 @@ Global Gui_SystemFont:TImageFont
 Global Gui_SystemFontSize:Int = 16
 Global Gui_Root:TContainer = Null  ' Global root container reference
 
+Global Gui_Clipboard:TClipboard
+
 ' =============================================================================
 '                        ABSTRACT WIDGET CLASS
 ' =============================================================================
@@ -141,6 +143,7 @@ Type TWidget Abstract
     Function GuiInit(fontPath:String = "Arial.ttf", FontSize:Int = 16)
         Gui_SystemFontSize = FontSize
         Gui_SystemFont = LoadImageFont(fontPath, Gui_SystemFontSize, SMOOTHFONT)
+		Gui_Clipboard:TClipboard = CreateClipboard()
     End Function
     
     ' Set the root container for the GUI

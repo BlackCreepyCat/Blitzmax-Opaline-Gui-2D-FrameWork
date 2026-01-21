@@ -17,23 +17,7 @@ Import BRL.GLMax2D
 Import BRL.LinkedList
 
 ' Import GUI framework modules
-Include "gui_constants.bmx"
-Include "gui_core.bmx"
-Include "gui_mouse.bmx"
-Include "gui_container.bmx"
-Include "gui_window.bmx"
-Include "gui_button.bmx"
-Include "gui_checkbox.bmx"
-Include "gui_radio.bmx"
-Include "gui_label.bmx"
-Include "gui_panel.bmx"
-Include "gui_progressbar.bmx"
-Include "gui_slider.bmx"
-Include "gui_textinput.bmx"
-Include "gui_listbox.bmx"
-Include "gui_combobox.bmx"
-Include "gui_tabber.bmx"
-Include "gui_events.bmx"
+Include "gui_opaline.bmx"
 
 
 Graphics 800, 600, 0
