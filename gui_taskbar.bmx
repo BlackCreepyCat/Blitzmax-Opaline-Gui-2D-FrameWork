@@ -348,9 +348,13 @@ Type TTaskBar Extends TWidget
     
     Method Draw(px:Int=0, py:Int=0)
         If Not visible Then Return
-        If isHidden And isAutoHide Then
-            ' Draw thin line indicator when hidden
-            TWidget.GuiDrawRect(0, GraphicsHeight() - 4, rect.w, 4, 1, red + 20, green+ 20, blue + 20)
+        
+        ' Check if taskbar is fully hidden (animation complete)
+        Local fullyHidden:Int = isHidden And (Abs(currentY - targetY) < 1.0)
+        
+        If fullyHidden And isAutoHide
+            ' Draw thin line indicator when fully hidden
+            TWidget.GuiDrawRect(0, GraphicsHeight() - 4, rect.w, 4, 1, red + 20, green + 20, blue + 20)
             Return
         EndIf
         
