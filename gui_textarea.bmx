@@ -1,11 +1,10 @@
 ' =============================================================================
-'                           TEXTAREA WIDGET
+'                           TEXTAREA WIDGET (version corrigée - COMPLET)
 ' =============================================================================
 ' Multi-line editable text area with cursor, selection, scrolling
-' Features: vertical & horizontal scrollbars, line numbers, read-only mode
+' CORRECTION : scrollbar vertical ne dépasse plus après Ctrl+X / suppressions massives
 ' =============================================================================
 
-' Global reference to the currently focused TextArea
 Global g_FocusedTextArea:TTextArea = Null
 
 Type TTextArea Extends TWidget
@@ -101,7 +100,10 @@ Type TTextArea Extends TWidget
         UpdateMetrics()
     End Method
     
-    ' Update view metrics
+    ' =========================================================================
+    '                         METRICS & SCROLLBARS
+    ' =========================================================================
+    
     Method UpdateMetrics()
         SetImageFont(Gui_SystemFont)
         lineHeight = TextHeight("Xg") + 2
@@ -109,16 +111,28 @@ Type TTextArea Extends TWidget
         
         ' Calculate content area (accounting for scrollbars)
         Local contentHeight:Int = rect.h - padding * 2
-        If NeedsHScrollbar() Then contentHeight :- scrollbarWidth
+        Local contentWidth:Int = rect.w - padding * 2
+        If showLineNumbers Then contentWidth :- lineNumberWidth
         
+        ' Première estimation
         visibleLines = contentHeight / lineHeight
         If visibleLines < 1 Then visibleLines = 1
         
-        ' Calculate max line width
+        Local needsV:Int = NeedsVScrollbar()
+        Local needsH:Int = NeedsHScrollbar()
+        
+        If needsV Then contentWidth :- scrollbarWidth
+        If needsH Then contentHeight :- scrollbarWidth
+        
+        ' Recalcul si interdépendance change
+        If needsV <> NeedsVScrollbar() Or needsH <> NeedsHScrollbar()
+            visibleLines = contentHeight / lineHeight
+            If visibleLines < 1 Then visibleLines = 1
+        EndIf
+        
         UpdateMaxLineWidth()
     End Method
     
-    ' Update the maximum line width (for horizontal scroll)
     Method UpdateMaxLineWidth()
         SetImageFont(Gui_SystemFont)
         maxLineWidth = 0
@@ -127,12 +141,10 @@ Type TTextArea Extends TWidget
             If w > maxLineWidth Then maxLineWidth = w
         Next
         
-        ' Calculate max scroll X
         Local contentWidth:Int = GetContentWidth()
         maxScrollX = Max(0, maxLineWidth - contentWidth + charWidth * 2)
     End Method
     
-    ' Get content width (excluding line numbers and scrollbar)
     Method GetContentWidth:Int()
         Local w:Int = rect.w - padding * 2
         If showLineNumbers Then w :- lineNumberWidth
@@ -140,19 +152,16 @@ Type TTextArea Extends TWidget
         Return Max(10, w)
     End Method
     
-    ' Get content height (excluding scrollbar)
     Method GetContentHeight:Int()
         Local h:Int = rect.h - padding * 2
         If NeedsHScrollbar() Then h :- scrollbarWidth
         Return Max(10, h)
     End Method
     
-    ' Check if vertical scrollbar is needed
     Method NeedsVScrollbar:Int()
-        Return showVScrollbar And lines.Count() > visibleLines
+        Return showVScrollbar And (lines.Count() > visibleLines Or scrollY > 0)
     End Method
     
-    ' Check if horizontal scrollbar is needed
     Method NeedsHScrollbar:Int()
         If Not showHScrollbar Then Return False
         Local contentWidth:Int = rect.w - padding * 2
@@ -162,36 +171,39 @@ Type TTextArea Extends TWidget
     End Method
     
     ' =========================================================================
+    '                         HELPER APRÈS MODIFICATION TEXTE
+    ' =========================================================================
+    Method AfterTextEdit()
+        UpdateMaxLineWidth()
+        UpdateMetrics()
+        EnsureCursorVisible()
+        FireChangeEvent()
+    End Method
+    
+    ' =========================================================================
     '                         TEXT MANAGEMENT
     ' =========================================================================
     
-    ' Set entire text content (replaces everything)
     Method SetText(text:String)
         lines.Clear()
         
-        ' Split by newlines
         Local parts:String[] = text.Split("~n")
         For Local part:String = EachIn parts
-            ' Remove carriage returns if present
             part = part.Replace("~r", "")
             lines.AddLast(part)
         Next
         
-        ' Ensure at least one line
         If lines.Count() = 0 Then lines.AddLast("")
         
-        ' Reset cursor
         cursorLine = 0
         cursorCol = 0
         ClearSelection()
         scrollX = 0
         scrollY = 0
         
-        UpdateMaxLineWidth()
-        FireChangeEvent()
+        AfterTextEdit()
     End Method
     
-    ' Get entire text content
     Method GetText:String()
         Local result:String = ""
         Local first:Int = True
@@ -203,7 +215,6 @@ Type TTextArea Extends TWidget
         Return result
     End Method
     
-    ' Get a specific line
     Method GetLine:String(index:Int)
         If index < 0 Or index >= lines.Count() Then Return ""
         Local i:Int = 0
@@ -214,11 +225,9 @@ Type TTextArea Extends TWidget
         Return ""
     End Method
     
-    ' Set a specific line
     Method SetLine(index:Int, text:String)
         If index < 0 Or index >= lines.Count() Then Return
         
-        ' Build a new list with the modified line
         Local newLines:TList = New TList
         Local i:Int = 0
         For Local line:String = EachIn lines
@@ -230,23 +239,18 @@ Type TTextArea Extends TWidget
             i :+ 1
         Next
         lines = newLines
-        UpdateMaxLineWidth()
-        FireChangeEvent()
+        AfterTextEdit()
     End Method
     
-    ' Get line count
     Method GetLineCount:Int()
         Return lines.Count()
     End Method
     
-    ' Insert text at cursor position
     Method InsertText(text:String)
         If isReadOnly Then Return
         
-        ' Delete selection first if any
         If HasSelection() Then DeleteSelection()
         
-        ' Split inserted text by newlines
         Local parts:String[] = text.Split("~n")
         
         Local currentLine:String = GetLine(cursorLine)
@@ -254,31 +258,24 @@ Type TTextArea Extends TWidget
         Local afterCursor:String = currentLine[cursorCol..]
         
         If parts.Length = 1
-            ' Single line insert
             SetLine(cursorLine, beforeCursor + parts[0] + afterCursor)
             cursorCol :+ parts[0].Length
         Else
-            ' Multi-line insert
             SetLine(cursorLine, beforeCursor + parts[0])
             
-            ' Insert middle lines
             For Local i:Int = 1 Until parts.Length - 1
                 cursorLine :+ 1
                 InsertLineAt(cursorLine, parts[i])
             Next
             
-            ' Insert last line with remainder
             cursorLine :+ 1
             InsertLineAt(cursorLine, parts[parts.Length - 1] + afterCursor)
             cursorCol = parts[parts.Length - 1].Length
         EndIf
         
-        UpdateMaxLineWidth()
-        EnsureCursorVisible()
-        FireChangeEvent()
+        AfterTextEdit()
     End Method
     
-    ' Insert a new line at index
     Method InsertLineAt(index:Int, text:String)
         If index < 0 Then index = 0
         If index >= lines.Count()
@@ -293,14 +290,12 @@ Type TTextArea Extends TWidget
             Next
             lines = newLines
         EndIf
-        UpdateMaxLineWidth()
+        AfterTextEdit()
     End Method
     
-    ' Remove a line at index
     Method RemoveLineAt(index:Int)
         If index < 0 Or index >= lines.Count() Then Return
-        If lines.Count() <= 1 Then
-            ' Keep at least one empty line
+        If lines.Count() <= 1
             SetLine(0, "")
             Return
         EndIf
@@ -312,7 +307,8 @@ Type TTextArea Extends TWidget
             i :+ 1
         Next
         lines = newLines
-        UpdateMaxLineWidth()
+        
+        AfterTextEdit()
     End Method
     
     ' =========================================================================
@@ -344,7 +340,6 @@ Type TTextArea Extends TWidget
         selEndCol = cursorCol
     End Method
     
-    ' Get normalized selection (start before end)
     Method GetNormalizedSelection(startLine:Int Var, startCol:Int Var, endLine:Int Var, endCol:Int Var)
         If selStartLine < selEndLine Or (selStartLine = selEndLine And selStartCol <= selEndCol)
             startLine = selStartLine
@@ -359,7 +354,6 @@ Type TTextArea Extends TWidget
         EndIf
     End Method
     
-    ' Get selected text
     Method GetSelectedText:String()
         If Not HasSelection() Then Return ""
         
@@ -367,29 +361,18 @@ Type TTextArea Extends TWidget
         GetNormalizedSelection(startLine, startCol, endLine, endCol)
         
         If startLine = endLine
-            ' Single line selection
             Local line:String = GetLine(startLine)
             Return line[startCol..endCol]
         Else
-            ' Multi-line selection
-            Local result:String = ""
-            
-            ' First line (from startCol to end)
-            result = GetLine(startLine)[startCol..]
-            
-            ' Middle lines (complete)
+            Local result:String = GetLine(startLine)[startCol..]
             For Local i:Int = startLine + 1 Until endLine
                 result :+ "~n" + GetLine(i)
             Next
-            
-            ' Last line (from start to endCol)
             result :+ "~n" + GetLine(endLine)[..endCol]
-            
             Return result
         EndIf
     End Method
     
-    ' Delete selected text
     Method DeleteSelection()
         If Not HasSelection() Then Return
         
@@ -397,33 +380,28 @@ Type TTextArea Extends TWidget
         GetNormalizedSelection(startLine, startCol, endLine, endCol)
         
         If startLine = endLine
-            ' Single line deletion
             Local line:String = GetLine(startLine)
             SetLine(startLine, line[..startCol] + line[endCol..])
+            cursorCol = startCol
         Else
-            ' Multi-line deletion
             Local firstLine:String = GetLine(startLine)[..startCol]
             Local lastLine:String = GetLine(endLine)[endCol..]
             
-            ' Remove lines from end to start+1
+            SetLine(startLine, firstLine + lastLine)
+            
             For Local i:Int = endLine To startLine + 1 Step -1
                 RemoveLineAt(i)
             Next
             
-            ' Merge first and last parts
-            SetLine(startLine, firstLine + lastLine)
+            cursorLine = startLine
+            cursorCol = startCol
         EndIf
         
-        ' Move cursor to start of selection
-        cursorLine = startLine
-        cursorCol = startCol
         ClearSelection()
         
-        UpdateMaxLineWidth()
-        FireChangeEvent()
+        AfterTextEdit()  ' FIX PRINCIPAL
     End Method
     
-    ' Select all text
     Method SelectAll()
         selStartLine = 0
         selStartCol = 0
@@ -438,20 +416,18 @@ Type TTextArea Extends TWidget
     ' =========================================================================
     
     Method EnsureCursorVisible()
-        ' Vertical scrolling
+        ' Vertical scrolling - reclamp strict
+        Local maxScrollY:Int = Max(0, lines.Count() - visibleLines)
         If cursorLine < scrollY
             scrollY = cursorLine
         ElseIf cursorLine >= scrollY + visibleLines
             scrollY = cursorLine - visibleLines + 1
         EndIf
-        
-        ' Clamp scrollY
-        Local maxScrollY:Int = Max(0, lines.Count() - visibleLines)
         scrollY = Max(0, Min(scrollY, maxScrollY))
         
         ' Horizontal scrolling
-        Local line:String = GetLine(cursorLine)
         SetImageFont(Gui_SystemFont)
+        Local line:String = GetLine(cursorLine)
         Local cursorX:Int = TextWidth(line[..cursorCol])
         Local contentWidth:Int = GetContentWidth()
         
@@ -461,17 +437,14 @@ Type TTextArea Extends TWidget
             scrollX = cursorX - contentWidth + 20
         EndIf
         
-        ' Clamp scrollX
         scrollX = Max(0, Min(scrollX, maxScrollX))
     End Method
     
     Method MoveCursorTo(line:Int, col:Int, extendSelection:Int = False)
         If extendSelection Then StartSelection()
         
-        ' Clamp line
         cursorLine = Max(0, Min(line, lines.Count() - 1))
         
-        ' Clamp column
         Local lineText:String = GetLine(cursorLine)
         cursorCol = Max(0, Min(col, lineText.Length))
         
@@ -490,7 +463,6 @@ Type TTextArea Extends TWidget
     '                         SCROLLBAR HELPERS
     ' =========================================================================
     
-    ' Get vertical scrollbar rectangle (relative to widget)
     Method GetVScrollbarRect(bx:Int Var, by:Int Var, bw:Int Var, bh:Int Var)
         bx = rect.w - scrollbarWidth
         by = 0
@@ -499,7 +471,6 @@ Type TTextArea Extends TWidget
         If NeedsHScrollbar() Then bh :- scrollbarWidth
     End Method
     
-    ' Get vertical scrollbar thumb rectangle
     Method GetVScrollThumbRect(tx:Int Var, ty:Int Var, tw:Int Var, th:Int Var)
         Local bx:Int, by:Int, bw:Int, bh:Int
         GetVScrollbarRect(bx, by, bw, bh)
@@ -507,13 +478,11 @@ Type TTextArea Extends TWidget
         Local totalLines:Int = lines.Count()
         Local trackHeight:Int = bh - 4
         
-        ' Thumb height proportional to visible area
-        th = Max(20, trackHeight * visibleLines / totalLines)
+        th = Max(20, trackHeight * visibleLines / Max(1, totalLines))
         tw = bw - 4
         tx = bx + 2
         
-        ' Thumb position
-        Local scrollRange:Int = totalLines - visibleLines
+        Local scrollRange:Int = Max(0, totalLines - visibleLines)
         If scrollRange > 0
             ty = by + 2 + (trackHeight - th) * scrollY / scrollRange
         Else
@@ -521,7 +490,6 @@ Type TTextArea Extends TWidget
         EndIf
     End Method
     
-    ' Get horizontal scrollbar rectangle
     Method GetHScrollbarRect(bx:Int Var, by:Int Var, bw:Int Var, bh:Int Var)
         bx = 0
         If showLineNumbers Then bx = lineNumberWidth
@@ -531,7 +499,6 @@ Type TTextArea Extends TWidget
         bh = scrollbarWidth
     End Method
     
-    ' Get horizontal scrollbar thumb rectangle
     Method GetHScrollThumbRect(tx:Int Var, ty:Int Var, tw:Int Var, th:Int Var)
         Local bx:Int, by:Int, bw:Int, bh:Int
         GetHScrollbarRect(bx, by, bw, bh)
@@ -539,7 +506,6 @@ Type TTextArea Extends TWidget
         Local contentWidth:Int = GetContentWidth()
         Local trackWidth:Int = bw - 4
         
-        ' Thumb width proportional to visible area
         If maxLineWidth > 0
             tw = Max(20, trackWidth * contentWidth / (maxLineWidth + charWidth * 2))
         Else
@@ -548,7 +514,6 @@ Type TTextArea Extends TWidget
         th = bh - 4
         ty = by + 2
         
-        ' Thumb position
         If maxScrollX > 0
             tx = bx + 2 + (trackWidth - tw) * scrollX / maxScrollX
         Else
@@ -575,7 +540,7 @@ Type TTextArea Extends TWidget
         ' Ctrl+C - Copy
         If ctrl And KeyHit(KEY_C)
             If HasSelection()
-             '   SetClipboardText(GetSelectedText())
+                ' SetClipboardText(GetSelectedText())
             EndIf
             Return
         EndIf
@@ -583,7 +548,7 @@ Type TTextArea Extends TWidget
         ' Ctrl+X - Cut
         If ctrl And KeyHit(KEY_X)
             If HasSelection() And Not isReadOnly
-          '      SetClipboardText(GetSelectedText())
+                ' SetClipboardText(GetSelectedText())
                 DeleteSelection()
             EndIf
             Return
@@ -592,7 +557,7 @@ Type TTextArea Extends TWidget
         ' Ctrl+V - Paste
         If ctrl And KeyHit(KEY_V)
             If Not isReadOnly
-                Local clip:String = ""'GetClipboardText()
+                Local clip:String = "" 'GetClipboardText()
                 If clip.Length > 0
                     InsertText(clip)
                 EndIf
@@ -714,19 +679,17 @@ Type TTextArea Extends TWidget
                 Local line:String = GetLine(cursorLine)
                 SetLine(cursorLine, line[..cursorCol-1] + line[cursorCol..])
                 cursorCol :- 1
-                FireChangeEvent()
             ElseIf cursorLine > 0
-                ' Merge with previous line
                 Local prevLine:String = GetLine(cursorLine - 1)
                 Local currentLine:String = GetLine(cursorLine)
                 cursorCol = prevLine.Length
                 SetLine(cursorLine - 1, prevLine + currentLine)
                 RemoveLineAt(cursorLine)
                 cursorLine :- 1
-                FireChangeEvent()
             EndIf
             EnsureCursorVisible()
             ResetCursorBlink()
+            AfterTextEdit()
             Return
         EndIf
         
@@ -738,17 +701,15 @@ Type TTextArea Extends TWidget
                 Local line:String = GetLine(cursorLine)
                 If cursorCol < line.Length
                     SetLine(cursorLine, line[..cursorCol] + line[cursorCol+1..])
-                    FireChangeEvent()
                 ElseIf cursorLine < lines.Count() - 1
-                    ' Merge with next line
                     Local nextLine:String = GetLine(cursorLine + 1)
                     SetLine(cursorLine, line + nextLine)
                     RemoveLineAt(cursorLine + 1)
-                    FireChangeEvent()
                 EndIf
             EndIf
             EnsureCursorVisible()
             ResetCursorBlink()
+            AfterTextEdit()
             Return
         EndIf
         
@@ -767,7 +728,7 @@ Type TTextArea Extends TWidget
             
             EnsureCursorVisible()
             ResetCursorBlink()
-            FireChangeEvent()
+            AfterTextEdit()
             Return
         EndIf
         
@@ -794,7 +755,7 @@ Type TTextArea Extends TWidget
                 
                 EnsureCursorVisible()
                 ResetCursorBlink()
-                FireChangeEvent()
+                AfterTextEdit()
             EndIf
             key = GetChar()
         Wend
@@ -810,12 +771,10 @@ Type TTextArea Extends TWidget
         Local contentX:Int = padding
         If showLineNumbers Then contentX :+ lineNumberWidth
         
-        ' Calculate line from Y position
         Local relY:Int = my - padding
         Local clickLine:Int = scrollY + relY / lineHeight
         clickLine = Max(0, Min(clickLine, lines.Count() - 1))
         
-        ' Calculate column from X position
         Local relX:Int = mx - contentX + scrollX
         Local line:String = GetLine(clickLine)
         Local clickCol:Int = 0
@@ -823,7 +782,6 @@ Type TTextArea Extends TWidget
         For Local i:Int = 0 To line.Length
             Local w:Int = TextWidth(line[..i])
             If w >= relX
-                ' Check if closer to this char or previous
                 If i > 0
                     Local prevW:Int = TextWidth(line[..i-1])
                     If relX - prevW < w - relX
@@ -851,7 +809,6 @@ Type TTextArea Extends TWidget
         
         UpdateMetrics()
         
-        ' Check if mouse is over this widget
         Local over:Int = (mx >= 0 And mx < rect.w And my >= 0 And my < rect.h)
         hover = over
         
@@ -859,7 +816,6 @@ Type TTextArea Extends TWidget
         Local down:Int = GuiMouse.Down()
         Local released:Int = GuiMouse.Released()
         
-        ' Check scrollbar hover
         hoverVScroll = False
         hoverHScroll = False
         
@@ -879,7 +835,6 @@ Type TTextArea Extends TWidget
             EndIf
         EndIf
         
-        ' Handle vertical scrollbar dragging
         If draggingVScroll
             If down
                 Local bx:Int, by:Int, bw:Int, bh:Int
@@ -905,7 +860,6 @@ Type TTextArea Extends TWidget
             EndIf
         EndIf
         
-        ' Handle horizontal scrollbar dragging
         If draggingHScroll
             If down
                 Local bx:Int, by:Int, bw:Int, bh:Int
@@ -930,19 +884,15 @@ Type TTextArea Extends TWidget
             EndIf
         EndIf
         
-        ' Start scrollbar drag
         If hit And over
-            ' Check vertical scrollbar click
             If NeedsVScrollbar() And hoverVScroll
                 Local tx:Int, ty:Int, tw:Int, th:Int
                 GetVScrollThumbRect(tx, ty, tw, th)
                 
                 If mx >= tx And mx < tx + tw And my >= ty And my < ty + th
-                    ' Click on thumb - start drag
                     draggingVScroll = True
                     scrollDragOffset = my - ty
                 Else
-                    ' Click on track - page scroll
                     Local bx:Int, by:Int, bw:Int, bh:Int
                     GetVScrollbarRect(bx, by, bw, bh)
                     If my < ty
@@ -954,17 +904,14 @@ Type TTextArea Extends TWidget
                 Return True
             EndIf
             
-            ' Check horizontal scrollbar click
             If NeedsHScrollbar() And hoverHScroll
                 Local tx:Int, ty:Int, tw:Int, th:Int
                 GetHScrollThumbRect(tx, ty, tw, th)
                 
                 If mx >= tx And mx < tx + tw And my >= ty And my < ty + th
-                    ' Click on thumb - start drag
                     draggingHScroll = True
                     scrollDragOffset = mx - tx
                 Else
-                    ' Click on track - page scroll
                     Local contentWidth:Int = GetContentWidth()
                     If mx < tx
                         scrollX = Max(0, scrollX - contentWidth)
@@ -976,12 +923,9 @@ Type TTextArea Extends TWidget
             EndIf
         EndIf
         
-        ' Check if click is in content area (not on scrollbars)
         Local inContentArea:Int = over And Not hoverVScroll And Not hoverHScroll
         
-        ' Mouse click to focus and position cursor
         If inContentArea And hit And draggedWindow = Null
-            ' Unfocus previous TextArea or TextInput
             If g_FocusedTextArea <> Null And g_FocusedTextArea <> Self
                 g_FocusedTextArea.LoseFocus()
             EndIf
@@ -993,17 +937,14 @@ Type TTextArea Extends TWidget
             focused = True
             g_FocusedTextArea = Self
             
-            ' Get click position
             Local pos:Int[] = GetPositionFromMouse(mx, my)
             
             If KeyDown(KEY_LSHIFT) Or KeyDown(KEY_RSHIFT)
-                ' Extend selection
                 StartSelection()
                 cursorLine = pos[0]
                 cursorCol = pos[1]
                 UpdateSelection()
             Else
-                ' New cursor position
                 ClearSelection()
                 cursorLine = pos[0]
                 cursorCol = pos[1]
@@ -1016,7 +957,6 @@ Type TTextArea Extends TWidget
             Return True
         EndIf
         
-        ' Mouse drag for selection
         If dragging And down
             Local pos:Int[] = GetPositionFromMouse(mx, my)
             cursorLine = pos[0]
@@ -1028,13 +968,11 @@ Type TTextArea Extends TWidget
         
         If dragging And released
             dragging = False
-            ' Clear selection if start equals end
             If selStartLine = selEndLine And selStartCol = selEndCol
                 ClearSelection()
             EndIf
         EndIf
         
-        ' Mouse wheel scrolling
         If over
             Local wheel:Int = GuiMouse.WheelIdle()
             If wheel <> 0
@@ -1043,12 +981,10 @@ Type TTextArea Extends TWidget
             EndIf
         EndIf
         
-        ' Click outside loses focus
         If hit And Not over And focused
             LoseFocus()
         EndIf
         
-        ' Update cursor blink
         If focused
             cursorBlink :+ 1
             If cursorBlink >= 30
@@ -1080,46 +1016,38 @@ Type TTextArea Extends TWidget
         Local ax:Int = px + rect.x
         Local ay:Int = py + rect.y
         
-        ' Draw background
         If focused
             TWidget.GuiDrawRect(ax, ay, rect.w, rect.h, 3, bgR + 10, bgG + 10, bgB + 10)
         Else
             TWidget.GuiDrawRect(ax, ay, rect.w, rect.h, 3, bgR, bgG, bgB)
         EndIf
         
-        ' Calculate content area
         Local contentX:Int = ax + padding
         Local contentY:Int = ay + padding
         Local contentW:Int = GetContentWidth()
         Local contentH:Int = GetContentHeight()
         
-        ' Draw line numbers if enabled
         If showLineNumbers
             TWidget.GuiDrawRect(ax, ay, lineNumberWidth, rect.h, 1, lineNumBgR, lineNumBgG, lineNumBgB)
             contentX :+ lineNumberWidth
         EndIf
         
-        ' Set clipping for text area
         TWidget.GuiSetViewport(contentX, contentY, contentW, contentH)
         
         SetImageFont(Gui_SystemFont)
         
-        ' Draw visible lines
         Local y:Int = contentY
         For Local i:Int = scrollY Until Min(scrollY + visibleLines + 1, lines.Count())
             Local line:String = GetLine(i)
             Local lineY:Int = y
             
-            ' Draw selection background for this line
             If HasSelection()
                 DrawLineSelection(i, contentX, lineY, line)
             EndIf
             
-            ' Draw text
             SetColor(textR, textG, textB)
             DrawText(line, contentX - scrollX, lineY)
             
-            ' Draw cursor on this line
             If focused And cursorVisible And i = cursorLine
                 Local cursorDrawX:Int = contentX - scrollX + TextWidth(line[..cursorCol])
                 SetColor(COLOR_TEXTINPUT_CURSOR_R, COLOR_TEXTINPUT_CURSOR_G, COLOR_TEXTINPUT_CURSOR_B)
@@ -1129,10 +1057,8 @@ Type TTextArea Extends TWidget
             y :+ lineHeight
         Next
         
-        ' Reset clipping
         TWidget.GuiSetViewport(0, 0, GraphicsWidth(), GraphicsHeight())
         
-        ' Draw line numbers
         If showLineNumbers
             TWidget.GuiSetViewport(ax + 2, contentY, lineNumberWidth - 4, contentH)
             Local y2:Int = contentY
@@ -1145,16 +1071,13 @@ Type TTextArea Extends TWidget
             TWidget.GuiSetViewport(0, 0, GraphicsWidth(), GraphicsHeight())
         EndIf
         
-        ' Draw vertical scrollbar
         If NeedsVScrollbar()
             Local bx:Int, by:Int, bw:Int, bh:Int
             GetVScrollbarRect(bx, by, bw, bh)
             
-            ' Background
             SetColor(scrollBgR, scrollBgG, scrollBgB)
             DrawRect(ax + bx, ay + by, bw, bh)
             
-            ' Thumb
             Local tx:Int, ty:Int, tw:Int, th:Int
             GetVScrollThumbRect(tx, ty, tw, th)
             
@@ -1168,16 +1091,13 @@ Type TTextArea Extends TWidget
             DrawRect(ax + tx, ay + ty, tw, th)
         EndIf
         
-        ' Draw horizontal scrollbar
         If NeedsHScrollbar()
             Local bx:Int, by:Int, bw:Int, bh:Int
             GetHScrollbarRect(bx, by, bw, bh)
             
-            ' Background
             SetColor(scrollBgR, scrollBgG, scrollBgB)
             DrawRect(ax + bx, ay + by, bw, bh)
             
-            ' Thumb
             Local tx:Int, ty:Int, tw:Int, th:Int
             GetHScrollThumbRect(tx, ty, tw, th)
             
@@ -1191,7 +1111,6 @@ Type TTextArea Extends TWidget
             DrawRect(ax + tx, ay + ty, tw, th)
         EndIf
         
-        ' Draw corner if both scrollbars visible
         If NeedsVScrollbar() And NeedsHScrollbar()
             SetColor(scrollBgR, scrollBgG, scrollBgB)
             DrawRect(ax + rect.w - scrollbarWidth, ay + rect.h - scrollbarWidth, scrollbarWidth, scrollbarWidth)
@@ -1200,7 +1119,6 @@ Type TTextArea Extends TWidget
         SetColor(255, 255, 255)
     End Method
     
-    ' Draw selection highlight for a line
     Method DrawLineSelection(lineIndex:Int, contentX:Int, lineY:Int, lineText:String)
         Local startLine:Int, startCol:Int, endLine:Int, endCol:Int
         GetNormalizedSelection(startLine, startCol, endLine, endCol)
@@ -1210,19 +1128,15 @@ Type TTextArea Extends TWidget
         Local selStartX:Int, selEndX:Int
         
         If lineIndex = startLine And lineIndex = endLine
-            ' Selection on single line
             selStartX = contentX - scrollX + TextWidth(lineText[..startCol])
             selEndX = contentX - scrollX + TextWidth(lineText[..endCol])
         ElseIf lineIndex = startLine
-            ' First line of multi-line selection
             selStartX = contentX - scrollX + TextWidth(lineText[..startCol])
             selEndX = contentX - scrollX + TextWidth(lineText) + charWidth
         ElseIf lineIndex = endLine
-            ' Last line of multi-line selection
             selStartX = contentX - scrollX
             selEndX = contentX - scrollX + TextWidth(lineText[..endCol])
         Else
-            ' Middle line - full selection
             selStartX = contentX - scrollX
             selEndX = contentX - scrollX + TextWidth(lineText) + charWidth
         EndIf
