@@ -540,7 +540,7 @@ Type TTextArea Extends TWidget
         ' Ctrl+C - Copy
         If ctrl And KeyHit(KEY_C)
             If HasSelection()
-                ' SetClipboardText(GetSelectedText())
+				ClipboardSetText(Gui_Clipboard, GetSelectedText())
             EndIf
             Return
         EndIf
@@ -548,7 +548,7 @@ Type TTextArea Extends TWidget
         ' Ctrl+X - Cut
         If ctrl And KeyHit(KEY_X)
             If HasSelection() And Not isReadOnly
-                ' SetClipboardText(GetSelectedText())
+                ClipboardSetText(Gui_Clipboard, GetSelectedText())
                 DeleteSelection()
             EndIf
             Return
@@ -557,7 +557,7 @@ Type TTextArea Extends TWidget
         ' Ctrl+V - Paste
         If ctrl And KeyHit(KEY_V)
             If Not isReadOnly
-                Local clip:String = "" 'GetClipboardText()
+                Local clip:String = ClipboardText(Gui_Clipboard)
                 If clip.Length > 0
                     InsertText(clip)
                 EndIf
