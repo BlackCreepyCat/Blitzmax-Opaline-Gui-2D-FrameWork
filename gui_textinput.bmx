@@ -135,6 +135,10 @@ Type TTextInput Extends TWidget
             cursorVisible = True
             cursorBlink = 0
             
+            ' IMPORTANT: Clear keyboard buffer to avoid "ghost" characters
+            ' from keys pressed before gaining focus
+            FlushKeys()
+            
             Local clickPos:Int = GetCharIndexAtX(mx)
             
             Local CurrentTime:Int = MilliSecs()
@@ -175,11 +179,8 @@ Type TTextInput Extends TWidget
             LoseFocus()
         EndIf
         
-        ' Process keyboard input only when focused
-        ' Traite les entrées clavier uniquement quand focus
-        If focused
-            HandleKeyboard()
-        EndIf
+        ' NOTE: Keyboard input is now handled in GuiUpdate/GuiRefresh
+        ' to ensure it works even when mouse is over another widget
         
         Return over Or focused
     End Method
@@ -197,8 +198,6 @@ Type TTextInput Extends TWidget
     
     ' Handles all keyboard input: shortcuts, navigation, deletion, typing
     Method HandleKeyboard()
-        Local key:Int = GetChar()
-        
         Local ctrl:Int = KeyDown(KEY_LCONTROL) Or KeyDown(KEY_RCONTROL)
         Local shift:Int = KeyDown(KEY_LSHIFT) Or KeyDown(KEY_RSHIFT)
         
@@ -337,21 +336,27 @@ Type TTextInput Extends TWidget
         EndIf
         
         ' Normal printable character input
-        If key >= 32 And key < 127
-            If maxLength > 0 And text.Length >= maxLength
-                Return
+        ' Process ALL characters in the buffer (loop until empty)
+        Local key:Int = GetChar()
+        While key <> 0
+            If key >= 32 And key < 127
+                If maxLength > 0 And text.Length >= maxLength
+                    key = GetChar()
+                    Continue
+                EndIf
+                
+                If HasSelection()
+                    DeleteSelection()
+                EndIf
+                
+                text = text[..cursorPos] + Chr(key) + text[cursorPos..]
+                cursorPos :+ 1
+                EnsureCursorVisible()
+                OnTextChanged()
+                ResetCursorBlink()
             EndIf
-            
-            If HasSelection()
-                DeleteSelection()
-            EndIf
-            
-            text = text[..cursorPos] + Chr(key) + text[cursorPos..]
-            cursorPos :+ 1
-            EnsureCursorVisible()
-            OnTextChanged()
-            ResetCursorBlink()
-        EndIf
+            key = GetChar()
+        Wend
     End Method
     
     ' Converts mouse X coordinate to character index under the cursor
@@ -550,6 +555,9 @@ Type TTextInput Extends TWidget
             focused = True
             g_FocusedTextInput = Self
             ResetCursorBlink()
+            
+            ' Clear keyboard buffer to avoid ghost characters
+            FlushKeys()
         Else
             LoseFocus()
         EndIf

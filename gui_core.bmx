@@ -177,13 +177,19 @@ Type TWidget Abstract
         ' 2. Handle active popup FIRST (ComboBox dropdown has priority)
         TComboBox.UpdateActivePopup()
         
-        ' 3. Update widget tree (input handling, state changes)
+        ' 3. IMPORTANT: Always update focused TextInput for keyboard handling
+        ' This ensures keyboard input is processed even if mouse is elsewhere
+        If g_FocusedTextInput <> Null And g_FocusedTextInput.focused
+            g_FocusedTextInput.HandleKeyboard()
+        EndIf
+        
+        ' 4. Update widget tree (input handling, state changes)
         Gui_Root.Update(GuiMouse.x, GuiMouse.y)
         
-        ' 4. Draw widget tree
+        ' 5. Draw widget tree
         Gui_Root.Draw()
         
-        ' 5. Draw popup overlays LAST (on top of everything)
+        ' 6. Draw popup overlays LAST (on top of everything)
         TComboBox.DrawActivePopup()
     End Function
     
@@ -196,6 +202,12 @@ Type TWidget Abstract
         
         ' Handle active popup first
         TComboBox.UpdateActivePopup()
+        
+        ' IMPORTANT: Always update focused TextInput for keyboard handling
+        ' This ensures keyboard input is processed even if mouse is elsewhere
+        If g_FocusedTextInput <> Null And g_FocusedTextInput.focused
+            g_FocusedTextInput.HandleKeyboard()
+        EndIf
         
         ' Update widget tree
         Gui_Root.Update(GuiMouse.x, GuiMouse.y)

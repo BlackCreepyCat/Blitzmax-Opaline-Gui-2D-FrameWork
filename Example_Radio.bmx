@@ -53,7 +53,7 @@ Local r2:TRadio = New TRadio(40, 210, 20, 20, "Normal", group)
 Local r3:TRadio = New TRadio(40, 240, 20, 20, "Hard", group)
 r2.selected = True
 
-win.AddChild r1; win.AddChild r2; win.AddChild r3
+win.AddChild(r1); win.AddChild(r2); win.AddChild(r3)
 
 ' Main loop
 While Not KeyDown(KEY_ESCAPE)

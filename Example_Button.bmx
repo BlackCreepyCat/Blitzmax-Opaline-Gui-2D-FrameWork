@@ -43,10 +43,10 @@ Global root:TContainer = New TContainer(GraphicsWidth(), GraphicsHeight())
 TWidget.GuiSetRoot(root)
 
 Local win:TWindow = New TWindow(100, 100, 600, 400, "Opaline Demo Button (check console)", True, True, True)
-root.AddChild win
+root.AddChild(win)
 
 Local btn:TButton = New TButton(20, 20, 200, 40, "Click me!")
-win.AddChild btn
+win.AddChild(btn)
 
 ' Main loop
 While Not KeyDown(KEY_ESCAPE)
