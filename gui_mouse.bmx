@@ -106,3 +106,4 @@ End Type
 ' Global instances
 Global GuiMouse:TMouse = New TMouse
 Global draggedWindow:TWindow = Null
+Global resizingWindow:TWindow = Null  ' Window currently being resized

@@ -16,34 +16,32 @@ SuperStrict
 Import BRL.GLMax2D
 Import BRL.LinkedList
 
-' Import GUI framework modules
 Include "gui_opaline.bmx"
 
-Graphics 800, 600, 0
+Graphics 1280, 720, 0
 
 TWidget.GuiInit()
+
 Global root:TContainer = New TContainer(GraphicsWidth(), GraphicsHeight())
 TWidget.GuiSetRoot(root)
 
-Local win:TWindow = New TWindow(100, 100, 600, 400, "Opaline Demo Button (check console)", True, True, True)
+' Créer une fenêtre avec bouton
+Local win:TWindow = New TWindow(100, 100, 300, 200, "Hello Opaline")
+Local btn:TButton = New TButton(50, 50, 200, 40, "Click Me!")
+Local lbl:TLabel = New TLabel(50, 100, 200, 30, "Status: Ready")
+
+win.AddChild(btn)
+win.AddChild(lbl)
 root.AddChild(win)
 
-Local btn:TButton = New TButton(20, 20, 200, 40, "Click me!")
-win.AddChild(btn)
-
-' Main loop
-While Not KeyDown(KEY_ESCAPE)
+While Not AppTerminate()
     Cls
-	
-	' Refresh
-    TWidget.GuiUpdate()   
-    TWidget.GuiDraw()     
-	
-	' Events
-	If btn.WasClicked() Then Print "Bouton clicked!"
-
-    ' Clear all pending events at the end of the frame
-    ClearAllEvents(root)
-
+    TWidget.GuiRefresh()
+    
+    If btn.WasClicked()
+        lbl.SetText("Status: Clicked!")
+        btn.ClearEvents()
+    EndIf
+    
     Flip
 Wend

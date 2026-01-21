@@ -18,6 +18,7 @@ SuperStrict
 Import BRL.GLMax2D
 Import BRL.LinkedList
 
+
 ' Import GUI framework modules
 Include "gui_opaline.bmx"
 
@@ -37,17 +38,19 @@ TWidget.GuiSetRoot(root)  ' <-- IMPORTANT !
 
 ' Create demo windows
 Local win1:TWindow = New TWindow(120, 80, 540, 540, "Opaline Main Window",True,True,False,True)
+win1.SetResizable(True)
+win1.SetMinSize(540, 540)  
 
 ' More complex status text, sections adding (width = -1 for flexible)
-win1.AddStatusSection("Ready", -1, LABEL_ALIGN_LEFT)        ' Section 0 - flexible
-win1.AddStatusSection("Ln 1", -1, LABEL_ALIGN_CENTER)       ' Section 1 - 60px
-win1.AddStatusSection("Col 1", -1, LABEL_ALIGN_CENTER)      ' Section 2 - 60px
-win1.AddStatusSection("UTF-8", -1, LABEL_ALIGN_RIGHT)       ' Section 3 - 80px
+'win1.AddStatusSection("Ready", -1, LABEL_ALIGN_LEFT)        ' Section 0 - flexible
+'win1.AddStatusSection("Ln 1", -1, LABEL_ALIGN_CENTER)       ' Section 1 - 60px
+'win1.AddStatusSection("Col 1", -1, LABEL_ALIGN_CENTER)      ' Section 2 - 60px
+'win1.AddStatusSection("UTF-8", -1, LABEL_ALIGN_RIGHT)       ' Section 3 - 80px
 
 ' Mettre à jour une section
-win1.SetStatusSection(0, "Modified")
-win1.SetStatusSection(1, "Ln 42")
-win1.SetStatusSection(2, "Col 15")
+'win1.SetStatusSection(0, "Modified")
+'win1.SetStatusSection(1, "Ln 42")
+'win1.SetStatusSection(2, "Col 15")
 
 
 
@@ -63,7 +66,10 @@ Local win5:TWindow = New TWindow(700, 50, 650, 340, "ListBox Demo",True,True,Tru
 Local win6:TWindow = New TWindow(100, 650, 500, 350, "ComboBox Demo",True,True,True)
 Local win7:TWindow = New TWindow(620, 450, 500, 400, "Tabber Demo",True,True,True)
 Local win8:TWindow = New TWindow(1200, 500, 400, 450, "ImageBox Demo",True,True,True, True)
+
 Local win9:TWindow = New TWindow(50, 400, 500, 300, "TextArea Demo",True,True,True)
+win9.SetResizable(True)
+win9.SetMinSize(500, 300)  
 
 ' =============================================================================
 '                         MODAL WINDOW DEMO
@@ -124,6 +130,7 @@ contextMenu.AddItem("Properties...", "properties")
 ' =============================================================================
 Local lblTextAreaTitle:TLabel = New TLabel(10, 10, 480, 20, "Multi-line Text Editor (TTextArea)", LABEL_ALIGN_CENTER)
 lblTextAreaTitle.SetColor(100, 200, 255)
+lblTextAreaTitle.SetAnchors(ANCHOR_LEFT | ANCHOR_TOP | ANCHOR_RIGHT)  ' S'étire horizontalement
 win9.AddChild lblTextAreaTitle
 
 ' Create the TextArea with some initial text
@@ -143,17 +150,21 @@ sampleCode :+ "' - Scroll support~n"
 
 Global textArea:TTextArea = New TTextArea(10, 35, 480, 180, sampleCode)
 textArea.SetShowLineNumbers(True)
+textArea.SetAnchors(ANCHOR_ALL)  ' S'étire dans toutes les directions
 win9.AddChild textArea
 
 ' Options panel
 Local chkLineNumbers:TCheckBox = New TCheckBox(10, 225, 150, 20, "Line Numbers", True)
+chkLineNumbers.SetAnchors(ANCHOR_LEFT | ANCHOR_BOTTOM)  ' Reste en bas à gauche
 win9.AddChild chkLineNumbers
 
 Local chkReadOnly:TCheckBox = New TCheckBox(170, 225, 150, 20, "Read Only", False)
+chkReadOnly.SetAnchors(ANCHOR_LEFT | ANCHOR_BOTTOM)  ' Reste en bas à gauche
 win9.AddChild chkReadOnly
 
 Local lblLineInfo:TLabel = New TLabel(10, 250, 480, 20, "Line: 1  Col: 1  Lines: " + textArea.GetLineCount())
 lblLineInfo.SetColor(150, 150, 180)
+lblLineInfo.SetAnchors(ANCHOR_LEFT | ANCHOR_BOTTOM | ANCHOR_RIGHT)  ' S'étire horizontalement, reste en bas
 win9.AddChild lblLineInfo
 
 ' =============================================================================
@@ -217,6 +228,7 @@ winModal.AddChild btnModalOK
 ' --- Title Label ---
 Local titleLabel:TLabel = New TLabel(20, 20, 500, 24, "Welcome to the CreepyCat Opaline GUI Framework! (C)2026", LABEL_ALIGN_CENTER)
 titleLabel.SetColor(255, 220, 100)  ' Gold color
+titleLabel.SetAnchors(ANCHOR_LEFT | ANCHOR_TOP | ANCHOR_RIGHT)  ' S'étire horizontalement
 win1.AddChild titleLabel
 
 Local infoLabel:TLabel = New TLabel(20, 50, 300, 20, "This demonstrates Labels and Panels")
@@ -233,6 +245,7 @@ buttonPanel.AddChild btn2
 
 ' --- Panel with radio buttons ---
 Local optionsPanel:TPanel = New TPanel(280, 90, 240, 140, "Display Mode", PANEL_STYLE_RAISED)
+optionsPanel.SetAnchors(ANCHOR_TOP | ANCHOR_RIGHT)  ' Reste en haut à droite
 win1.AddChild optionsPanel
 
 ' Radio buttons are grouped together (only one can be selected at a time)
@@ -247,19 +260,23 @@ r2.selected = True
 
 ' --- Status panel (sunken style) ---
 Local statusPanel:TPanel = New TPanel(20, 250, 500, 60, "", PANEL_STYLE_SUNKEN)
+statusPanel.SetAnchors(ANCHOR_LEFT | ANCHOR_RIGHT)  ' S'étire horizontalement, position Y fixe
 win1.AddChild statusPanel
 
 Local statusLabel:TLabel = New TLabel(10, 15, 480, 30, "Status: Ready", LABEL_ALIGN_LEFT)
 statusLabel.SetColor(100, 255, 100)  ' Green
+statusLabel.SetAnchors(ANCHOR_LEFT | ANCHOR_TOP | ANCHOR_RIGHT)  ' S'étire avec le panel parent
 statusPanel.AddChild statusLabel
 
 ' --- Nested panels demo ---
 ' Shows that panels can contain other panels (hierarchy support)
 Local outerPanel:TPanel = New TPanel(20, 330, 500, 180, "Nested Panels Demo", PANEL_STYLE_RAISED)
+outerPanel.SetAnchors(ANCHOR_LEFT | ANCHOR_TOP | ANCHOR_RIGHT | ANCHOR_BOTTOM)  ' S'étire partout
 win1.AddChild outerPanel
 
 Local innerPanel1:TPanel = New TPanel(15, 35, 220, 120, "Panel A", PANEL_STYLE_SUNKEN)
 Local innerPanel2:TPanel = New TPanel(250, 35, 220, 120, "Panel B", PANEL_STYLE_SUNKEN)
+innerPanel2.SetAnchors(ANCHOR_TOP | ANCHOR_RIGHT | ANCHOR_BOTTOM)  ' Panel B reste à droite et s'étire verticalement
 outerPanel.AddChild innerPanel1
 outerPanel.AddChild innerPanel2
 
@@ -1208,7 +1225,7 @@ While Not AppTerminate()
     ClearAllEvents(root)
 
     ' Display help text at top-left corner
-    SetColor 220, 220, 255
+    SetColor 179, 255, 0
     DrawText "Welcome to the CreepyCat Opaline GUI Framework! (C)2026", 10, 10
     DrawText "Drag windows by title bar | Use mouse wheel on sliders and lists | Click ComboBox to open dropdown", 10, 30
     

@@ -16,6 +16,19 @@ Type TEvent
 End Type
 
 ' =============================================================================
+'                          ANCHOR CONSTANTS
+' =============================================================================
+' Anchors determine how a widget resizes/moves when its parent resizes
+' By default widgets are anchored to TOP and LEFT (position stays fixed)
+' =============================================================================
+Const ANCHOR_NONE:Int   = 0
+Const ANCHOR_LEFT:Int   = 1   ' Distance to left edge stays fixed
+Const ANCHOR_TOP:Int    = 2   ' Distance to top edge stays fixed
+Const ANCHOR_RIGHT:Int  = 4   ' Distance to right edge stays fixed
+Const ANCHOR_BOTTOM:Int = 8   ' Distance to bottom edge stays fixed
+Const ANCHOR_ALL:Int    = 15  ' Anchored to all edges (stretches both ways)
+
+' =============================================================================
 '                          GLOBAL GUI STATE
 ' =============================================================================
 Global Gui_SystemFont:TImageFont
@@ -43,6 +56,9 @@ Type TWidget Abstract
     Field enabled:Int = True          ' Whether widget accepts input
     Field visibleByUser:Int = True    ' User-controlled visibility (manual Show/Hide)
     Field visibleByTabber:Int = True  ' Tabber-controlled visibility
+    
+    ' Anchor system for automatic resizing
+    Field anchors:Int = ANCHOR_LEFT | ANCHOR_TOP  ' Default: fixed position top-left
 
     Method New(x:Int, y:Int, w:Int, h:Int)
         rect.x = x
@@ -128,6 +144,65 @@ Type TWidget Abstract
     ' Widget is visible only if BOTH user AND tabber want it visible
     Method UpdateVisibility()
         visible = visibleByUser And visibleByTabber
+    End Method
+
+    ' =========================================================================
+    '                      ANCHOR SYSTEM
+    ' =========================================================================
+    
+    ' Set anchor flags for this widget
+    ' Examples:
+    '   SetAnchors(ANCHOR_LEFT | ANCHOR_TOP)           - Fixed position (default)
+    '   SetAnchors(ANCHOR_RIGHT | ANCHOR_BOTTOM)       - Stays in bottom-right corner
+    '   SetAnchors(ANCHOR_LEFT | ANCHOR_RIGHT)         - Stretches horizontally
+    '   SetAnchors(ANCHOR_ALL)                         - Stretches in all directions
+    Method SetAnchors(anchorFlags:Int)
+        anchors = anchorFlags
+    End Method
+    
+    ' Get current anchor flags
+    Method GetAnchors:Int()
+        Return anchors
+    End Method
+    
+    ' Called when parent resizes - adjusts position and size based on anchors
+    ' deltaW, deltaH = change in parent's width and height
+    Method OnParentResize(deltaW:Int, deltaH:Int)
+        Local anchorL:Int = (anchors & ANCHOR_LEFT) <> 0
+        Local anchorR:Int = (anchors & ANCHOR_RIGHT) <> 0
+        Local anchorT:Int = (anchors & ANCHOR_TOP) <> 0
+        Local anchorB:Int = (anchors & ANCHOR_BOTTOM) <> 0
+        
+        ' Horizontal adjustment
+        If anchorL And anchorR
+            ' Anchored to both left and right: stretch width
+            rect.w :+ deltaW
+        ElseIf anchorR And Not anchorL
+            ' Anchored to right only: move right
+            rect.x :+ deltaW
+        ElseIf Not anchorL And Not anchorR
+            ' No horizontal anchor: move by half (center)
+            rect.x :+ deltaW / 2
+        EndIf
+        ' If only anchorL: do nothing (default behavior)
+        
+        ' Vertical adjustment
+        If anchorT And anchorB
+            ' Anchored to both top and bottom: stretch height
+            rect.h :+ deltaH
+        ElseIf anchorB And Not anchorT
+            ' Anchored to bottom only: move down
+            rect.y :+ deltaH
+        ElseIf Not anchorT And Not anchorB
+            ' No vertical anchor: move by half (center)
+            rect.y :+ deltaH / 2
+        EndIf
+        ' If only anchorT: do nothing (default behavior)
+        
+        ' Recursively notify children (they may have their own anchors)
+        For Local child:TWidget = EachIn children
+            child.OnParentResize(deltaW, deltaH)
+        Next
     End Method
 
     ' Abstract methods - must be implemented by subclasses

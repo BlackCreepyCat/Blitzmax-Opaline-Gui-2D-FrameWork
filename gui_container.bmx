@@ -84,12 +84,17 @@ Type TContainer Extends TWidget
         ' Normal update (no modal active)
         ' -----------------------------------------------------------------
         
-        ' PRIORITY 1: If a window is being dragged, update it regardless of mouse position
+        ' PRIORITY 1: If a window is being RESIZED, update it regardless of mouse position
+        If resizingWindow <> Null
+            Return resizingWindow.Update(mx, my)
+        EndIf
+        
+        ' PRIORITY 2: If a window is being DRAGGED, update it regardless of mouse position
         If draggedWindow <> Null
             Return draggedWindow.Update(mx, my)
         EndIf
         
-        ' PRIORITY 2: ComboBox popup has priority
+        ' PRIORITY 3: ComboBox popup has priority
         If TComboBox.IsPopupActive()
             ' Let the combobox owner window handle it
             For Local c:TWidget = EachIn children

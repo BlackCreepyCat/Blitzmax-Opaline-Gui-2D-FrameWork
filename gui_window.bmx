@@ -12,6 +12,11 @@ Global g_ModalWindow:TWindow = Null  ' Currently active modal window
 Global g_DesktopActive:Int = False   ' True when user clicked on desktop (no window active)
 
 ' -----------------------------------------------------------------------------
+' Resize Constants
+' -----------------------------------------------------------------------------
+Const DEFAULT_RESIZE_GRIP_SIZE:Int = 16  ' Size of the resize grip zone (bottom-right corner)
+
+' -----------------------------------------------------------------------------
 ' Status Bar Section - represents one section of the status bar
 ' -----------------------------------------------------------------------------
 Type TStatusSection
@@ -52,6 +57,20 @@ Type TWindow Extends TWidget
     Field showStatusBar:Int = False
     Field statusSections:TList = New TList  ' List of TStatusSection
     Field statusText:String = ""            ' Simple single-text mode
+
+    ' =========================================================================
+    '                         RESIZE SUPPORT
+    ' =========================================================================
+    Field isResizable:Int = False           ' Can this window be resized?
+    Field resizeGripSize:Int = DEFAULT_RESIZE_GRIP_SIZE  ' Size of resize grip zone
+    Field resizeStartX:Int                  ' Mouse X at resize start
+    Field resizeStartY:Int                  ' Mouse Y at resize start
+    Field resizeStartW:Int                  ' Window width at resize start
+    Field resizeStartH:Int                  ' Window height at resize start
+    
+    ' Minimum window size
+    Field minWidth:Int = 150
+    Field minHeight:Int = 100
 
     ' =========================================================================
     '                         MODAL SUPPORT
@@ -262,6 +281,72 @@ Type TWindow Extends TWidget
     End Method
 
     ' =========================================================================
+    '                         RESIZE METHODS
+    ' =========================================================================
+    
+    ' Enable or disable window resizing
+    Method SetResizable(resizable:Int)
+        isResizable = resizable
+    End Method
+    
+    ' Check if window is resizable
+    Method GetResizable:Int()
+        Return isResizable
+    End Method
+    
+    ' Set the size of the resize grip zone
+    Method SetResizeGripSize(size:Int)
+        resizeGripSize = Max(10, Min(size, 30))  ' Clamp between 10 and 30
+    End Method
+    
+    ' Get the current resize grip size
+    Method GetResizeGripSize:Int()
+        Return resizeGripSize
+    End Method
+    
+    ' Set minimum window size (minW, minH = CLIENT area size, like constructor)
+    ' Internally adds titlebar and statusbar heights
+    Method SetMinSize(minW:Int, minH:Int)
+        minWidth = Max(50, minW)
+        ' Add titlebar height, and statusbar if present
+        Local totalMinH:Int = minH + TITLEBAR_HEIGHT
+        If showStatusBar Then totalMinH :+ STATUSBAR_HEIGHT
+        minHeight = Max(50, totalMinH)
+    End Method
+    
+    ' Get minimum width
+    Method GetMinWidth:Int()
+        Return minWidth
+    End Method
+    
+    ' Get minimum height
+    Method GetMinHeight:Int()
+        Return minHeight
+    End Method
+    
+    ' Check if mouse is over the resize grip (bottom-right corner)
+    ' Le grip est au bas VISUEL de la fenêtre (titlebar + client area)
+    Method IsOverResizeGrip:Int(lx:Int, ly:Int)
+        If Not isResizable Then Return False
+        
+        Local gripSize:Int = 20
+        
+        ' Position X : coin droit de la fenêtre
+        Local gripX:Int = rect.w - gripSize
+        
+        ' Position Y : bas visuel = TITLEBAR_HEIGHT + GetClientHeight()
+        Local visualBottom:Int = TITLEBAR_HEIGHT + GetClientHeight()
+        Local gripY:Int = visualBottom - gripSize
+        
+        Return lx >= gripX And lx < rect.w And ly >= gripY And ly < visualBottom
+    End Method
+    
+    ' Check if currently resizing
+    Method GetIsResizing:Int()
+        Return (resizingWindow = Self)
+    End Method
+
+    ' =========================================================================
     '                         HELPER METHODS
     ' =========================================================================
     
@@ -308,7 +393,7 @@ Type TWindow Extends TWidget
         If Not visible Then Return
         
         Local ax:Int = px + rect.x
-        Local ay:Int = py + rect.y
+        Local ay:Int = py + rect.y 
 
         ' Draw title bar with different color depending on active/inactive state
         ' Modal windows are ALWAYS drawn as active
@@ -330,6 +415,36 @@ Type TWindow Extends TWidget
         ' Draw status bar if enabled
         If showStatusBar
             DrawStatusBar(ax, ay + TITLEBAR_HEIGHT + ClientHeight)
+        EndIf
+        
+        ' Draw resize grip indicator (bottom-right corner) if resizable
+        ' Le grip doit être au bas VISUEL de la fenêtre (titlebar + client area)
+        ' car la statusbar est dessinée DANS le client area avec une bidouille
+        If isResizable
+            Local gripSize:Int = 14
+            Local gripX:Int = ax + rect.w - gripSize - 2
+            ' Bas visuel = ay + TITLEBAR_HEIGHT + ClientHeight
+            Local gripY:Int = ay + TITLEBAR_HEIGHT + ClientHeight - gripSize - 2
+            
+            SetBlend(ALPHABLEND)
+            SetAlpha(0.7)
+            
+            ' Draw diagonal lines (grip pattern)
+            SetColor 150, 150, 170
+            For Local i:Int = 0 To 2
+                Local offset:Int = i * 4
+                DrawLine gripX + offset + 2, gripY + gripSize - 2, gripX + gripSize - 2, gripY + offset + 2
+            Next
+            
+            ' Darker lines for depth
+            SetColor 30, 30, 50
+            For Local i:Int = 0 To 2
+                Local offset:Int = i * 4
+                DrawLine gripX + offset + 3, gripY + gripSize - 2, gripX + gripSize - 2, gripY + offset + 3
+            Next
+            
+            SetAlpha(1.0)
+            SetColor 255, 255, 255
         EndIf
 
         ' First draw title bar buttons (they should appear on top of title bar)
@@ -433,23 +548,85 @@ Type TWindow Extends TWidget
         Local lx:Int = mx - rect.x
         Local ly:Int = my - rect.y
 
-        ' Handle ongoing drag
+        ' =====================================================================
+        ' Handle ongoing RESIZE operation (uses global resizingWindow)
+        ' Uses absolute mouse coords so it works even when mouse moves fast
+        ' =====================================================================
+        If resizingWindow = Self
+            If GuiMouse.Down()
+                Local newW:Int = resizeStartW + (GuiMouse.x - resizeStartX)
+                Local newH:Int = resizeStartH + (GuiMouse.y - resizeStartY)
+                
+                ' Apply minimum size constraints
+                newW = Max(minWidth, newW)
+                newH = Max(minHeight, newH)
+                
+                ' Calculate delta for anchor system
+                Local deltaW:Int = newW - rect.w
+                Local deltaH:Int = newH - rect.h
+                
+                ' Apply new size
+                rect.w = newW
+                rect.h = newH
+                
+                ' Update title bar buttons position
+                UpdateTitleButtonPositions()
+                
+                ' Notify children about resize (anchor system)
+                If deltaW <> 0 Or deltaH <> 0
+                    For Local child:TWidget = EachIn children
+                        ' Skip title bar buttons (they are handled by UpdateTitleButtonPositions)
+                        If TButton(child) And TButton(child).isTitleButton Then Continue
+                        child.OnParentResize(deltaW, deltaH)
+                    Next
+                EndIf
+                
+                Return True
+            Else
+                ' Mouse released - stop resizing
+                resizingWindow = Null
+                Return True
+            EndIf
+        EndIf
+
+        ' =====================================================================
+        ' Handle ongoing DRAG operation
+        ' =====================================================================
         If isDragging
             If GuiMouse.Down()
                 rect.x = mx - dragOffsetX
                 rect.y = my - dragOffsetY
-                ' Modal windows are always on top, no need to BringToFront
                 If parent And Not isModal Then parent.BringToFront(Self)
                 Return True
-            ElseIf GuiMouse.Released()
+            Else
                 isDragging = False
                 draggedWindow = Null
                 Return True
             EndIf
         EndIf
 
-        ' Start dragging only if mouse is over title bar and not over any button
-        If draggedWindow = Null And GuiMouse.Hit()
+        ' =====================================================================
+        ' Start RESIZE if mouse clicks on resize grip (bottom-right corner)
+        ' =====================================================================
+        If isResizable And resizingWindow = Null And draggedWindow = Null And GuiMouse.Hit()
+            If IsOverResizeGrip(lx, ly)
+                ' Start resizing
+                resizingWindow = Self
+                resizeStartX = GuiMouse.x
+                resizeStartY = GuiMouse.y
+                resizeStartW = rect.w
+                resizeStartH = rect.h
+                
+                If parent And Not isModal Then parent.BringToFront(Self)
+                g_DesktopActive = False
+                Return True
+            EndIf
+        EndIf
+
+        ' =====================================================================
+        ' Start DRAGGING if mouse clicks on title bar (not on buttons)
+        ' =====================================================================
+        If draggedWindow = Null And resizingWindow = Null And GuiMouse.Hit()
             If lx >= 0 And lx < rect.w And ly >= 0 And ly < TITLEBAR_HEIGHT
                 Local overButton:Int = False
                 
@@ -458,9 +635,8 @@ Type TWindow Extends TWidget
                 If maxBtn And lx >= maxBtn.rect.x And lx < maxBtn.rect.x + maxBtn.rect.w And ly >= maxBtn.rect.y And ly < maxBtn.rect.y + maxBtn.rect.h Then overButton = True
 
                 If Not overButton
-                    ' Modal windows stay on top, don't allow other windows to come to front
                     If parent And Not isModal Then parent.BringToFront(Self)
-                    g_DesktopActive = False  ' A window is now active
+                    g_DesktopActive = False
                     isDragging = True
                     dragOffsetX = lx
                     dragOffsetY = ly
@@ -509,16 +685,38 @@ Type TWindow Extends TWidget
         EndIf
 
         ' If clicked anywhere in the window (but not handled above), bring to front
-        ' But NOT if a modal window is active and this is not the modal
-        If draggedWindow = Null And GuiMouse.Hit()
+        If draggedWindow = Null And resizingWindow = Null And GuiMouse.Hit()
             If lx >= 0 And lx < rect.w And ly >= 0 And ly < rect.h
                 If parent And Not isModal Then parent.BringToFront(Self)
-                g_DesktopActive = False  ' A window is now active
+                g_DesktopActive = False
                 Return True
             EndIf
         EndIf
 
         Return False
+    End Method
+    
+    ' Update title bar button positions after resize
+    Method UpdateTitleButtonPositions()
+        Local btnY:Int = (TITLEBAR_HEIGHT - TITLE_BUTTON_SIZE) / 2
+        Local Right:Int = rect.w - TITLE_BUTTON_MARGIN
+        
+        If closeBtn
+            closeBtn.rect.x = Right - TITLE_BUTTON_SIZE
+            closeBtn.rect.y = btnY
+            Right :- TITLE_BUTTON_SIZE + 4
+        EndIf
+        
+        If maxBtn
+            maxBtn.rect.x = Right - TITLE_BUTTON_SIZE
+            maxBtn.rect.y = btnY
+            Right :- TITLE_BUTTON_SIZE + 4
+        EndIf
+        
+        If minBtn
+            minBtn.rect.x = Right - TITLE_BUTTON_SIZE
+            minBtn.rect.y = btnY
+        EndIf
     End Method
 
     ' Closes the window - removes it from parent and clears children
