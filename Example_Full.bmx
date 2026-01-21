@@ -35,6 +35,7 @@ Include "gui_textinput.bmx"
 Include "gui_listbox.bmx"
 Include "gui_combobox.bmx"
 Include "gui_tabber.bmx"
+Include "gui_imagebox.bmx"
 Include "gui_events.bmx"
 
 ' =============================================================================
@@ -52,13 +53,33 @@ Global root:TContainer = New TContainer(GraphicsWidth(), GraphicsHeight())
 TWidget.GuiSetRoot(root)  ' <-- IMPORTANT !
 
 ' Create demo windows
-Local win1:TWindow = New TWindow(120, 80, 540, 540, "Opaline Main Window",True,True,False)
-Local win2:TWindow = New TWindow(340, 220, 380, 320, "Settings Window",True,True,True)
+Local win1:TWindow = New TWindow(120, 80, 540, 540, "Opaline Main Window",True,True,False,True)
+
+' More complex status text, sections adding (width = -1 for flexible)
+win1.AddStatusSection("Ready", -1, LABEL_ALIGN_LEFT)        ' Section 0 - flexible
+win1.AddStatusSection("Ln 1", -1, LABEL_ALIGN_CENTER)       ' Section 1 - 60px
+win1.AddStatusSection("Col 1", -1, LABEL_ALIGN_CENTER)      ' Section 2 - 60px
+win1.AddStatusSection("UTF-8", -1, LABEL_ALIGN_RIGHT)       ' Section 3 - 80px
+
+' Mettre à jour une section
+win1.SetStatusSection(0, "Modified")
+win1.SetStatusSection(1, "Ln 42")
+win1.SetStatusSection(2, "Col 15")
+
+
+
+Local win2:TWindow = New TWindow(340, 220, 380, 320, "Settings Window",True,True,True,True)
+
+' Simple status text
+win2.SetStatusText("I like status window text!")
+
+
 Local win3:TWindow = New TWindow(1400, 80, 450, 800, "Progress Demo",False,False,True)
 Local win4:TWindow = New TWindow(700, 400, 450, 350, "Text Input Demo",False,False,False)
 Local win5:TWindow = New TWindow(700, 50, 650, 340, "ListBox Demo",True,True,True)
 Local win6:TWindow = New TWindow(100, 650, 500, 350, "ComboBox Demo",True,True,True)
 Local win7:TWindow = New TWindow(620, 450, 500, 400, "Tabber Demo",True,True,True)
+Local win8:TWindow = New TWindow(1200, 500, 400, 450, "ImageBox Demo",True,True,True, True)
 
 root.AddChild win1
 root.AddChild win2
@@ -67,6 +88,7 @@ root.AddChild win4
 root.AddChild win5
 root.AddChild win6
 root.AddChild win7
+root.AddChild win8
 
 ' =============================================================================
 '                         WINDOW 1 - LABELS & PANELS DEMO
@@ -653,6 +675,99 @@ lblTabInfo.SetColor(150, 200, 255)
 win7.AddChild lblTabInfo
 
 ' =============================================================================
+'                         WINDOW 8 - IMAGEBOX DEMO
+' =============================================================================
+
+win8.SetStatusText("ImageBox Widget Demo")
+
+Local imgTitle:TLabel = New TLabel(20, 10, 360, 24, "ImageBox Demo - Image Display Widget", LABEL_ALIGN_CENTER)
+imgTitle.SetColor(255, 180, 100)
+win8.AddChild imgTitle
+
+' --- ImageBox without border (flat) ---
+Local lblImg1:TLabel = New TLabel(20, 45, 150, 20, "No border:")
+win8.AddChild lblImg1
+
+
+
+Local imgBox1:TImageBox = New TImageBox(20, 70, 80, 80)
+imgBox1.SetBackgroundColor(60, 60, 80)
+win8.AddChild imgBox1
+
+
+' --- ImageBox with raised border ---
+Local lblImg2:TLabel = New TLabel(130, 45, 150, 20, "Raised:")
+win8.AddChild lblImg2
+
+Local imgBox2:TImageBox = New TImageBox(120, 70, 80, 80)
+imgBox2.SetShowBorder(True)
+imgBox2.SetBorderStyle(IMAGEBOX_STYLE_RAISED)
+imgBox2.SetBorderColor(80, 120, 180)
+win8.AddChild imgBox2
+
+' --- ImageBox with sunken border ---
+Local lblImg3:TLabel = New TLabel(220, 45, 150, 20, "Sunken:")
+win8.AddChild lblImg3
+
+Local imgBox3:TImageBox = New TImageBox(220, 70, 80, 80)
+imgBox3.SetShowBorder(True)
+imgBox3.SetBorderStyle(IMAGEBOX_STYLE_SUNKEN)
+imgBox3.SetBorderColor(100, 80, 60)
+win8.AddChild imgBox3
+
+' --- Clickable ImageBox (button-like) ---
+Local lblImg4:TLabel = New TLabel(320, 45, 60, 20, "Clickable:")
+win8.AddChild lblImg4
+
+Local imgBox4:TImageBox = New TImageBox(320, 70, 60, 60)
+imgBox4.SetShowBorder(True)
+imgBox4.SetClickable(True)
+imgBox4.SetBorderColor(100, 150, 200)
+win8.AddChild imgBox4
+
+' --- Large ImageBox with options ---
+Local lblImgLarge:TLabel = New TLabel(20, 165, 200, 20, "Large ImageBox with options:")
+win8.AddChild lblImgLarge
+
+
+Local imgBoxLarge:TImageBox = New TImageBox(20, 190, 200, 150)
+imgBoxLarge.SetShowBorder(True)
+imgBoxLarge.SetBorderStyle(IMAGEBOX_STYLE_RAISED)
+imgBoxLarge.SetBorderColor(80, 100, 140)
+imgBoxLarge.SetPreserveAspect(True)
+imgBoxLarge.SetCenterImage(True)
+imgBoxLarge.LoadFromFile("image.jpg")
+
+win8.AddChild imgBoxLarge
+
+' --- Options panel ---
+Local imgOptionsPanel:TPanel = New TPanel(240, 165, 140, 175, "Options", PANEL_STYLE_RAISED)
+win8.AddChild imgOptionsPanel
+
+Local chkPreserveAspect:TCheckBox = New TCheckBox(15, 30, 110, 20, "Aspect?", True)
+imgOptionsPanel.AddChild chkPreserveAspect
+
+Local chkCenterImg:TCheckBox = New TCheckBox(15, 55, 110, 20, "Center?", True)
+imgOptionsPanel.AddChild chkCenterImg
+
+Local chkShowBorderLarge:TCheckBox = New TCheckBox(15, 80, 110, 20, "Border?", True)
+imgOptionsPanel.AddChild chkShowBorderLarge
+
+Local lblAlpha:TLabel = New TLabel(15, 110, 60, 20, "Alpha:")
+imgOptionsPanel.AddChild lblAlpha
+
+Local sliderAlpha:TSlider = New TSlider(15, 135, 110, 20, 1.0, SLIDER_STYLE_HORIZONTAL)
+imgOptionsPanel.AddChild sliderAlpha
+
+' --- Info panel ---
+Local imgInfoPanel:TPanel = New TPanel(20, 355, 360, 50, "", PANEL_STYLE_SUNKEN)
+win8.AddChild imgInfoPanel
+
+Local lblImgInfo:TLabel = New TLabel(15, 12, 330, 24, "Click on the clickable ImageBox!")
+lblImgInfo.SetColor(150, 200, 255)
+imgInfoPanel.AddChild lblImgInfo
+
+' =============================================================================
 '                              MAIN LOOP
 ' =============================================================================
 While Not AppTerminate()
@@ -783,6 +898,43 @@ While Not AppTerminate()
     lblSfxVal.SetText(Int(sliderSfx.GetPercent()) + "%")
     lblMouseSensVal.SetText(Int(sliderMouseSens.GetPercent()) + "%")
 
+    ' =============================================================================
+    '                    IMAGEBOX DEMO - Event handling
+    ' =============================================================================
+    
+    ' Clickable ImageBox events
+    If imgBox4.WasClicked()
+        lblImgInfo.SetText("Clickable ImageBox was clicked!")
+        lblImgInfo.SetColor(100, 255, 100)
+    EndIf
+    
+    If imgBox4.IsHovered()
+        win8.SetStatusText("Hovering over clickable ImageBox...")
+    Else
+        win8.SetStatusText("ImageBox Widget Demo")
+    EndIf
+    
+    ' Update large ImageBox options from checkboxes
+    If chkPreserveAspect.StateChanged()
+        imgBoxLarge.SetPreserveAspect(chkPreserveAspect.IsChecked())
+        lblImgInfo.SetText("Preserve Aspect: " + chkPreserveAspect.IsChecked())
+        lblImgInfo.SetColor(200, 200, 255)
+    EndIf
+    
+    If chkCenterImg.StateChanged()
+        imgBoxLarge.SetCenterImage(chkCenterImg.IsChecked())
+        lblImgInfo.SetText("Center Image: " + chkCenterImg.IsChecked())
+        lblImgInfo.SetColor(200, 200, 255)
+    EndIf
+    
+    If chkShowBorderLarge.StateChanged()
+        imgBoxLarge.SetShowBorder(chkShowBorderLarge.IsChecked())
+        lblImgInfo.SetText("Show Border: " + chkShowBorderLarge.IsChecked())
+        lblImgInfo.SetColor(200, 200, 255)
+    EndIf
+    
+    ' Update alpha from slider
+    imgBoxLarge.SetImageAlpha(sliderAlpha.GetValue())
 
 
     ' =============================================================================

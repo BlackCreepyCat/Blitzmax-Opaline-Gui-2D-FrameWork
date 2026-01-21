@@ -9,6 +9,7 @@
 Const TITLEBAR_HEIGHT:Int = 28
 Const TITLE_BUTTON_SIZE:Int = 22
 Const TITLE_BUTTON_MARGIN:Int = 6
+Const STATUSBAR_HEIGHT:Int = 24
 
 ' Button Types
 Const BTN_TYPE_NORMAL:Int = 0
@@ -71,6 +72,18 @@ Const COLOR_WINDOW_CLIENT_B:Int = 60
 Const COLOR_WINDOW_TITLE_R:Int = 240
 Const COLOR_WINDOW_TITLE_G:Int = 240
 Const COLOR_WINDOW_TITLE_B:Int = 255
+
+Const COLOR_STATUSBAR_BG_R:Int = 50
+Const COLOR_STATUSBAR_BG_G:Int = 50
+Const COLOR_STATUSBAR_BG_B:Int = 70
+
+Const COLOR_STATUSBAR_TEXT_R:Int = 200
+Const COLOR_STATUSBAR_TEXT_G:Int = 200
+Const COLOR_STATUSBAR_TEXT_B:Int = 220
+
+Const COLOR_STATUSBAR_SEPARATOR_R:Int = 80
+Const COLOR_STATUSBAR_SEPARATOR_G:Int = 80
+Const COLOR_STATUSBAR_SEPARATOR_B:Int = 100
 
 ' -----------------------------------------------------------------------------
 ' Button Colors
