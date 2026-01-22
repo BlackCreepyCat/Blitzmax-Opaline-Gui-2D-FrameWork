@@ -353,14 +353,14 @@ Type TTaskBar Extends TWidget
         ' Check if taskbar is fully hidden (animation complete)
         Local fullyHidden:Int = isHidden And (Abs(currentY - targetY) < 1.0)
         
+
+		' Draw thin line indicator when fully hidden
         If fullyHidden And isAutoHide
-            ' Draw thin line indicator when fully hidden
-            TWidget.GuiDrawRect(0, GUI_GRAPHICSHEIGHT - 4, rect.w, 4, 1, red + 20, green + 20, blue + 20)
+			' ERROR WITH OPENB3D EXample??? Whyyyyyyyyy!!!!!!!!! :)))
+			' TWidget.GuiDrawRect(0, GUI_GRAPHICSHEIGHT - 4, rect.w, 4, 1, red + 20, green + 20, blue + 20)
             Return
         EndIf
 
-
-        
         Local ax:Int = px + rect.x
         Local ay:Int = py + rect.y
         
@@ -379,6 +379,7 @@ Type TTaskBar Extends TWidget
         If showClock
             DrawClock(ax, ay)
         EndIf
+
     End Method
     
     ' Draw the clock on the right side
