@@ -15,17 +15,20 @@ Import Openb3d.B3dglgraphics
 
 Include "opaline/gui_opaline.bmx"
 
-Graphics3D 1920,1080,0,2
+Graphics3D 1024,768,0,2
 
 Local camera:TCamera=CreateCamera()
 CameraClsColor camera,32,32,64
-PositionEntity camera,0,0,-6
+PositionEntity camera,0,0,-5
 
-AmbientLight 128,128,128
+AmbientLight 0,0,0
 
 Local light:TLight=CreateLight(2)
-PositionEntity light,6,6,-6
-PointEntity light,camera
+PositionEntity light,5,5,-5
+
+Local light2:TLight=CreateLight(2)
+PositionEntity light2,-5,-5,-5
+
 
 Local cube1:TMesh=CreateCube()
 EntityColor cube1,220,0,0
@@ -41,17 +44,12 @@ TWidget.GuiSetRoot(root)
 ' =============================================================
 '                         GUI BUILDING
 ' =============================================================
-Local win:TWindow = New TWindow(50, 50, 700, 500, "Window Demo", False, True, True)
+Local win:TWindow = New TWindow(50, 50, 530, 300, "Window Demo", False, True, True)
 root.AddChild win
 
-Local title:TLabel = New TLabel(20, 20, 660, 24, "Opaline GUI - Button Demonstration", LABEL_ALIGN_CENTER)
+Local title:TLabel = New TLabel(20, 20, 660, 24, "Opaline GUI - OPENB3D Demonstration", LABEL_ALIGN_CENTER)
 title.SetColor(255, 220, 100)
 win.AddChild title
-
-Local win2:TWindow = New TWindow(350, 350, 700, 500, "Window Demo", False, True, True)
-root.AddChild win2
-
-
 
 Local btn1:TButton = New TButton(20, 20, 180, 38, "Quit Opaline")
 btn1.SetEnabled(True)
@@ -61,23 +59,21 @@ win.AddChild btn1
 While Not KeyDown(KEY_ESCAPE)
 
 	' control cube
-	TurnEntity cube1,5,6,2
-		
+	TurnEntity cube1,1,1,1
 
-	
 	UpdateWorld 
 	RenderWorld
 	
+	' return 2 max 2D
 	BeginMax2D()
 
 	TWidget.GuiRefresh()
-
-
-
+	' Gui check here
 	ClearAllEvents(root)
 	
 	EndMax2D()
 	
 	Flip
 Wend
+
 End
