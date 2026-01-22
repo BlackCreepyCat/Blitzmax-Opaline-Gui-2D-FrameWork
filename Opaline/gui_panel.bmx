@@ -115,9 +115,7 @@ Type TPanel Extends TWidget
         Return False
     End Method
 
-    ' -----------------------------------------------------------------------------
     ' Public API - Title control
-    ' -----------------------------------------------------------------------------
     Method SetTitle(newTitle:String)
         title = newTitle
         ' Automatically adjust title bar height
@@ -132,9 +130,7 @@ Type TPanel Extends TWidget
         Return title
     End Method
 
-    ' -----------------------------------------------------------------------------
     ' Public API - Style & appearance
-    ' -----------------------------------------------------------------------------
     Method SetStyle(newStyle:Int)
         style = newStyle
     End Method
@@ -150,9 +146,9 @@ Type TPanel Extends TWidget
         blue = b
     End Method
 
-    ' -----------------------------------------------------------------------------
+    ' --------------------------------------------------------------------
     ' Helper methods for layout / positioning children inside content area
-    ' -----------------------------------------------------------------------------
+    ' --------------------------------------------------------------------
 
     ' Returns X position where content should start (after padding)
     Method GetContentX:Int()

@@ -511,7 +511,7 @@ Type TWindow Extends TWidget
                 
                 ' Draw separator before section (except first)
                 If sectionIndex > 0
-					GuiDrawLine(currentX - 1, statusY + 4, currentX - 1, statusY + STATUSBAR_HEIGHT - 4, 2, COLOR_STATUSBAR_SEPARATOR_R, COLOR_STATUSBAR_SEPARATOR_G, COLOR_STATUSBAR_SEPARATOR_B)
+					GuiDrawLine(currentX - 1, statusY , currentX - 1, statusY + (STATUSBAR_HEIGHT - 5), 2, COLOR_STATUSBAR_SEPARATOR_R, COLOR_STATUSBAR_SEPARATOR_G, COLOR_STATUSBAR_SEPARATOR_B)
                 EndIf
                 
                 ' Calculate text position based on alignment

@@ -356,8 +356,6 @@ Type TTaskBar Extends TWidget
 
 		' Draw thin line indicator when fully hidden
         If fullyHidden And isAutoHide
-			' ERROR WITH OPENB3D EXample??? Whyyyyyyyyy!!!!!!!!! :)))
-			' TWidget.GuiDrawRect(0, GUI_GRAPHICSHEIGHT - 4, rect.w, 4, 1, red + 20, green + 20, blue + 20)
             Return
         EndIf
 
@@ -365,11 +363,8 @@ Type TTaskBar Extends TWidget
         Local ay:Int = py + rect.y
         
         ' Draw panel background
-        TWidget.GuiDrawRect(ax, ay, rect.w, rect.h, 2, red, green, blue)
-        
-        ' Draw separator line at top
-        TWidget.GuiDrawLine(ax, ay, ax + rect.w, ay, 1, red + 40, green + 40, blue + 40)
-        
+        TWidget.GuiDrawRect(ax, ay, rect.w, rect.h, 4, red, green, blue)
+
         ' Draw buttons
         For Local item:TTaskBarItem = EachIn items
             item.button.Draw(ax, ay)
@@ -397,7 +392,7 @@ Type TTaskBar Extends TWidget
         Local clockY:Int = ay + (TASKBAR_HEIGHT - TWidget.GuiTextHeight(timeStr)) / 2
         
         ' Draw clock background
-        TWidget.GuiDrawRect(clockX - 5, ay + 5, TASKBAR_CLOCK_WIDTH - 10, TASKBAR_HEIGHT - 10, 3, red - 10, green - 10, blue - 10)
+        TWidget.GuiDrawRect(clockX - 5, ay + 5, TASKBAR_CLOCK_WIDTH - 10, TASKBAR_HEIGHT - 10, 5, red - 10, green - 10, blue - 10)
         
         ' Draw time text
         TWidget.GuiDrawText(clockX + 5, clockY, timeStr, TEXT_STYLE_SHADOW, COLOR_TASKBAR_CLOCK_R, COLOR_TASKBAR_CLOCK_G, COLOR_TASKBAR_CLOCK_B)

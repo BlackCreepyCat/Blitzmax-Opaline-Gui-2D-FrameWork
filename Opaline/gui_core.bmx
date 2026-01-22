@@ -31,6 +31,8 @@ Const ANCHOR_ALL:Int    = 15  ' Anchored to all edges (stretches both ways)
 ' =============================================================================
 '                          GLOBAL GUI STATE
 ' =============================================================================
+Global Gui_Version:String="1.6"
+
 Global Gui_SymbolFont:TImageFont
 Global Gui_SymbolFontSize:Int = 18
 
@@ -531,14 +533,14 @@ Type TWidget Abstract
 
         ' Raised look B
         Case 4
-            SetColor 5,10,15
+            SetColor 10,15,20
             DrawRect px, py, tx, ty
 
 			GuiDrawRect(px+1, py+1, tx-3, ty-3, 2, red, green, blue)
 			
         ' Raised look B
         Case 5
-            SetColor 5,10,15
+            SetColor 10,15,20
             DrawRect px, py, tx, ty
 
 			GuiDrawRect(px+1, py+1, tx-3, ty-3, 3, red, green, blue)
