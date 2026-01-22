@@ -164,11 +164,11 @@ textArea.SetAnchors(ANCHOR_ALL)  ' S'étire dans toutes les directions
 win9.AddChild textArea
 
 ' Options panel
-Local chkLineNumbers:TCheckBox = New TCheckBox(10, 225, 150, 18, "Line Numbers", True)
+Local chkLineNumbers:TCheckBox = New TCheckBox(10, 225, 150, 22, "Line Numbers", True)
 chkLineNumbers.SetAnchors(ANCHOR_LEFT | ANCHOR_BOTTOM)  ' Reste en bas à gauche
 win9.AddChild chkLineNumbers
 
-Local chkReadOnly:TCheckBox = New TCheckBox(170, 225, 150, 18, "Read Only", False)
+Local chkReadOnly:TCheckBox = New TCheckBox(170, 225, 150, 22, "Read Only", False)
 chkReadOnly.SetAnchors(ANCHOR_LEFT | ANCHOR_BOTTOM)  ' Reste en bas à gauche
 win9.AddChild chkReadOnly
 
@@ -896,19 +896,19 @@ win8.AddChild imgBoxLarge
 Local imgOptionsPanel:TPanel = New TPanel(240, 165, 140, 175, "Options", PANEL_STYLE_RAISED)
 win8.AddChild imgOptionsPanel
 
-Local chkPreserveAspect:TCheckBox = New TCheckBox(15, 30, 110, 20, "Aspect?", True)
+Local chkPreserveAspect:TCheckBox = New TCheckBox(15, 20, 110, 20, "Aspect?", True)
 imgOptionsPanel.AddChild chkPreserveAspect
 
-Local chkCenterImg:TCheckBox = New TCheckBox(15, 55, 110, 20, "Center?", True)
+Local chkCenterImg:TCheckBox = New TCheckBox(15, 45, 110, 20, "Center?", True)
 imgOptionsPanel.AddChild chkCenterImg
 
-Local chkShowBorderLarge:TCheckBox = New TCheckBox(15, 80, 110, 20, "Border?", True)
+Local chkShowBorderLarge:TCheckBox = New TCheckBox(15, 70, 110, 20, "Border?", True)
 imgOptionsPanel.AddChild chkShowBorderLarge
 
-Local lblAlpha:TLabel = New TLabel(15, 110, 60, 20, "Alpha:")
+Local lblAlpha:TLabel = New TLabel(15, 100, 60, 20, "Alpha:")
 imgOptionsPanel.AddChild lblAlpha
 
-Local sliderAlpha:TSlider = New TSlider(15, 135, 110, 20, 1.0, SLIDER_STYLE_HORIZONTAL)
+Local sliderAlpha:TSlider = New TSlider(15, 125, 110, 20, 1.0, SLIDER_STYLE_HORIZONTAL)
 imgOptionsPanel.AddChild sliderAlpha
 
 ' --- Info panel ---
