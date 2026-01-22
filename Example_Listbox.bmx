@@ -1,11 +1,7 @@
 ' =============================================================================
-'                  Simple GUI Framework - BlitzMax NG
-'                           LISTBOX DEMO : Opaline UI
-' =============================================================================
-' By Creepy Cat (C)2025/2026
-' https://github.com/BlackCreepyCat
-'
-' Demo showcasing ListBox widgets with single and multi-column examples
+'                     Simple GUI Framework - BlitzMax NG
+'                          LISTBOX DEMO : Opaline UI
+'        By Creepy Cat (C)2025/2026 : https://github.com/BlackCreepyCat
 ' =============================================================================
 
 SuperStrict
@@ -17,10 +13,7 @@ Import BRL.LinkedList
 ' Import GUI framework modules
 Include "opaline/gui_opaline.bmx"
 
-' =============================================================================
-'                              MAIN PROGRAM
-' =============================================================================
-Graphics 800, 600, 0
+Graphics 1024, 768, 0
 
 ' Init the GUI
 TWidget.GuiInit()

@@ -41,11 +41,13 @@ Local win1:TWindow = New TWindow(120, 80, 540, 540, "Opaline Main Window",True,T
 win1.SetResizable(True)
 win1.SetMinSize(540, 540)  
 
+'win1.SetStatusText("I like status window text!")
+
 ' More complex status text, sections adding (width = -1 for flexible)
-'win1.AddStatusSection("Ready", -1, LABEL_ALIGN_LEFT)        ' Section 0 - flexible
-'win1.AddStatusSection("Ln 1", -1, LABEL_ALIGN_CENTER)       ' Section 1 - 60px
-'win1.AddStatusSection("Col 1", -1, LABEL_ALIGN_CENTER)      ' Section 2 - 60px
-'win1.AddStatusSection("UTF-8", -1, LABEL_ALIGN_RIGHT)       ' Section 3 - 80px
+win1.AddStatusSection("Ready", -1, LABEL_ALIGN_LEFT)        ' Section 0 - flexible
+win1.AddStatusSection("Ln 1", -1, LABEL_ALIGN_CENTER)       ' Section 1 - 60px
+win1.AddStatusSection("Col 1", -1, LABEL_ALIGN_CENTER)      ' Section 2 - 60px
+win1.AddStatusSection("UTF-8", -1, LABEL_ALIGN_RIGHT)       ' Section 3 - 80px
 
 ' Mettre à jour une section
 'win1.SetStatusSection(0, "Modified")
@@ -57,7 +59,7 @@ win1.SetMinSize(540, 540)
 Local win2:TWindow = New TWindow(340, 220, 380, 320, "Settings Window",True,True,True,True)
 
 ' Simple status text
-win2.SetStatusText("I like status window text!")
+
 
 
 Local win3:TWindow = New TWindow(1400, 80, 450, 800, "Progress Demo",False,False,True)
@@ -918,10 +920,7 @@ imgInfoPanel.AddChild lblImgInfo
 While Not AppTerminate()
     Cls
 
-    TWidget.GuiUpdate()   ' Mouse + popup + widgets update
-    TWidget.GuiDraw()     ' Widgets draw + popup overlay
-
-
+    TWidget.GuiRefresh()
 
     ' =============================================================================
     '                    SLIDER DEMO - Live value display

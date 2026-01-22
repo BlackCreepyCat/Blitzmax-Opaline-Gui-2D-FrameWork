@@ -28,12 +28,13 @@ Global root:TContainer = New TContainer(GraphicsWidth(), GraphicsHeight())
 TWidget.GuiSetRoot(root)
 
 ' Create a window
-Local win:TWindow = New TWindow(475, 100, 235, 350, "My Calculator")
+Local win:TWindow = New TWindow(475, 100, 235, 350, "My Calculator",false)
 win.SetResizable(False)
 root.AddChild(win)
 
-'===================================
+'==============
 'BUTTONS GADGET
+'==============
 
 ' size & space between button gadgets, "a grid-like ..."
 Const STARTX:Int = 20
@@ -445,5 +446,10 @@ While Not AppTerminate() And Not KeyHit(KEY_ESCAPE)
     EndIf
 
     TWidget.GuiClearEvents()
+
+      ' Draw instructions
+    SetColor 255, 166, 0
+    DrawText "Calculator Demo By Eagle54 2026 - Press ESC to exit", 10, 10
+
     Flip
 Wend
