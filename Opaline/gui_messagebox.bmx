@@ -73,9 +73,11 @@ Type TMessageBox
         
         Local winHeight:Int = 120
         
+
+
         ' Create modal window (centered on screen)
-        Local winX:Int = (GraphicsWidth() - winWidth) / 2
-        Local winY:Int = (GraphicsHeight() - winHeight) / 2
+        Local winX:Int = (GUI_GRAPHICSWIDTH - winWidth) / 2
+        Local winY:Int = (GUI_GRAPHICSHEIGHT - winHeight) / 2
         
         mb.window = New TWindow(winX, winY, winWidth, winHeight, title, False, False, False)
         mb.window.SetModalState(True)

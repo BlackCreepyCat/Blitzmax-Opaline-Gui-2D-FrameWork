@@ -23,8 +23,10 @@ Type TBackground
     Method New(blob:TImage)
         Self.blobImage = blob
 
-        x = Rnd(GraphicsWidth())
-        y = Rnd(GraphicsHeight())
+
+
+        x = Rnd(GUI_GRAPHICSWIDTH)
+        y = Rnd(GUI_GRAPHICSHEIGHT)
 
         vx = Rnd(-2.0, 2.0)
         vy = Rnd(-2.0, 2.0)
@@ -56,7 +58,7 @@ Type TBackground
 
 		GrabImage(blob, 0, 0)
 
-		TWidget.GuiSetViewport(0,0,GraphicsWidth(),GraphicsHeight())
+		TWidget.GuiSetViewport(0,0,GUI_GRAPHICSWIDTH, GUI_GRAPHICSHEIGHT)
 		MidHandleImage(blob)
 		
 		Return blob
@@ -78,8 +80,8 @@ Type TBackground
     Method Update()
         x :+ vx
         y :+ vy
-        If x < 0 Or x > GraphicsWidth() Then vx = -vx
-        If y < 0 Or y > GraphicsHeight() Then vy = -vy
+        If x < 0 Or x > GUI_GRAPHICSWIDTH Then vx = -vx
+        If y < 0 Or y > GUI_GRAPHICSHEIGHT Then vy = -vy
         angle :+ rotatespeed
     End Method
     

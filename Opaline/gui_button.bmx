@@ -150,8 +150,10 @@ Type TButton Extends TWidget
             TWidget.GuiDrawText(textX, textY, caption, TEXT_STYLE_SHADOW, COLOR_BUTTON_TEXT_R, COLOR_BUTTON_TEXT_G, COLOR_BUTTON_TEXT_B)
         EndIf
         
+
+
         ' Restore full viewport
-        TWidget.GuiSetViewport(0, 0, GraphicsWidth(), GraphicsHeight())
+        TWidget.GuiSetViewport(0, 0, GUI_GRAPHICSWIDTH, GUI_GRAPHICSHEIGHT)
         
         ' Draw any child widgets
         For Local child:TWidget = EachIn children

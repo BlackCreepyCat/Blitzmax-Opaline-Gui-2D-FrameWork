@@ -532,7 +532,7 @@ Type TWindow Extends TWidget
                 ' Clip and draw text
                 TWidget.GuiSetViewport(currentX, statusY, sectionWidth, STATUSBAR_HEIGHT)
                 TWidget.GuiDrawText(textX, textY, section.text, TEXT_STYLE_NORMAL, section.textR, section.textG, section.textB)
-                TWidget.GuiSetViewport(0, 0, GraphicsWidth(), GraphicsHeight())
+                TWidget.GuiSetViewport(0, 0,  GUI_GRAPHICSWIDTH, GUI_GRAPHICSHEIGHT)
                 
                 currentX :+ sectionWidth + 2
                 sectionIndex :+ 1
@@ -541,7 +541,7 @@ Type TWindow Extends TWidget
             ' Simple single text mode
             TWidget.GuiSetViewport(ax + padding, statusY, rect.w - padding * 2, STATUSBAR_HEIGHT)
             TWidget.GuiDrawText(ax + padding, textY, statusText, TEXT_STYLE_NORMAL, COLOR_STATUSBAR_TEXT_R, COLOR_STATUSBAR_TEXT_G, COLOR_STATUSBAR_TEXT_B)
-            TWidget.GuiSetViewport(0, 0, GraphicsWidth(), GraphicsHeight())
+            TWidget.GuiSetViewport(0, 0,  GUI_GRAPHICSWIDTH, GUI_GRAPHICSHEIGHT)
         EndIf
     End Method
 
@@ -555,10 +555,8 @@ Type TWindow Extends TWidget
         Local lx:Int = mx - rect.x
         Local ly:Int = my - rect.y
 
-        ' =====================================================================
         ' Handle ongoing RESIZE operation (uses global resizingWindow)
         ' Uses absolute mouse coords so it works even when mouse moves fast
-        ' =====================================================================
         If resizingWindow = Self
             If GuiMouse.Down()
                 Local newW:Int = resizeStartW + (GuiMouse.x - resizeStartX)
@@ -596,9 +594,7 @@ Type TWindow Extends TWidget
             EndIf
         EndIf
 
-        ' =====================================================================
         ' Handle ongoing DRAG operation
-        ' =====================================================================
         If isDragging
             If GuiMouse.Down()
                 rect.x = mx - dragOffsetX
@@ -612,9 +608,7 @@ Type TWindow Extends TWidget
             EndIf
         EndIf
 
-        ' =====================================================================
         ' Start RESIZE if mouse clicks on resize grip (bottom-right corner)
-        ' =====================================================================
         If isResizable And resizingWindow = Null And draggedWindow = Null And GuiMouse.Hit()
             If IsOverResizeGrip(lx, ly)
                 ' Start resizing
@@ -630,9 +624,7 @@ Type TWindow Extends TWidget
             EndIf
         EndIf
 
-        ' =====================================================================
         ' Start DRAGGING if mouse clicks on title bar (not on buttons)
-        ' =====================================================================
         If draggedWindow = Null And resizingWindow = Null And GuiMouse.Hit()
             If lx >= 0 And lx < rect.w And ly >= 0 And ly < TITLEBAR_HEIGHT
                 Local overButton:Int = False

@@ -195,14 +195,16 @@ Type TContextMenu
         
         x = screenX
         y = screenY
+
+	
         
         ' Adjust position to stay on screen
         Local menuH:Int = GetHeight()
-        If x + width > GraphicsWidth()
-            x = GraphicsWidth() - width - 5
+        If x + width > GUI_GRAPHICSWIDTH
+            x = GUI_GRAPHICSWIDTH - width - 5
         EndIf
-        If y + menuH > GraphicsHeight()
-            y = GraphicsHeight() - menuH - 5
+        If y + menuH > GUI_GRAPHICSHEIGHT
+            y = GUI_GRAPHICSHEIGHT - menuH - 5
         EndIf
         If x < 0 Then x = 5
         If y < 0 Then y = 5

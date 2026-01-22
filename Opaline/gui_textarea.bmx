@@ -1101,8 +1101,10 @@ Type TTextArea Extends TWidget
             
             y :+ lineHeight
         Next
+
+
         
-        TWidget.GuiSetViewport(0, 0, GraphicsWidth(), GraphicsHeight())
+        TWidget.GuiSetViewport(0, 0, GUI_GRAPHICSWIDTH, GUI_GRAPHICSHEIGHT)
         
         If showLineNumbers
             TWidget.GuiSetViewport(ax + 2, contentY, lineNumberWidth - 4, contentH)
@@ -1115,7 +1117,7 @@ Type TTextArea Extends TWidget
                 y2 :+ lineHeight
             Next
 
-            TWidget.GuiSetViewport(0, 0, GraphicsWidth(), GraphicsHeight())
+            TWidget.GuiSetViewport(0, 0,GUI_GRAPHICSWIDTH, GUI_GRAPHICSHEIGHT)
         EndIf
         
         If NeedsVScrollbar()

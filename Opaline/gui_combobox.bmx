@@ -247,7 +247,8 @@ Type TComboBox Extends TWidget
             TWidget.GuiDrawText(textX, textY, placeholder, TEXT_STYLE_NORMAL, COLOR_TEXTINPUT_PLACEHOLDER_R, COLOR_TEXTINPUT_PLACEHOLDER_G, COLOR_TEXTINPUT_PLACEHOLDER_B)
         EndIf
 
-        TWidget.GuiSetViewport(0, 0, GraphicsWidth(), GraphicsHeight())
+
+        TWidget.GuiSetViewport(0, 0, GUI_GRAPHICSWIDTH, GUI_GRAPHICSHEIGHT)
     End Method
 
     '  Drawing - Dropdown content (called separately)

@@ -355,9 +355,11 @@ Type TTaskBar Extends TWidget
         
         If fullyHidden And isAutoHide
             ' Draw thin line indicator when fully hidden
-            TWidget.GuiDrawRect(0, GraphicsHeight() - 4, rect.w, 4, 1, red + 20, green + 20, blue + 20)
+            TWidget.GuiDrawRect(0, GUI_GRAPHICSHEIGHT - 4, rect.w, 4, 1, red + 20, green + 20, blue + 20)
             Return
         EndIf
+
+
         
         Local ax:Int = px + rect.x
         Local ay:Int = py + rect.y

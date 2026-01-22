@@ -77,10 +77,12 @@ Type TTextInput Extends TWidget
         
         Local displayText:String = GetDisplayText()
         
+
+
         ' Show placeholder when empty and not focused
         If text.Length = 0 And Not focused And placeholder.Length > 0
             TWidget.GuiDrawText(textAreaX - scrollOffset, ay + (rect.h - TWidget.GuiTextHeight("X")) / 2, placeholder, TEXT_STYLE_NORMAL, COLOR_TEXTINPUT_PLACEHOLDER_R, COLOR_TEXTINPUT_PLACEHOLDER_G, COLOR_TEXTINPUT_PLACEHOLDER_B)
-            TWidget.GuiSetViewport(0, 0, GraphicsWidth(), GraphicsHeight())
+            TWidget.GuiSetViewport(0, 0, GUI_GRAPHICSWIDTH, GUI_GRAPHICSHEIGHT)
             Return
         EndIf
         
@@ -107,7 +109,7 @@ Type TTextInput Extends TWidget
         EndIf
         
         ' Restore full viewport after clipping
-        TWidget.GuiSetViewport(0, 0, GraphicsWidth(), GraphicsHeight())
+        TWidget.GuiSetViewport(0, 0,  GUI_GRAPHICSWIDTH, GUI_GRAPHICSHEIGHT)
         
         For Local c:TWidget = EachIn children
             c.Draw(ax, ay)

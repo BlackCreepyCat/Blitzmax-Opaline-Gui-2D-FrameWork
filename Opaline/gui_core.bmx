@@ -40,6 +40,9 @@ Global Gui_SystemFontSize:Int = 16
 Global Gui_Root:TContainer = Null  ' Global root container reference
 Global Gui_Clipboard:TClipboard ' Init the clipboard
 
+Global GUI_GRAPHICSWIDTH:Int = GraphicsWidth()
+Global GUI_GRAPHICSHEIGHT:Int = GraphicsHeight()
+
 ' =============================================================================
 '                        ABSTRACT WIDGET CLASS
 ' =============================================================================
@@ -216,13 +219,15 @@ Type TWidget Abstract
     '                      STATIC GUI FUNCTIONS
     ' =========================================================================
 
-
     ' Initialize the GUI system, Call once at startup before creating any widgets
     Function GuiInit()
         Gui_SystemFont = LoadImageFont("incbin::Arial.ttf", Gui_SystemFontSize, SMOOTHFONT )
 		Gui_SymbolFont = LoadImageFont("incbin::Symbol.ttf", Gui_SymbolFontSize, SMOOTHFONT)
 		
 		Gui_Clipboard:TClipboard = CreateClipboard()
+		
+		GUI_GRAPHICSWIDTH = GraphicsWidth()
+		GUI_GRAPHICSHEIGHT = GraphicsHeight()
     End Function
     
     ' Set the root container for the GUI
@@ -248,7 +253,7 @@ Type TWidget Abstract
         
         ' 2. Auto-initialize TaskBar if not already done
         If g_TaskBar = Null
-            g_TaskBar = New TTaskBar(GraphicsWidth(), GraphicsHeight())
+            g_TaskBar = New TTaskBar(GUI_GRAPHICSWIDTH, GUI_GRAPHICSHEIGHT)
         EndIf
         
         ' 3. Handle context menu FIRST (highest priority overlay)
@@ -314,7 +319,7 @@ Type TWidget Abstract
         
         ' Auto-initialize TaskBar if not already done
         If g_TaskBar = Null
-            g_TaskBar = New TTaskBar(GraphicsWidth(), GraphicsHeight())
+            g_TaskBar = New TTaskBar(GUI_GRAPHICSWIDTH, GUI_GRAPHICSHEIGHT)
         EndIf
         
         ' Handle context menu first
@@ -387,16 +392,12 @@ Type TWidget Abstract
     '                      DRAWING HELPER FUNCTIONS
     ' =========================================================================
 
-	' ----------------------
     ' Constrain the viewport
-	' ----------------------
     Function GuiSetViewport(Px:Int, Py:Int, Tx:Int, Ty:Int)
         SetViewport(Px, Py, Tx, Ty)
     End Function
 
-	' ---------------------
 	' Get text pixel Height
-	' ---------------------
 	Function GuiTextHeight:Int(caption:String , symbol:Int = False)
 		Select symbol
 		Case True
@@ -410,9 +411,7 @@ Type TWidget Abstract
 		EndSelect
 	End Function
 
-	' ---------------------
 	' Get text pixel Width
-	' ---------------------
 	Function GuiTextWidth:Int(caption:String , symbol:Int = False)
 		Select symbol
 		Case True
@@ -426,9 +425,7 @@ Type TWidget Abstract
 		EndSelect
 	End Function
 
-	' ------------------------------------
     ' Draw GUI symbol with optional shadow
-	' ------------------------------------
     Function GuiDrawSymbol(Px:Int, Py:Int, caption:String, style:Int, red:Int, green:Int, blue:Int, alpha:Float = 1.0)
         SetBlend(ALPHABLEND)
         SetImageFont(Gui_SymbolFont)
@@ -455,10 +452,8 @@ Type TWidget Abstract
         SetColor 255, 255, 255
         SetAlpha 1.0
     End Function
- 
-	' ---------------------------------- 
+
     ' Draw GUI text with optional shadow
-	' ----------------------------------
     Function GuiDrawText(Px:Int, Py:Int, caption:String, style:Int, red:Int, green:Int, blue:Int, alpha:Float = 1.0)
         SetBlend(ALPHABLEND)
         SetImageFont(Gui_SystemFont)
@@ -485,10 +480,8 @@ Type TWidget Abstract
         SetColor 255, 255, 255
         SetAlpha 1.0
     End Function
-
-	' -----------------------------------------------------------    
+  
     ' Draw filled rectangle with optional embossed/pressed styles
-	' -----------------------------------------------------------
     Function GuiDrawRect(px:Int, py:Int, tx:Int, ty:Int, style:Int, red:Int, green:Int, blue:Int, alpha:Float=1.0)
 		SetBlend(ALPHABLEND)
 		SetAlpha(alpha)
@@ -532,9 +525,7 @@ Type TWidget Abstract
 		SetAlpha 1.0
     End Function
  
-	' ------------------------------------- 
     ' Draw oval/circle with optional shadow
-	' -------------------------------------
     Function GuiDrawOval(px:Int, py:Int, RadiusX:Int, RadiusY:Int, style:Int, red:Int, green:Int, blue:Int, alpha:Float=1.0)
 		SetBlend(ALPHABLEND)
 		SetAlpha(alpha)
@@ -560,9 +551,7 @@ Type TWidget Abstract
 		SetAlpha 1.0
     End Function
 
-	' -------------------------------------
     ' Draw oval/circle with optional shadow
-	' -------------------------------------
     Function GuiDrawLine(px:Int, py:Int, Tx:Int, Ty:Int, style:Int, red:Int, green:Int, blue:Int, alpha:Float=1.0)
 		SetBlend(ALPHABLEND)
 		SetAlpha(alpha)
@@ -588,9 +577,7 @@ Type TWidget Abstract
 		SetAlpha 1.0
     End Function
 
-	' -----------
     ' Draw images
-	' -----------
 	Function GuiDrawImageRect(image:TImage,px:Int, py:Int, Tx:Int, Ty:Int, alpha:Float=1.0)
 		SetBlend(ALPHABLEND)
 		SetAlpha alpha

@@ -178,8 +178,10 @@ Type TImageBox Extends TWidget
             ' Draw the image with alpha
 			GuiDrawImageRect(image, destX, destY, destW, destH, imageAlpha)
             
+
+
             ' Reset viewport
-            TWidget.GuiSetViewport(0, 0, GraphicsWidth(), GraphicsHeight())
+            TWidget.GuiSetViewport(0, 0, GUI_GRAPHICSWIDTH, GUI_GRAPHICSHEIGHT)
         EndIf
         
         ' Draw children (if any)

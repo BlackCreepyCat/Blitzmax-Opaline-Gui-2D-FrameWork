@@ -398,8 +398,10 @@ Type TListBox Extends TWidget
         ' Draw items
         DrawItems(clipX, clipY)
         
+
+
         ' Reset viewport
-        TWidget.GuiSetViewport(0, 0, GraphicsWidth(), GraphicsHeight())
+        TWidget.GuiSetViewport(0, 0, GUI_GRAPHICSWIDTH, GUI_GRAPHICSHEIGHT)
         
         ' Draw scrollbars (external, on top)
         If needScrollV
@@ -451,7 +453,9 @@ Type TListBox Extends TWidget
             headerX :+ col.width
         Next
         
-        TWidget.GuiSetViewport(0, 0, GraphicsWidth(), GraphicsHeight())
+
+
+        TWidget.GuiSetViewport(0, 0, GUI_GRAPHICSWIDTH, GUI_GRAPHICSHEIGHT)
     End Method
     
     Method DrawItems(clipX:Int, clipY:Int)
