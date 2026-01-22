@@ -35,6 +35,7 @@ Type TImageBox Extends TWidget
     Field borderR:Int = COLOR_BUTTON_NORMAL_R
     Field borderG:Int = COLOR_BUTTON_NORMAL_G
     Field borderB:Int = COLOR_BUTTON_NORMAL_B
+    Field useCustomBorderColor:Int = False  ' True if user set custom border color
     
     ' Background color (shown when no image or image has transparency)
     Field red:Int = 30
@@ -101,13 +102,27 @@ Type TImageBox Extends TWidget
             
             If clickable
                 If pressed
-                    bR = COLOR_BUTTON_PRESSED_R
-                    bG = COLOR_BUTTON_PRESSED_G
-                    bB = COLOR_BUTTON_PRESSED_B
+                    If useCustomBorderColor
+                        ' Darken custom color for pressed state
+                        bR = Max(0, borderR - 30)
+                        bG = Max(0, borderG - 30)
+                        bB = Max(0, borderB - 30)
+                    Else
+                        bR = COLOR_BUTTON_PRESSED_R
+                        bG = COLOR_BUTTON_PRESSED_G
+                        bB = COLOR_BUTTON_PRESSED_B
+                    EndIf
                 ElseIf hover
-                    bR = COLOR_BUTTON_HOVER_R
-                    bG = COLOR_BUTTON_HOVER_G
-                    bB = COLOR_BUTTON_HOVER_B
+                    If useCustomBorderColor
+                        ' Lighten custom color for hover state
+                        bR = Min(255, borderR + 20)
+                        bG = Min(255, borderG + 20)
+                        bB = Min(255, borderB + 20)
+                    Else
+                        bR = COLOR_BUTTON_HOVER_R
+                        bG = COLOR_BUTTON_HOVER_G
+                        bB = COLOR_BUTTON_HOVER_B
+                    EndIf
                 EndIf
             EndIf
             
@@ -287,6 +302,28 @@ Type TImageBox Extends TWidget
         red = r
         green = g
         blue = b
+        useCustomBorderColor = True
+    End Method
+    
+    ' Alias for SetBorderColor (API consistency with other widgets)
+    Method SetColor(r:Int, g:Int, b:Int)
+        SetBorderColor(r, g, b)
+    End Method
+    
+    ' Reset border color to default
+    Method ResetBorderColor()
+        borderR = COLOR_BUTTON_NORMAL_R
+        borderG = COLOR_BUTTON_NORMAL_G
+        borderB = COLOR_BUTTON_NORMAL_B
+        red = borderR
+        green = borderG
+        blue = borderB
+        useCustomBorderColor = False
+    End Method
+    
+    ' Alias for ResetBorderColor (API consistency with other widgets)
+    Method ResetColor()
+        ResetBorderColor()
     End Method
     
     ' Set background color
