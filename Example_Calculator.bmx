@@ -127,14 +127,22 @@ While Not AppTerminate() And Not KeyHit(KEY_ESCAPE)
     
     ' Reset calculator
     If btnclr.wasclicked()
-        Print "Button CLR clicked!"
+        Print "Button <CLR> clicked!"
         Reset(lbl)
     EndIf
 
     ' ==========================================
-    ' Get first arg <0>
+    ' How does calculator works :
+    ' -List of tasks (see below) => Reset, get first value, get operator, get second value, get result(calculate)
+    ' -Tasksequence = 0 => enable to get first value
+    ' -Operator selected => tasksequence = 1
+    ' -Ttasksequence = 1 => enable to get second value
+    ' -Equal selected => calculate and display result => tasksequence = 2
+    ' -Tasksequence = 2 => Reset all vars => tasksequence = 0 => Ready for a new task!
+
     If btn0.wasclicked()
         If tasksequence = 2 Then Reset(lbl)
+        ' Get first arg <0>
         If tasksequence = 0
           Print "Button <0> clicked!"
           str_a = str_a + "0"
@@ -142,119 +150,7 @@ While Not AppTerminate() And Not KeyHit(KEY_ESCAPE)
           Print str_result
           lbl.SetText(str_result)
         EndIf
-    EndIf
-
-    ' Get first arg <1>
-    If btn1.wasclicked()
-        If tasksequence = 2 Then Reset(lbl)
-        If tasksequence = 0
-          Print "Button <1> clicked!"
-          str_a = str_a + "1"
-          str_result = str_result + "1"
-          Print str_result
-          lbl.SetText(str_result)
-        EndIf
-    EndIf
-
-    ' Get first arg <2>
-    If btn2.wasclicked()
-        If tasksequence = 2 Then Reset(lbl)
-        If tasksequence = 0
-          Print "Button <2> clicked!"
-          str_a = str_a + "2"
-          str_result = str_result + "2"
-          Print str_result
-          lbl.SetText(str_result)
-        EndIf
-    EndIf
-
-    ' Get first arg <3>
-    If btn3.wasclicked()
-        If tasksequence = 2 Then Reset(lbl)
-        If tasksequence = 0
-          Print "Button <3> clicked!"
-          str_a = str_a + "3"
-          str_result = str_result + "3"
-          Print str_result
-          lbl.SetText(str_result)
-        EndIf
-    EndIf
-
-    ' Get first arg <4>
-    If btn4.wasclicked()
-        If tasksequence = 2 Then Reset(lbl)
-        If tasksequence = 0
-          Print "Button <4> clicked!"
-          str_a = str_a + "4"
-          str_result = str_result + "4"
-          Print str_result
-          lbl.SetText(str_result)
-        EndIf
-    EndIf
-
-    ' Get first arg <5>
-    If btn5.wasclicked()
-        If tasksequence = 2 Then Reset(lbl)
-        If tasksequence = 0
-          Print "Button <5> clicked!"
-          str_a = str_a + "5"
-          str_result = str_result + "5"
-          Print str_result
-          lbl.SetText(str_result)
-        EndIf
-    EndIf
-
-    ' Get first arg <6>
-    If btn6.wasclicked()
-        If tasksequence = 2 Then Reset(lbl)
-        If tasksequence = 0
-          Print "Button <6> clicked!"
-          str_a = str_a + "6"
-          str_result = str_result + "6"
-          Print str_result
-          lbl.SetText(str_result)
-        EndIf
-    EndIf
-
-    ' Get first arg <7>
-    If btn7.wasclicked()
-        If tasksequence = 2 Then Reset(lbl)
-        If tasksequence = 0
-          Print "Button <7> clicked!"
-          str_a = str_a + "7"
-          str_result = str_result + "7"
-          Print str_result
-          lbl.SetText(str_result)
-        EndIf
-    EndIf
-
-    ' Get first arg <8>
-    If btn8.wasclicked()
-        If tasksequence = 2 Then Reset(lbl)
-        If tasksequence = 0
-          Print "Button <8> clicked!"
-          str_a = str_a + "8"
-          str_result = str_result + "8"
-          Print str_result
-          lbl.SetText(str_result)
-        EndIf
-    EndIf
-
-    ' Get first arg <9>
-    If btn9.wasclicked()
-        If tasksequence = 2 Then Reset(lbl)
-        If tasksequence = 0
-          Print "Button <9> clicked!"
-          str_a = str_a + "9"
-          str_result = str_result + "9"
-          Print str_result
-          lbl.SetText(str_result)
-        EndIf
-    EndIf
-
-    ' ==========================================
-    ' Get second arg <0>
-    If btn0.wasclicked()
+        ' Get second arg <0>
         If tasksequence = 1
           Print "Button <0> clicked!"
           str_b = str_b + "0"
@@ -264,8 +160,17 @@ While Not AppTerminate() And Not KeyHit(KEY_ESCAPE)
         EndIf
     EndIf
 
-    ' Get second arg <1>
     If btn1.wasclicked()
+        If tasksequence = 2 Then Reset(lbl)
+        ' Get first arg <1>
+        If tasksequence = 0
+          Print "Button <1> clicked!"
+          str_a = str_a + "1"
+          str_result = str_result + "1"
+          Print str_result
+          lbl.SetText(str_result)
+        EndIf
+        ' Get second arg <1>
         If tasksequence = 1
           Print "Button <1> clicked!"
           str_b = str_b + "1"
@@ -275,8 +180,17 @@ While Not AppTerminate() And Not KeyHit(KEY_ESCAPE)
         EndIf
     EndIf
 
-    ' Get second arg <2>
     If btn2.wasclicked()
+        If tasksequence = 2 Then Reset(lbl)
+        ' Get first arg <2>
+        If tasksequence = 0
+          Print "Button <2> clicked!"
+          str_a = str_a + "2"
+          str_result = str_result + "2"
+          Print str_result
+          lbl.SetText(str_result)
+        EndIf
+        ' Get second arg <2>
         If tasksequence = 1
           Print "Button <2> clicked!"
           str_b = str_b + "2"
@@ -286,8 +200,17 @@ While Not AppTerminate() And Not KeyHit(KEY_ESCAPE)
         EndIf
     EndIf
 
-    ' Get second arg <3>
     If btn3.wasclicked()
+        If tasksequence = 2 Then Reset(lbl)
+        ' Get first arg <3>
+        If tasksequence = 0
+          Print "Button <3> clicked!"
+          str_a = str_a + "3"
+          str_result = str_result + "3"
+          Print str_result
+          lbl.SetText(str_result)
+        EndIf
+        ' Get second arg <3>
         If tasksequence = 1
           Print "Button <3> clicked!"
           str_b = str_b + "3"
@@ -297,8 +220,17 @@ While Not AppTerminate() And Not KeyHit(KEY_ESCAPE)
         EndIf
     EndIf
 
-    ' Get second arg <4>
     If btn4.wasclicked()
+        If tasksequence = 2 Then Reset(lbl)
+        ' Get first arg <4>
+        If tasksequence = 0
+          Print "Button <4> clicked!"
+          str_a = str_a + "4"
+          str_result = str_result + "4"
+          Print str_result
+          lbl.SetText(str_result)
+        EndIf
+        ' Get second arg <4>
         If tasksequence = 1
           Print "Button <4> clicked!"
           str_b = str_b + "4"
@@ -308,8 +240,17 @@ While Not AppTerminate() And Not KeyHit(KEY_ESCAPE)
         EndIf
     EndIf
 
-    ' Get second arg <5>
     If btn5.wasclicked()
+        If tasksequence = 2 Then Reset(lbl)
+        ' Get first arg <5>
+        If tasksequence = 0
+          Print "Button <5> clicked!"
+          str_a = str_a + "5"
+          str_result = str_result + "5"
+          Print str_result
+          lbl.SetText(str_result)
+        EndIf
+        ' Get second arg <5>
         If tasksequence = 1
           Print "Button <5> clicked!"
           str_b = str_b + "5"
@@ -319,8 +260,17 @@ While Not AppTerminate() And Not KeyHit(KEY_ESCAPE)
         EndIf
     EndIf
 
-    ' Get second arg <6>
     If btn6.wasclicked()
+        If tasksequence = 2 Then Reset(lbl)
+        ' Get first arg <6>
+        If tasksequence = 0
+          Print "Button <6> clicked!"
+          str_a = str_a + "6"
+          str_result = str_result + "6"
+          Print str_result
+          lbl.SetText(str_result)
+        EndIf
+        ' Get second arg <6>
         If tasksequence = 1
           Print "Button <6> clicked!"
           str_b = str_b + "6"
@@ -330,8 +280,17 @@ While Not AppTerminate() And Not KeyHit(KEY_ESCAPE)
         EndIf
     EndIf
 
-    ' Get second arg <7>
     If btn7.wasclicked()
+        If tasksequence = 2 Then Reset(lbl)
+        ' Get first arg <7>
+        If tasksequence = 0
+          Print "Button <7> clicked!"
+          str_a = str_a + "7"
+          str_result = str_result + "7"
+          Print str_result
+          lbl.SetText(str_result)
+        EndIf
+        ' Get second arg <7>
         If tasksequence = 1
           Print "Button <7> clicked!"
           str_b = str_b + "7"
@@ -341,8 +300,17 @@ While Not AppTerminate() And Not KeyHit(KEY_ESCAPE)
         EndIf
     EndIf
 
-    ' Get second arg <8>
     If btn8.wasclicked()
+        If tasksequence = 2 Then Reset(lbl)
+        ' Get first arg <8>
+        If tasksequence = 0
+          Print "Button <8> clicked!"
+          str_a = str_a + "8"
+          str_result = str_result + "8"
+          Print str_result
+          lbl.SetText(str_result)
+        EndIf
+        ' Get second arg <8>
         If tasksequence = 1
           Print "Button <8> clicked!"
           str_b = str_b + "8"
@@ -352,8 +320,17 @@ While Not AppTerminate() And Not KeyHit(KEY_ESCAPE)
         EndIf
     EndIf
 
-    ' Get second arg <9>
     If btn9.wasclicked()
+        If tasksequence = 2 Then Reset(lbl)
+        ' Get first arg <9>
+        If tasksequence = 0
+          Print "Button <9> clicked!"
+          str_a = str_a + "9"
+          str_result = str_result + "9"
+          Print str_result
+          lbl.SetText(str_result)
+        EndIf
+        ' Get second arg <9>
         If tasksequence = 1
           Print "Button <9> clicked!"
           str_b = str_b + "9"
@@ -364,11 +341,14 @@ While Not AppTerminate() And Not KeyHit(KEY_ESCAPE)
     EndIf
 
     ' ==========================================
-    ' Get operator <+>
+    ' Get operators (+,-,*,/)
+
     If btnadd.wasclicked()
+        ' Get operator <+>
         If tasksequence = 0
           Print "Button <+> clicked!"
           str_ope = "+"
+          If str_a = "" Then str_a = "0"
           str_result = str_a + str_ope
           Print str_result
           lbl.SetText(str_result)
@@ -377,11 +357,12 @@ While Not AppTerminate() And Not KeyHit(KEY_ESCAPE)
         EndIf
     EndIf
 
-    ' Get operator <->
     If btnsub.wasclicked()
+        ' Get operator <->
         If tasksequence = 0
           Print "Button <-> clicked!"
           str_ope = "-"
+          If str_a = "" Then str_a = "0"
           str_result = str_a + str_ope
           Print str_result
           lbl.SetText(str_result)
@@ -390,11 +371,12 @@ While Not AppTerminate() And Not KeyHit(KEY_ESCAPE)
         EndIf
     EndIf
 
-    ' Get operator <*>
     If btnmul.wasclicked()
+        ' Get operator <*>
         If tasksequence = 0
           Print "Button <*> clicked!"
           str_ope = "*"
+          If str_a = "" Then str_a = "0"
           str_result = str_a + str_ope
           Print str_result
           lbl.SetText(str_result)
@@ -403,11 +385,12 @@ While Not AppTerminate() And Not KeyHit(KEY_ESCAPE)
         EndIf
     EndIf
 
-    ' Get operator </>
     If btndiv.wasclicked()
+        ' Get operator </>
         If tasksequence = 0
           Print "Button </> clicked!"
           str_ope = "/"
+          If str_a = "" Then str_a = "0"
           str_result = str_a + str_ope
           Print str_result
           lbl.SetText(str_result)
@@ -417,8 +400,10 @@ While Not AppTerminate() And Not KeyHit(KEY_ESCAPE)
     EndIf
 
     ' ==========================================
-    ' Get operator <=>
+    ' Calculate => var a + operator + var b = result
+
     If btnequ.wasclicked()
+        ' Get operator <=>
         If tasksequence = 1
           Print "Button <=> clicked!"
           var_b = str_b.ToInt()
@@ -452,7 +437,7 @@ While Not AppTerminate() And Not KeyHit(KEY_ESCAPE)
 
     TWidget.GuiClearEvents()
 
-      ' Draw instructions
+    ' Draw instructions
     SetColor 255, 166, 0
     DrawText "Calculator Demo By Eagle54 2026 - Press ESC to exit", 10, 10
 
