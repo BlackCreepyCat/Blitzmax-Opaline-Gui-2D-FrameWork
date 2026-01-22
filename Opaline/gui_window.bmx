@@ -402,6 +402,13 @@ Type TWindow Extends TWidget
         Local ax:Int = px + rect.x
         Local ay:Int = py + rect.y 
 
+        ' Calculate client area height
+        Local ClientHeight:Int = GetClientHeight()
+
+        ' Draw client area shadow
+		TWidget.GuiDrawRect(ax+7, ay +7 , rect.w, ClientHeight + TITLEBAR_HEIGHT, 1, 10,15,20,0.2)
+		
+		
         ' Draw title bar with different color depending on active/inactive state
         ' Modal windows are ALWAYS drawn as active
         If IsTopWindow() Or isModal
@@ -413,8 +420,8 @@ Type TWindow Extends TWidget
         ' Draw title text with shadow
         TWidget.GuiDrawText(ax + 8, ay + 6, title, TEXT_STYLE_SHADOW, COLOR_WINDOW_TITLE_R, COLOR_WINDOW_TITLE_G, COLOR_WINDOW_TITLE_B)
 
-        ' Calculate client area height
-        Local ClientHeight:Int = GetClientHeight()
+
+
 
         ' Draw client area background
         TWidget.GuiDrawRect(ax, ay + TITLEBAR_HEIGHT, rect.w, ClientHeight, 2, red, green, blue)
