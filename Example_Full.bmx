@@ -211,7 +211,7 @@ Local modalTitle:TLabel = New TLabel(20, 20, 360, 30, "Opaline GUI Framework", L
 modalTitle.SetColor(255, 220, 100)  ' Gold color
 winModal.AddChild modalTitle
 
-Local modalVersion:TLabel = New TLabel(20, 55, 360, 20, "Version 1.5 - Modal Window Demo", LABEL_ALIGN_CENTER)
+Local modalVersion:TLabel = New TLabel(20, 55, 360, 20, "Version "+Gui_Version+" - Modal Window Demo", LABEL_ALIGN_CENTER)
 modalVersion.SetColor(200, 200, 220)
 winModal.AddChild modalVersion
 
@@ -236,7 +236,7 @@ winModal.AddChild btnModalOK
 ' =============================================================================
 
 ' --- Title Label ---
-Local titleLabel:TLabel = New TLabel(20, 20, 500, 24, "Welcome to the CreepyCat Opaline GUI Framework 1.5! (C)2026", LABEL_ALIGN_CENTER)
+Local titleLabel:TLabel = New TLabel(20, 20, 500, 24, "Welcome to the CreepyCat Opaline GUI Framework "+Gui_Version+"! (C)2026", LABEL_ALIGN_CENTER)
 titleLabel.SetColor(255, 220, 100)  ' Gold color
 titleLabel.SetAnchors(ANCHOR_LEFT | ANCHOR_TOP | ANCHOR_RIGHT)  ' S'étire horizontalement
 win1.AddChild titleLabel
