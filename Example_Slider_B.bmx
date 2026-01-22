@@ -23,7 +23,7 @@ Global max_scale:Int = 4
 Const MAX_FRAME:Int = 5
 Const SIZEIMG:Int = 512
  
-Graphics 1280, 720, 32
+Graphics 1280, 720, 0
 
 ' Initialize the GUI
 TWidget.GuiInit()
@@ -75,7 +75,7 @@ SetMaskColor(255, 255, 255) ' White
 AutoImageFlags(MASKEDIMAGE)
 
 ' load anim image
-anim = LoadAnimImage("media/zombie_walking.png", 128, 128, 0, MAX_FRAME)
+anim = LoadAnimImage("zombie_walking.png", 128, 128, 0, MAX_FRAME)
 If anim = Null Then
   Print "Image could Not load - Check path And filename"
   End
