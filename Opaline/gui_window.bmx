@@ -406,7 +406,7 @@ Type TWindow Extends TWidget
         Local ClientHeight:Int = GetClientHeight()
 
         ' Draw client area shadow
-		TWidget.GuiDrawRect(ax+7, ay +7 , rect.w, ClientHeight + TITLEBAR_HEIGHT, 1, 10,15,20,0.2)
+		TWidget.GuiDrawRect(ax+WIN_SHADOW_OFFSET, ay +WIN_SHADOW_OFFSET , rect.w, ClientHeight + TITLEBAR_HEIGHT, 1, 10,15,20,0.2)
 		
 		
         ' Draw title bar with different color depending on active/inactive state

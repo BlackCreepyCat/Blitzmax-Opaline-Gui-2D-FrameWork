@@ -219,7 +219,7 @@ Type TWidget Abstract
 
     ' Initialize the GUI system, Call once at startup before creating any widgets
     Function GuiInit()
-        Gui_SystemFont = LoadImageFont("incbin::Arial.ttf", Gui_SystemFontSize, SMOOTHFONT)
+        Gui_SystemFont = LoadImageFont("incbin::Arial.ttf", Gui_SystemFontSize, SMOOTHFONT )
 		Gui_SymbolFont = LoadImageFont("incbin::Symbol.ttf", Gui_SymbolFontSize, SMOOTHFONT)
 		
 		Gui_Clipboard:TClipboard = CreateClipboard()

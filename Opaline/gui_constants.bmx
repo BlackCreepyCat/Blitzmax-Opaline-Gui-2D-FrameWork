@@ -8,8 +8,9 @@
 ' Layout Constants
 Const TITLEBAR_HEIGHT:Int = 30
 Const TITLE_BUTTON_SIZE:Int = 26
-Const TITLE_BUTTON_MARGIN:Int = 6
+Const TITLE_BUTTON_MARGIN:Int = 2
 Const STATUSBAR_HEIGHT:Int = 24
+Const WIN_SHADOW_OFFSET:Int=7
 
 ' Button Types
 Const BTN_TYPE_NORMAL:Int = 0
