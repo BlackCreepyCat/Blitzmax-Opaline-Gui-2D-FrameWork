@@ -320,60 +320,50 @@ Type TContextMenu
         ' Draw items
         Local currentY:Int = y + paddingY
         Local idx:Int = 0
-        
-     '   SetImageFont(Gui_SystemFont)
-        
+
         For Local item:TMenuItem = EachIn items
             If item.itemType = MENUITEM_SEPARATOR
                 ' Draw separator line
-                SetColor(separatorR, separatorG, separatorB)
-                DrawLine(x + paddingX, currentY + separatorHeight/2, x + width - paddingX, currentY + separatorHeight/2)
+				TWidget.GuiDrawLine(x + paddingX, currentY + separatorHeight/2, x + width - paddingX, currentY + separatorHeight/2, 1, separatorR, separatorG, separatorB)
                 currentY :+ separatorHeight
             Else
                 ' Draw hover highlight
                 If idx = hoverIndex
-                 '   SetColor(hoverR, hoverG, hoverB)
-                 '   DrawRect(x + 2, currentY, width - 4, itemHeight)
-
 					TWidget.GuiDrawRect(x + 2, currentY, width - 4, itemHeight, 1, hoverR, hoverG, hoverB)
                 EndIf
                 
                 ' Draw checkbox mark
                 Local textStartX:Int = x + paddingX
+
                 If item.itemType = MENUITEM_CHECKBOX
                     textStartX :+ 20
+
+					' Draw checkmark
                     If item.checked
-                        SetColor(checkR, checkG, checkB)
-                        ' Draw checkmark
-                        DrawLine(x + paddingX + 3, currentY + itemHeight/2, x + paddingX + 7, currentY + itemHeight/2 + 4)
-                        DrawLine(x + paddingX + 7, currentY + itemHeight/2 + 4, x + paddingX + 14, currentY + itemHeight/2 - 4)
+						TWidget.GuiDrawLine(x + paddingX + 3, currentY + itemHeight/2, x + paddingX + 7, currentY + itemHeight/2 + 4,2, checkR, checkG, checkB)
+						TWidget.GuiDrawLine(x + paddingX + 7, currentY + itemHeight/2 + 4, x + paddingX + 14, currentY + itemHeight/2 - 4, 2, checkR, checkG, checkB)
                     EndIf
                 EndIf
                 
                 ' Draw text
                 If item.enabled
-                    SetColor(textR, textG, textB)
+					TWidget.GuiDrawText(textStartX, currentY + (itemHeight -  TWidget.GuiTextHeight(item.text)) / 2, item.text, 1, textR, textG, textB)
                 Else
-                    SetColor(disabledR, disabledG, disabledB)
+					TWidget.GuiDrawText(textStartX, currentY + (itemHeight -  TWidget.GuiTextHeight(item.text)) / 2, item.text, 1, disabledR, disabledG, disabledB)
                 EndIf
-
-                DrawText(item.text, textStartX, currentY + (itemHeight - TextHeight(item.text)) / 2)
-
-				
-                
+  
                 ' Draw shortcut text (right-aligned)
                 If item.shortcut.Length > 0
-                    Local shortcutX:Int = x + width - paddingX - TextWidth(item.shortcut)
-                    SetColor(disabledR, disabledG, disabledB)
-                    DrawText(item.shortcut, shortcutX, currentY + (itemHeight - TextHeight(item.shortcut)) / 2)
+                    Local shortcutX:Int = x + width - paddingX -  TWidget.GuiTextWidth(item.shortcut)
+
+					TWidget.GuiDrawText(shortcutX, currentY + (itemHeight -  TWidget.GuiTextHeight(item.shortcut)) / 2, item.shortcut, 1, disabledR, disabledG, disabledB)
                 EndIf
                 
                 currentY :+ itemHeight
             EndIf
             idx :+ 1
         Next
-        
-        SetColor(255, 255, 255)
+
     End Method
     
     ' =========================================================================

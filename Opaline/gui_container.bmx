@@ -80,9 +80,9 @@ Type TContainer Extends TWidget
             Return modalWin.Update(mx, my)
         EndIf
         
-        ' -----------------------------------------------------------------
+        ' -------------------------------
         ' Normal update (no modal active)
-        ' -----------------------------------------------------------------
+        ' -------------------------------
         
         ' PRIORITY 1: If a window is being RESIZED, update it regardless of mouse position
         If resizingWindow <> Null
