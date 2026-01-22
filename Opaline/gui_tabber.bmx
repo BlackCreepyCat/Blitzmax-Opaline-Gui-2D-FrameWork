@@ -218,14 +218,14 @@ Type TTabber Extends TWidget
         Local ay:Int = py + rect.y
         
         ' Draw tab bar background
-        TWidget.GuiDrawRect(ax, ay, rect.w, TABBER_TAB_HEIGHT-1, 2, red, green, blue)
+        TWidget.GuiDrawRect(ax, ay, rect.w, TABBER_TAB_HEIGHT +1 , 4, red, green, blue)
         
         ' Draw content area background
-        TWidget.GuiDrawRect(ax, ay + TABBER_TAB_HEIGHT, rect.w, rect.h - TABBER_TAB_HEIGHT, 2, COLOR_TABBER_CONTENT_R, COLOR_TABBER_CONTENT_G, COLOR_TABBER_CONTENT_B)
+        TWidget.GuiDrawRect(ax, ay + TABBER_TAB_HEIGHT, rect.w, rect.h - TABBER_TAB_HEIGHT, 4, COLOR_TABBER_CONTENT_R, COLOR_TABBER_CONTENT_G, COLOR_TABBER_CONTENT_B)
         
         ' Draw tabs
-        Local tabX:Int = ax + 2
-        Local tabY:Int = ay + 2
+        Local tabX:Int = ax + 3
+        Local tabY:Int = ay + 3
         Local i:Int = 0
         
         For Local page:TTabPage = EachIn pages
@@ -249,7 +249,7 @@ Type TTabber Extends TWidget
             EndIf
             
             ' Draw tab button
-            Local tabH:Int = TABBER_TAB_HEIGHT - 5
+            Local tabH:Int = TABBER_TAB_HEIGHT - 6
             If isActive Then tabH = TABBER_TAB_HEIGHT - 2  ' Active tab is slightly taller
             
             TWidget.GuiDrawRect(tabX, tabY, page.tabWidth, tabH, 2, tabR, tabG, tabB)
