@@ -62,7 +62,7 @@ Type TRadio Extends TWidget
 
         ' Draw label text with shadow
         Local textX:Int = ax + rect.w + 8
-        Local textY:Int = ay + (rect.h - TextHeight(caption)) / 2
+        Local textY:Int = ay + (rect.h - TWidget.GuiTextHeight(caption)) / 2
         TWidget.GuiDrawText(textX, textY, caption, TEXT_STYLE_SHADOW, COLOR_RADIO_TEXT_R, COLOR_RADIO_TEXT_G, COLOR_RADIO_TEXT_B)
     End Method
 
@@ -91,6 +91,7 @@ Type TRadio Extends TWidget
                         r.selected = False
                     Next
                 EndIf
+
                 ' Select this one
                 selected = True
                 

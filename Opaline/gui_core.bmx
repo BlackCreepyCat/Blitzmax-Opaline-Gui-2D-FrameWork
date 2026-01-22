@@ -217,8 +217,7 @@ Type TWidget Abstract
     ' =========================================================================
 
 
-    ' Initialize the GUI system
-    ' Call once at startup before creating any widgets
+    ' Initialize the GUI system, Call once at startup before creating any widgets
     Function GuiInit()
         Gui_SystemFont = LoadImageFont("incbin::Arial.ttf", Gui_SystemFontSize, SMOOTHFONT)
 		Gui_SymbolFont = LoadImageFont("incbin::Symbol.ttf", Gui_SymbolFontSize, SMOOTHFONT)
@@ -388,12 +387,16 @@ Type TWidget Abstract
     '                      DRAWING HELPER FUNCTIONS
     ' =========================================================================
 
+	' ----------------------
     ' Constrain the viewport
+	' ----------------------
     Function GuiSetViewport(Px:Int, Py:Int, Tx:Int, Ty:Int)
         SetViewport(Px, Py, Tx, Ty)
     End Function
 
-	' Get text Height
+	' ---------------------
+	' Get text pixel Height
+	' ---------------------
 	Function GuiTextHeight:Int(caption:String , symbol:Int = False)
 		Select symbol
 		Case True
@@ -406,8 +409,10 @@ Type TWidget Abstract
 						
 		EndSelect
 	End Function
-	
-	' Get text Height
+
+	' ---------------------
+	' Get text pixel Width
+	' ---------------------
 	Function GuiTextWidth:Int(caption:String , symbol:Int = False)
 		Select symbol
 		Case True
@@ -421,7 +426,9 @@ Type TWidget Abstract
 		EndSelect
 	End Function
 
+	' ------------------------------------
     ' Draw GUI symbol with optional shadow
+	' ------------------------------------
     Function GuiDrawSymbol(Px:Int, Py:Int, caption:String, style:Int, red:Int, green:Int, blue:Int, alpha:Float = 1.0)
         SetBlend(ALPHABLEND)
         SetImageFont(Gui_SymbolFont)
@@ -448,8 +455,10 @@ Type TWidget Abstract
         SetColor 255, 255, 255
         SetAlpha 1.0
     End Function
-    
+ 
+	' ---------------------------------- 
     ' Draw GUI text with optional shadow
+	' ----------------------------------
     Function GuiDrawText(Px:Int, Py:Int, caption:String, style:Int, red:Int, green:Int, blue:Int, alpha:Float = 1.0)
         SetBlend(ALPHABLEND)
         SetImageFont(Gui_SystemFont)
@@ -476,8 +485,10 @@ Type TWidget Abstract
         SetColor 255, 255, 255
         SetAlpha 1.0
     End Function
-    
+
+	' -----------------------------------------------------------    
     ' Draw filled rectangle with optional embossed/pressed styles
+	' -----------------------------------------------------------
     Function GuiDrawRect(px:Int, py:Int, tx:Int, ty:Int, style:Int, red:Int, green:Int, blue:Int, alpha:Float=1.0)
 		SetBlend(ALPHABLEND)
 		SetAlpha(alpha)
@@ -520,8 +531,10 @@ Type TWidget Abstract
         SetColor 255, 255, 255
 		SetAlpha 1.0
     End Function
-    
+ 
+	' ------------------------------------- 
     ' Draw oval/circle with optional shadow
+	' -------------------------------------
     Function GuiDrawOval(px:Int, py:Int, RadiusX:Int, RadiusY:Int, style:Int, red:Int, green:Int, blue:Int, alpha:Float=1.0)
 		SetBlend(ALPHABLEND)
 		SetAlpha(alpha)
@@ -547,7 +560,9 @@ Type TWidget Abstract
 		SetAlpha 1.0
     End Function
 
+	' -------------------------------------
     ' Draw oval/circle with optional shadow
+	' -------------------------------------
     Function GuiDrawLine(px:Int, py:Int, Tx:Int, Ty:Int, style:Int, red:Int, green:Int, blue:Int, alpha:Float=1.0)
 		SetBlend(ALPHABLEND)
 		SetAlpha(alpha)
@@ -572,5 +587,17 @@ Type TWidget Abstract
         SetColor 255, 255, 255
 		SetAlpha 1.0
     End Function
-    
+
+	' -----------
+    ' Draw images
+	' -----------
+	Function GuiDrawImageRect(image:TImage,px:Int, py:Int, Tx:Int, Ty:Int, alpha:Float=1.0)
+		SetBlend(ALPHABLEND)
+		SetAlpha alpha
+		
+		SetColor 255, 255, 255
+		DrawImageRect(image, px, py, tx, ty	)
+		
+		SetAlpha 1.0
+	End Function
 End Type

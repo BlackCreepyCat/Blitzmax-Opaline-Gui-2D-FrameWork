@@ -79,7 +79,7 @@ Type TTextInput Extends TWidget
         
         ' Show placeholder when empty and not focused
         If text.Length = 0 And Not focused And placeholder.Length > 0
-            TWidget.GuiDrawText(textAreaX - scrollOffset, ay + (rect.h - TextHeight("X")) / 2, placeholder, TEXT_STYLE_NORMAL, COLOR_TEXTINPUT_PLACEHOLDER_R, COLOR_TEXTINPUT_PLACEHOLDER_G, COLOR_TEXTINPUT_PLACEHOLDER_B)
+            TWidget.GuiDrawText(textAreaX - scrollOffset, ay + (rect.h - TWidget.GuiTextHeight("X")) / 2, placeholder, TEXT_STYLE_NORMAL, COLOR_TEXTINPUT_PLACEHOLDER_R, COLOR_TEXTINPUT_PLACEHOLDER_G, COLOR_TEXTINPUT_PLACEHOLDER_B)
             TWidget.GuiSetViewport(0, 0, GraphicsWidth(), GraphicsHeight())
             Return
         EndIf
@@ -89,20 +89,20 @@ Type TTextInput Extends TWidget
             Local selStart:Int = MinInt(selectionStart, selectionEnd)
             Local selEnd:Int = MaxInt(selectionStart, selectionEnd)
             
-            Local selStartX:Int = textAreaX + TextWidth(displayText[..selStart]) - scrollOffset
-            Local selEndX:Int = textAreaX + TextWidth(displayText[..selEnd]) - scrollOffset
+            Local selStartX:Int = textAreaX + TWidget.GuiTextWidth(displayText[..selStart]) - scrollOffset
+            Local selEndX:Int = textAreaX + TWidget.GuiTextWidth(displayText[..selEnd]) - scrollOffset
             Local selWidth:Int = selEndX - selStartX
             
             TWidget.GuiDrawRect(selStartX, textAreaY, selWidth, textAreaH, 1, COLOR_TEXTINPUT_SELECTION_R, COLOR_TEXTINPUT_SELECTION_G, COLOR_TEXTINPUT_SELECTION_B)
         EndIf
         
         ' Draw the actual text content
-        Local textY:Int = ay + (rect.h - TextHeight("X")) / 2
+        Local textY:Int = ay + (rect.h - TWidget.GuiTextHeight("X")) / 2
         TWidget.GuiDrawText(textAreaX - scrollOffset, textY, displayText, TEXT_STYLE_NORMAL, textR, textG, textB)
         
         ' Draw blinking cursor when focused
         If focused And cursorVisible
-            Local cursorX:Int = textAreaX + TextWidth(displayText[..cursorPos]) - scrollOffset
+            Local cursorX:Int = textAreaX + TWidget.GuiTextWidth(displayText[..cursorPos]) - scrollOffset
             TWidget.GuiDrawRect(cursorX, textAreaY + 2, 2, textAreaH - 4, 1, COLOR_TEXTINPUT_CURSOR_R, COLOR_TEXTINPUT_CURSOR_G, COLOR_TEXTINPUT_CURSOR_B)
         EndIf
         
@@ -150,8 +150,8 @@ Type TTextInput Extends TWidget
             FlushKeys()
             
             Local clickPos:Int = GetCharIndexAtX(mx)
-            
             Local CurrentTime:Int = MilliSecs()
+
             If CurrentTime - lastClickTime < 300 And Abs(clickPos - lastClickPos) <= 1
                 SelectWordAt(clickPos)
                 lastClickTime = 0
@@ -190,8 +190,7 @@ Type TTextInput Extends TWidget
         EndIf
         
         ' NOTE: Keyboard input is now handled in GuiUpdate/GuiRefresh
-        ' to ensure it works even when mouse is over another widget
-        
+        ' to ensure it works even when mouse is over another widget   
         Return over Or focused
     End Method
     
@@ -201,6 +200,7 @@ Type TTextInput Extends TWidget
         scrollOffset = 0
         selectionStart = -1
         selectionEnd = -1
+
         If g_FocusedTextInput = Self
             g_FocusedTextInput = Null
         EndIf
@@ -210,7 +210,7 @@ Type TTextInput Extends TWidget
     Method HandleKeyboard()
         Local ctrl:Int = KeyDown(KEY_LCONTROL) Or KeyDown(KEY_RCONTROL)
         Local shift:Int = KeyDown(KEY_LSHIFT) Or KeyDown(KEY_RSHIFT)
-        Local currentTime:Int = MilliSecs()
+        Local CurrentTime:Int = MilliSecs()
         
         If ctrl And KeyHit(KEY_A)
             SelectAll()
@@ -235,7 +235,7 @@ Type TTextInput Extends TWidget
         
         ' Backspace with repeat support
         If KeyDown(KEY_BACKSPACE)
-            If KeyHit(KEY_BACKSPACE) Or CheckKeyRepeat(KEY_BACKSPACE, currentTime)
+            If KeyHit(KEY_BACKSPACE) Or CheckKeyRepeat(KEY_BACKSPACE, CurrentTime)
                 If HasSelection()
                     DeleteSelection()
                 ElseIf cursorPos > 0
@@ -250,7 +250,7 @@ Type TTextInput Extends TWidget
         
         ' Delete with repeat support
         If KeyDown(KEY_DELETE)
-            If KeyHit(KEY_DELETE) Or CheckKeyRepeat(KEY_DELETE, currentTime)
+            If KeyHit(KEY_DELETE) Or CheckKeyRepeat(KEY_DELETE, CurrentTime)
                 If HasSelection()
                     DeleteSelection()
                 ElseIf cursorPos < text.Length
@@ -264,7 +264,7 @@ Type TTextInput Extends TWidget
         
         ' Arrow keys navigation with selection support AND KEY REPEAT
         If KeyDown(KEY_LEFT)
-            If KeyHit(KEY_LEFT) Or CheckKeyRepeat(KEY_LEFT, currentTime)
+            If KeyHit(KEY_LEFT) Or CheckKeyRepeat(KEY_LEFT, CurrentTime)
                 If shift
                     If selectionStart = -1
                         selectionStart = cursorPos
@@ -289,7 +289,7 @@ Type TTextInput Extends TWidget
         EndIf
         
         If KeyDown(KEY_RIGHT)
-            If KeyHit(KEY_RIGHT) Or CheckKeyRepeat(KEY_RIGHT, currentTime)
+            If KeyHit(KEY_RIGHT) Or CheckKeyRepeat(KEY_RIGHT, CurrentTime)
                 If shift
                     If selectionStart = -1
                         selectionStart = cursorPos
@@ -319,7 +319,7 @@ Type TTextInput Extends TWidget
         EndIf
         
         If KeyDown(KEY_HOME)
-            If KeyHit(KEY_HOME) Or CheckKeyRepeat(KEY_HOME, currentTime)
+            If KeyHit(KEY_HOME) Or CheckKeyRepeat(KEY_HOME, CurrentTime)
                 If shift
                     If selectionStart = -1
                         selectionStart = cursorPos
@@ -338,7 +338,7 @@ Type TTextInput Extends TWidget
         EndIf
         
         If KeyDown(KEY_END)
-            If KeyHit(KEY_END) Or CheckKeyRepeat(KEY_END, currentTime)
+            If KeyHit(KEY_END) Or CheckKeyRepeat(KEY_END, CurrentTime)
                 If shift
                     If selectionStart = -1
                         selectionStart = cursorPos
@@ -398,10 +398,10 @@ Type TTextInput Extends TWidget
         If relX <= 0 Return 0
         
         For Local i:Int = 0 To displayText.Length
-            Local charX:Int = TextWidth(displayText[..i])
+            Local charX:Int = TWidget.GuiTextWidth(displayText[..i])
             If charX >= relX
                 If i > 0
-                    Local prevX:Int = TextWidth(displayText[..i-1])
+                    Local prevX:Int = TWidget.GuiTextWidth(displayText[..i-1])
                     If relX - prevX < charX - relX
                         Return i - 1
                     EndIf
@@ -417,9 +417,11 @@ Type TTextInput Extends TWidget
     Method GetDisplayText:String()
         If passwordMode
             Local masked:String = ""
+
             For Local i:Int = 0 Until text.Length
                 masked :+ "*"
             Next
+
             Return masked
         EndIf
         Return text
@@ -429,7 +431,7 @@ Type TTextInput Extends TWidget
     Method EnsureCursorVisible()
         Local padding:Int = 4
         Local displayText:String = GetDisplayText()
-        Local cursorX:Int = TextWidth(displayText[..cursorPos])
+        Local cursorX:Int = TWidget.GuiTextWidth(displayText[..cursorPos])
         Local visibleWidth:Int = rect.w - padding * 2
         
         If cursorX - scrollOffset > visibleWidth - 10
@@ -625,26 +627,26 @@ Type TTextInput Extends TWidget
     ' =========================================================================
     
     ' Check if a key should repeat (returns True if action should be performed)
-    Method CheckKeyRepeat:Int(key:Int, currentTime:Int)
+    Method CheckKeyRepeat:Int(key:Int, CurrentTime:Int)
         ' If this is a new key, start tracking it
         If keyRepeatKey <> key
             keyRepeatKey = key
-            keyRepeatStartTime = currentTime
-            keyRepeatLastTime = currentTime
+            keyRepeatStartTime = CurrentTime
+            keyRepeatLastTime = CurrentTime
             keyRepeatActive = False
             Return False  ' First press handled by KeyHit
         EndIf
         
         ' Check if we're past the initial delay
-        Local elapsed:Int = currentTime - keyRepeatStartTime
+        Local elapsed:Int = CurrentTime - keyRepeatStartTime
         If elapsed < KEY_REPEAT_DELAY
             Return False  ' Still in initial delay
         EndIf
         
         ' We're in repeat mode - check if enough time has passed since last repeat
-        Local timeSinceLastRepeat:Int = currentTime - keyRepeatLastTime
+        Local timeSinceLastRepeat:Int = CurrentTime - keyRepeatLastTime
         If timeSinceLastRepeat >= KEY_REPEAT_INTERVAL
-            keyRepeatLastTime = currentTime
+            keyRepeatLastTime = CurrentTime
             keyRepeatActive = True
             Return True  ' Trigger repeat action
         EndIf

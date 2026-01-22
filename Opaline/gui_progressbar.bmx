@@ -28,9 +28,7 @@ Type TProgressBar Extends TWidget
     Field green:Int ' ← background green
     Field blue:Int  ' ← background blue
 
-    ' ────────────────────────────────────────────────────────────────
     ' Constructor
-    ' ────────────────────────────────────────────────────────────────
     Method New(x:Int, y:Int, w:Int, h:Int, initialValue:Float = 0.0)
         Super.New(x, y, w, h)
 
@@ -43,9 +41,7 @@ Type TProgressBar Extends TWidget
         blue  = COLOR_PROGRESSBAR_BG_B
     End Method
 
-    ' ────────────────────────────────────────────────────────────────
     ' Rendering
-    ' ────────────────────────────────────────────────────────────────
     Method Draw(px:Int=0, py:Int=0)
         If Not visible Then Return
         
@@ -88,8 +84,8 @@ Type TProgressBar Extends TWidget
             Local percentText:String = percent + "%"
             
             ' Center the text horizontally and vertically
-            Local textX:Int = ax + (rect.w - TextWidth(percentText)) / 2
-            Local textY:Int = ay + (rect.h - TextHeight(percentText)) / 2
+            Local textX:Int = ax + (rect.w - TWidget.GuiTextWidth(percentText)) / 2
+            Local textY:Int = ay + (rect.h - TWidget.GuiTextHeight(percentText)) / 2
             
             ' Draw text with shadow for better readability
             TWidget.GuiDrawText(textX, textY, percentText, TEXT_STYLE_SHADOW, 255, 255, 255)
@@ -101,9 +97,7 @@ Type TProgressBar Extends TWidget
         Next
     End Method
 
-    ' ────────────────────────────────────────────────────────────────
     ' Input handling
-    ' ────────────────────────────────────────────────────────────────
     Method Update:Int(mx:Int, my:Int)
         If Not visible Then Return False
         
@@ -116,10 +110,6 @@ Type TProgressBar Extends TWidget
         Next
         Return False
     End Method
-
-    ' ────────────────────────────────────────────────────────────────
-    ' Public API
-    ' ────────────────────────────────────────────────────────────────
 
     ' Set the current progress value (automatically clamped)
     Method SetValue(newValue:Float)
@@ -178,9 +168,6 @@ Type TProgressBar Extends TWidget
         showPercentage = show
     End Method
 
-    ' ────────────────────────────────────────────────────────────────
-    ' Utility function
-    ' ────────────────────────────────────────────────────────────────
     ' Helper function (could be moved to a global Utils module)
     Function Clamp:Float(val:Float, minVal:Float, maxVal:Float)
         If val < minVal Then Return minVal

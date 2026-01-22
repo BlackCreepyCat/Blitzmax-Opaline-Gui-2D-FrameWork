@@ -32,9 +32,7 @@ Type TTabber Extends TWidget
     Field contentW:Int = 0
     Field contentH:Int = 0
     
-    ' -----------------------------------------------------------------------------
     ' Constructor
-    ' -----------------------------------------------------------------------------
     Method New(x:Int, y:Int, w:Int, h:Int)
         Super.New(x, y, w, h)
         
@@ -45,9 +43,9 @@ Type TTabber Extends TWidget
         UpdateLayout()
     End Method
     
-    ' -----------------------------------------------------------------------------
+    ' --------------
     ' Tab Management
-    ' -----------------------------------------------------------------------------
+    ' --------------
     
     ' Add a new tab page
     Method AddTab:Int(name:String)
@@ -119,9 +117,9 @@ Type TTabber Extends TWidget
         EndIf
     End Method
     
-    ' -----------------------------------------------------------------------------
+    ' -----------------
     ' Widget Management
-    ' -----------------------------------------------------------------------------
+    ' -----------------
     
     ' Add a widget to a specific tab
     Method AddWidgetToTab(index:Int, widget:TWidget)
@@ -155,9 +153,9 @@ Type TTabber Extends TWidget
         Return Null
     End Method
     
-    ' -----------------------------------------------------------------------------
+    ' ---------------------
     ' Active Tab Management
-    ' -----------------------------------------------------------------------------
+    ' ---------------------
     
     ' Set the active tab
     Method SetActiveTab(index:Int)
@@ -191,10 +189,9 @@ Type TTabber Extends TWidget
         Next
     End Method
     
-    ' -----------------------------------------------------------------------------
+    ' ------
     ' Layout
-    ' -----------------------------------------------------------------------------
-    
+    ' ------
     Method UpdateLayout()
         ' Content area starts below tabs
         contentX = 0
@@ -206,14 +203,14 @@ Type TTabber Extends TWidget
     Method UpdateTabWidths()
         For Local page:TTabPage = EachIn pages
             ' Calculate width based on text
-            Local textW:Int = TextWidth(page.name) + TABBER_TAB_PADDING * 2
+            Local textW:Int = TWidget.GuiTextWidth(page.name) + TABBER_TAB_PADDING * 2
             page.tabWidth = Max(textW, TABBER_TAB_MIN_WIDTH)
         Next
     End Method
     
-    ' -----------------------------------------------------------------------------
+    ' -------
     ' Drawing
-    ' -----------------------------------------------------------------------------
+    ' -------
     Method Draw(px:Int=0, py:Int=0)
         If Not visible Then Return
         
@@ -221,7 +218,7 @@ Type TTabber Extends TWidget
         Local ay:Int = py + rect.y
         
         ' Draw tab bar background
-        TWidget.GuiDrawRect(ax, ay, rect.w, TABBER_TAB_HEIGHT, 1, red, green, blue)
+        TWidget.GuiDrawRect(ax, ay, rect.w, TABBER_TAB_HEIGHT-1, 2, red, green, blue)
         
         ' Draw content area background
         TWidget.GuiDrawRect(ax, ay + TABBER_TAB_HEIGHT, rect.w, rect.h - TABBER_TAB_HEIGHT, 2, COLOR_TABBER_CONTENT_R, COLOR_TABBER_CONTENT_G, COLOR_TABBER_CONTENT_B)
@@ -252,7 +249,7 @@ Type TTabber Extends TWidget
             EndIf
             
             ' Draw tab button
-            Local tabH:Int = TABBER_TAB_HEIGHT - 4
+            Local tabH:Int = TABBER_TAB_HEIGHT - 5
             If isActive Then tabH = TABBER_TAB_HEIGHT - 2  ' Active tab is slightly taller
             
             TWidget.GuiDrawRect(tabX, tabY, page.tabWidth, tabH, 2, tabR, tabG, tabB)
@@ -269,9 +266,10 @@ Type TTabber Extends TWidget
                 textB = COLOR_TABBER_TEXT_INACTIVE_B
             EndIf
             
-            Local textX:Int = tabX + (page.tabWidth - TextWidth(page.name)) / 2
-            Local textY:Int = tabY + (tabH - TextHeight(page.name)) / 2
-            TWidget.GuiDrawText(textX, textY, page.name, TEXT_STYLE_NORMAL, textR, textG, textB)
+            Local textX:Int = tabX + (page.tabWidth - TWidget.GuiTextWidth(page.name)) / 2
+            Local textY:Int = tabY + (tabH - TWidget.GuiTextHeight(page.name)) / 2
+
+            TWidget.GuiDrawText(textX, textY, page.name, TEXT_STYLE_SHADOW, textR, textG, textB)
             
             tabX :+ page.tabWidth + TABBER_TAB_SPACING
             i :+ 1
@@ -285,9 +283,9 @@ Type TTabber Extends TWidget
         Next
     End Method
     
-    ' -----------------------------------------------------------------------------
+    ' -----------------------
     ' Update / Input Handling
-    ' -----------------------------------------------------------------------------
+    ' -----------------------
     Method Update:Int(mx:Int, my:Int)
         If Not visible Then Return False
         If Not enabled Then Return ContainsPoint(mx, my)
@@ -342,9 +340,9 @@ Type TTabber Extends TWidget
         Return over
     End Method
     
-    ' -----------------------------------------------------------------------------
+    ' ------------
     ' Event System
-    ' -----------------------------------------------------------------------------
+    ' ------------
     Method FireEvent(eventType:String)
         Local ev:TEvent = New TEvent
         ev.target = Self

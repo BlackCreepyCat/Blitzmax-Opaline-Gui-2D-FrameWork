@@ -176,11 +176,7 @@ Type TImageBox Extends TWidget
             EndIf
             
             ' Draw the image with alpha
-            SetBlend ALPHABLEND
-            SetAlpha imageAlpha
-            SetColor 255, 255, 255
-            DrawImageRect(image, destX, destY, destW, destH)
-            SetAlpha 1.0
+			GuiDrawImageRect(image, destX, destY, destW, destH, imageAlpha)
             
             ' Reset viewport
             TWidget.GuiSetViewport(0, 0, GraphicsWidth(), GraphicsHeight())
@@ -208,9 +204,11 @@ Type TImageBox Extends TWidget
         
         ' Update children first
         Local rev:TList = New TList
+
         For Local c:TWidget = EachIn children
             rev.AddFirst(c)
         Next
+
         For Local c:TWidget = EachIn rev
             Local relX:Int = mx - c.rect.x
             Local relY:Int = my - c.rect.y
@@ -274,7 +272,7 @@ Type TImageBox Extends TWidget
     End Method
     
     ' Load image from file
-    Method LoadFromFile:Int(path:String, flags:Int = -1)
+    Method LoadFromFile:Int(path:String, flags:Int = FILTEREDIMAGE)
         image = LoadImage(path, flags)
         Return image <> Null
     End Method
@@ -299,9 +297,11 @@ Type TImageBox Extends TWidget
         borderR = r
         borderG = g
         borderB = b
+
         red = r
         green = g
         blue = b
+
         useCustomBorderColor = True
     End Method
     
@@ -315,9 +315,11 @@ Type TImageBox Extends TWidget
         borderR = COLOR_BUTTON_NORMAL_R
         borderG = COLOR_BUTTON_NORMAL_G
         borderB = COLOR_BUTTON_NORMAL_B
+
         red = borderR
         green = borderG
         blue = borderB
+
         useCustomBorderColor = False
     End Method
     

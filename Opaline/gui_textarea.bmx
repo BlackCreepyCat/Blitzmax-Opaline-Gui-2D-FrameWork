@@ -60,7 +60,7 @@ Type TTextArea Extends TWidget
     Field tabSize:Int = 4
     Field maxLines:Int = 0      ' 0 = unlimited
     Field showLineNumbers:Int = False
-    Field lineNumberWidth:Int = 40
+    Field lineNumberWidth:Int = 50
     
     ' Scrollbar options
     Field scrollbarWidth:Int = 14
@@ -117,9 +117,8 @@ Type TTextArea Extends TWidget
     ' =========================================================================
     
     Method UpdateMetrics()
-        SetImageFont(Gui_SystemFont)
-        lineHeight = TextHeight("Xg") + 2
-        charWidth = TextWidth("X")
+        lineHeight = TWidget.GuiTextHeight("Xg") + 2
+        charWidth = TWidget.GuiTextWidth("X")
         
         ' Calculate content area (accounting for scrollbars)
         Local contentHeight:Int = rect.h - padding * 2
@@ -146,10 +145,10 @@ Type TTextArea Extends TWidget
     End Method
     
     Method UpdateMaxLineWidth()
-        SetImageFont(Gui_SystemFont)
         maxLineWidth = 0
+
         For Local line:String = EachIn lines
-            Local w:Int = TextWidth(line)
+            Local w:Int = TWidget.GuiTextWidth(line)
             If w > maxLineWidth Then maxLineWidth = w
         Next
         
@@ -307,6 +306,7 @@ Type TTextArea Extends TWidget
     
     Method RemoveLineAt(index:Int)
         If index < 0 Or index >= lines.Count() Then Return
+
         If lines.Count() <= 1
             SetLine(0, "")
             Return
@@ -314,10 +314,12 @@ Type TTextArea Extends TWidget
         
         Local newLines:TList = New TList
         Local i:Int = 0
+
         For Local line:String = EachIn lines
             If i <> index Then newLines.AddLast(line)
             i :+ 1
         Next
+
         lines = newLines
         
         AfterTextEdit()
@@ -438,9 +440,8 @@ Type TTextArea Extends TWidget
         scrollY = Max(0, Min(scrollY, maxScrollY))
         
         ' Horizontal scrolling
-        SetImageFont(Gui_SystemFont)
         Local line:String = GetLine(cursorLine)
-        Local cursorX:Int = TextWidth(line[..cursorCol])
+        Local cursorX:Int = TWidget.GuiTextWidth(line[..cursorCol])
         Local contentWidth:Int = GetContentWidth()
         
         If cursorX - scrollX < 0
@@ -577,11 +578,11 @@ Type TTextArea Extends TWidget
             Return
         EndIf
         
-        Local currentTime:Int = MilliSecs()
+        Local CurrentTime:Int = MilliSecs()
         
         ' Arrow keys with KEY REPEAT support
         If KeyDown(KEY_UP)
-            If KeyHit(KEY_UP) Or CheckKeyRepeat(KEY_UP, currentTime)
+            If KeyHit(KEY_UP) Or CheckKeyRepeat(KEY_UP, CurrentTime)
                 If Not shift Then ClearSelection()
                 If cursorLine > 0
                     If shift Then StartSelection()
@@ -596,7 +597,7 @@ Type TTextArea Extends TWidget
         EndIf
         
         If KeyDown(KEY_DOWN)
-            If KeyHit(KEY_DOWN) Or CheckKeyRepeat(KEY_DOWN, currentTime)
+            If KeyHit(KEY_DOWN) Or CheckKeyRepeat(KEY_DOWN, CurrentTime)
                 If Not shift Then ClearSelection()
                 If cursorLine < lines.Count() - 1
                     If shift Then StartSelection()
@@ -611,7 +612,7 @@ Type TTextArea Extends TWidget
         EndIf
         
         If KeyDown(KEY_LEFT)
-            If KeyHit(KEY_LEFT) Or CheckKeyRepeat(KEY_LEFT, currentTime)
+            If KeyHit(KEY_LEFT) Or CheckKeyRepeat(KEY_LEFT, CurrentTime)
                 If shift Then StartSelection() Else If HasSelection() Then ClearSelection()
                 
                 If cursorCol > 0
@@ -629,7 +630,7 @@ Type TTextArea Extends TWidget
         EndIf
         
         If KeyDown(KEY_RIGHT)
-            If KeyHit(KEY_RIGHT) Or CheckKeyRepeat(KEY_RIGHT, currentTime)
+            If KeyHit(KEY_RIGHT) Or CheckKeyRepeat(KEY_RIGHT, CurrentTime)
                 If shift Then StartSelection() Else If HasSelection() Then ClearSelection()
                 
                 Local lineLen:Int = GetLine(cursorLine).Length
@@ -654,13 +655,17 @@ Type TTextArea Extends TWidget
         
         ' Home/End with repeat
         If KeyDown(KEY_HOME)
-            If KeyHit(KEY_HOME) Or CheckKeyRepeat(KEY_HOME, currentTime)
+            If KeyHit(KEY_HOME) Or CheckKeyRepeat(KEY_HOME, CurrentTime)
                 If shift Then StartSelection() Else ClearSelection()
+
                 If ctrl
                     cursorLine = 0
                 EndIf
+
                 cursorCol = 0
+
                 If shift Then UpdateSelection()
+
                 EnsureCursorVisible()
                 ResetCursorBlink()
             EndIf
@@ -668,13 +673,16 @@ Type TTextArea Extends TWidget
         EndIf
         
         If KeyDown(KEY_END)
-            If KeyHit(KEY_END) Or CheckKeyRepeat(KEY_END, currentTime)
+            If KeyHit(KEY_END) Or CheckKeyRepeat(KEY_END, CurrentTime)
                 If shift Then StartSelection() Else ClearSelection()
+
                 If ctrl
                     cursorLine = lines.Count() - 1
                 EndIf
+
                 cursorCol = GetLine(cursorLine).Length
                 If shift Then UpdateSelection()
+
                 EnsureCursorVisible()
                 ResetCursorBlink()
             EndIf
@@ -683,10 +691,12 @@ Type TTextArea Extends TWidget
         
         ' Page Up/Down with repeat
         If KeyDown(KEY_PAGEUP)
-            If KeyHit(KEY_PAGEUP) Or CheckKeyRepeat(KEY_PAGEUP, currentTime)
+            If KeyHit(KEY_PAGEUP) Or CheckKeyRepeat(KEY_PAGEUP, CurrentTime)
                 If shift Then StartSelection() Else ClearSelection()
+
                 cursorLine = Max(0, cursorLine - visibleLines)
                 cursorCol = Min(cursorCol, GetLine(cursorLine).Length)
+
                 If shift Then UpdateSelection()
                 EnsureCursorVisible()
                 ResetCursorBlink()
@@ -695,7 +705,7 @@ Type TTextArea Extends TWidget
         EndIf
         
         If KeyDown(KEY_PAGEDOWN)
-            If KeyHit(KEY_PAGEDOWN) Or CheckKeyRepeat(KEY_PAGEDOWN, currentTime)
+            If KeyHit(KEY_PAGEDOWN) Or CheckKeyRepeat(KEY_PAGEDOWN, CurrentTime)
                 If shift Then StartSelection() Else ClearSelection()
                 cursorLine = Min(lines.Count() - 1, cursorLine + visibleLines)
                 cursorCol = Min(cursorCol, GetLine(cursorLine).Length)
@@ -708,7 +718,7 @@ Type TTextArea Extends TWidget
         
         ' Backspace with repeat support
         If KeyDown(KEY_BACKSPACE) And Not isReadOnly
-            If KeyHit(KEY_BACKSPACE) Or CheckKeyRepeat(KEY_BACKSPACE, currentTime)
+            If KeyHit(KEY_BACKSPACE) Or CheckKeyRepeat(KEY_BACKSPACE, CurrentTime)
                 If HasSelection()
                     DeleteSelection()
                 ElseIf cursorCol > 0
@@ -732,7 +742,7 @@ Type TTextArea Extends TWidget
         
         ' Delete with repeat support
         If KeyDown(KEY_DELETE) And Not isReadOnly
-            If KeyHit(KEY_DELETE) Or CheckKeyRepeat(KEY_DELETE, currentTime)
+            If KeyHit(KEY_DELETE) Or CheckKeyRepeat(KEY_DELETE, CurrentTime)
                 If HasSelection()
                     DeleteSelection()
                 Else
@@ -784,6 +794,7 @@ Type TTextArea Extends TWidget
         
         ' Normal character input
         Local key:Int = GetChar()
+
         While key <> 0
             If key >= 32 And key < 127 And Not isReadOnly
                 If HasSelection() Then DeleteSelection()
@@ -796,6 +807,7 @@ Type TTextArea Extends TWidget
                 ResetCursorBlink()
                 AfterTextEdit()
             EndIf
+
             key = GetChar()
         Wend
     End Method
@@ -804,9 +816,7 @@ Type TTextArea Extends TWidget
     '                         MOUSE HANDLING
     ' =========================================================================
     
-    Method GetPositionFromMouse:Int[](mx:Int, my:Int)
-        SetImageFont(Gui_SystemFont)
-        
+    Method GetPositionFromMouse:Int[](mx:Int, my:Int)        
         Local contentX:Int = padding
         If showLineNumbers Then contentX :+ lineNumberWidth
         
@@ -819,10 +829,10 @@ Type TTextArea Extends TWidget
         Local clickCol:Int = 0
         
         For Local i:Int = 0 To line.Length
-            Local w:Int = TextWidth(line[..i])
+            Local w:Int = TWidget.GuiTextWidth(line[..i])
             If w >= relX
                 If i > 0
-                    Local prevW:Int = TextWidth(line[..i-1])
+                    Local prevW:Int = TWidget.GuiTextWidth(line[..i-1])
                     If relX - prevW < w - relX
                         clickCol = i - 1
                     Else
@@ -1072,10 +1082,7 @@ Type TTextArea Extends TWidget
         EndIf
         
         TWidget.GuiSetViewport(contentX, contentY, contentW, contentH)
-        
-
-        SetImageFont(Gui_SystemFont)
-        
+ 
         Local y:Int = contentY
         For Local i:Int = scrollY Until Min(scrollY + visibleLines + 1, lines.Count())
             Local line:String = GetLine(i)
@@ -1084,14 +1091,12 @@ Type TTextArea Extends TWidget
             If HasSelection()
                 DrawLineSelection(i, contentX, lineY, line)
             EndIf
-            
-            SetColor(textR, textG, textB)
-            DrawText(line, contentX - scrollX, lineY)
-            
+
+			TWidget.GuiDrawText(contentX - scrollX, lineY, String(line),TEXT_STYLE_SHADOW,textR, textG, textB)
+
             If focused And cursorVisible And i = cursorLine
-                Local cursorDrawX:Int = contentX - scrollX + TextWidth(line[..cursorCol])
-                SetColor(COLOR_TEXTINPUT_CURSOR_R, COLOR_TEXTINPUT_CURSOR_G, COLOR_TEXTINPUT_CURSOR_B)
-                DrawLine(cursorDrawX, lineY, cursorDrawX, lineY + lineHeight - 2)
+                Local cursorDrawX:Int = contentX - scrollX + TWidget.GuiTextWidth(line[..cursorCol])
+				TWidget.GuiDrawLine(cursorDrawX, lineY, cursorDrawX, lineY + lineHeight - 2, 1, COLOR_TEXTINPUT_CURSOR_R, COLOR_TEXTINPUT_CURSOR_G, COLOR_TEXTINPUT_CURSOR_B)
             EndIf
             
             y :+ lineHeight
@@ -1102,61 +1107,59 @@ Type TTextArea Extends TWidget
         If showLineNumbers
             TWidget.GuiSetViewport(ax + 2, contentY, lineNumberWidth - 4, contentH)
             Local y2:Int = contentY
+
             For Local i:Int = scrollY Until Min(scrollY + visibleLines + 1, lines.Count())
-                SetColor(lineNumR, lineNumG, lineNumB)
                 Local numStr:String = String(i + 1)
-                DrawText(numStr, ax + lineNumberWidth - 6 - TextWidth(numStr), y2)
+				TWidget.GuiDrawText(ax + lineNumberWidth - 6 - TWidget.GuiTextWidth(numStr), y2, String(numStr),TEXT_STYLE_SHADOW, lineNumR, lineNumG, lineNumB)
+				
                 y2 :+ lineHeight
             Next
+
             TWidget.GuiSetViewport(0, 0, GraphicsWidth(), GraphicsHeight())
         EndIf
         
         If NeedsVScrollbar()
             Local bx:Int, by:Int, bw:Int, bh:Int
             GetVScrollbarRect(bx, by, bw, bh)
-            
-            SetColor(scrollBgR, scrollBgG, scrollBgB)
-            DrawRect(ax + bx, ay + by, bw, bh)
-            
+
+            TWidget.GuiDrawRect(ax + bx, ay + by, bw, bh, 1, scrollBgR, scrollBgG, scrollBgB)
+
             Local tx:Int, ty:Int, tw:Int, th:Int
             GetVScrollThumbRect(tx, ty, tw, th)
             
             If draggingVScroll
-                SetColor(scrollThumbDragR, scrollThumbDragG, scrollThumbDragB)
+				TWidget.GuiDrawRect(ax + tx, ay + ty, tw, th, 1, scrollThumbDragR, scrollThumbDragG, scrollThumbDragB)
             ElseIf hoverVScroll
-                SetColor(scrollThumbHoverR, scrollThumbHoverG, scrollThumbHoverB)
+				TWidget.GuiDrawRect(ax + tx, ay + ty, tw, th, 1, scrollThumbDragR, scrollThumbDragG, scrollThumbDragB)
             Else
-                SetColor(scrollThumbR, scrollThumbG, scrollThumbB)
+				TWidget.GuiDrawRect(ax + tx, ay + ty, tw, th, 1, scrollThumbDragR, scrollThumbDragG, scrollThumbDragB)
             EndIf
-            DrawRect(ax + tx, ay + ty, tw, th)
         EndIf
         
         If NeedsHScrollbar()
             Local bx:Int, by:Int, bw:Int, bh:Int
             GetHScrollbarRect(bx, by, bw, bh)
-            
-            SetColor(scrollBgR, scrollBgG, scrollBgB)
-            DrawRect(ax + bx, ay + by, bw, bh)
+
+			TWidget.GuiDrawRect(ax + bx, ay + by, bw, bh, 1, scrollBgR, scrollBgG, scrollBgB)
             
             Local tx:Int, ty:Int, tw:Int, th:Int
             GetHScrollThumbRect(tx, ty, tw, th)
             
             If draggingHScroll
-                SetColor(scrollThumbDragR, scrollThumbDragG, scrollThumbDragB)
+				TWidget.GuiDrawRect(ax + tx, ay + ty, tw, th, 1, scrollThumbDragR, scrollThumbDragG, scrollThumbDragB)
             ElseIf hoverHScroll
-                SetColor(scrollThumbHoverR, scrollThumbHoverG, scrollThumbHoverB)
+				TWidget.GuiDrawRect(ax + tx, ay + ty, tw, th, 1, scrollThumbHoverR, scrollThumbHoverG, scrollThumbHoverB)
             Else
-                SetColor(scrollThumbR, scrollThumbG, scrollThumbB)
+				TWidget.GuiDrawRect(ax + tx, ay + ty, tw, th, 1, scrollThumbR, scrollThumbG, scrollThumbB)
             EndIf
-            DrawRect(ax + tx, ay + ty, tw, th)
+
         EndIf
-        
+		
+		' Little rectangle at bottom right
         If NeedsVScrollbar() And NeedsHScrollbar()
-            SetColor(scrollBgR, scrollBgG, scrollBgB)
-            DrawRect(ax + rect.w - scrollbarWidth, ay + rect.h - scrollbarWidth, scrollbarWidth, scrollbarWidth)
+			TWidget.GuiDrawRect(ax + rect.w - scrollbarWidth, ay + rect.h - scrollbarWidth, scrollbarWidth, scrollbarWidth, 1, scrollBgR, scrollBgG, scrollBgB)
         EndIf
-        
-        SetColor(255, 255, 255)
+
     End Method
     
     Method DrawLineSelection(lineIndex:Int, contentX:Int, lineY:Int, lineText:String)
@@ -1168,21 +1171,20 @@ Type TTextArea Extends TWidget
         Local selStartX:Int, selEndX:Int
         
         If lineIndex = startLine And lineIndex = endLine
-            selStartX = contentX - scrollX + TextWidth(lineText[..startCol])
-            selEndX = contentX - scrollX + TextWidth(lineText[..endCol])
+            selStartX = contentX - scrollX + TWidget.GuiTextWidth(lineText[..startCol])
+            selEndX = contentX - scrollX + TWidget.GuiTextWidth(lineText[..endCol])
         ElseIf lineIndex = startLine
-            selStartX = contentX - scrollX + TextWidth(lineText[..startCol])
-            selEndX = contentX - scrollX + TextWidth(lineText) + charWidth
+            selStartX = contentX - scrollX + TWidget.GuiTextWidth(lineText[..startCol])
+            selEndX = contentX - scrollX + TWidget.GuiTextWidth(lineText) + charWidth
         ElseIf lineIndex = endLine
             selStartX = contentX - scrollX
-            selEndX = contentX - scrollX + TextWidth(lineText[..endCol])
+            selEndX = contentX - scrollX + TWidget.GuiTextWidth(lineText[..endCol])
         Else
             selStartX = contentX - scrollX
-            selEndX = contentX - scrollX + TextWidth(lineText) + charWidth
+            selEndX = contentX - scrollX + TWidget.GuiTextWidth(lineText) + charWidth
         EndIf
-        
-        SetColor(COLOR_TEXTINPUT_SELECTION_R, COLOR_TEXTINPUT_SELECTION_G, COLOR_TEXTINPUT_SELECTION_B)
-        DrawRect(selStartX, lineY, selEndX - selStartX, lineHeight)
+
+		TWidget.GuiDrawRect(selStartX, lineY, selEndX - selStartX, lineHeight, 1, COLOR_TEXTINPUT_SELECTION_R, COLOR_TEXTINPUT_SELECTION_G, COLOR_TEXTINPUT_SELECTION_B)
     End Method
     
     ' =========================================================================
@@ -1248,26 +1250,26 @@ Type TTextArea Extends TWidget
     ' =========================================================================
     
     ' Check if a key should repeat (returns True if action should be performed)
-    Method CheckKeyRepeat:Int(key:Int, currentTime:Int)
+    Method CheckKeyRepeat:Int(key:Int, CurrentTime:Int)
         ' If this is a new key, start tracking it
         If keyRepeatKey <> key
             keyRepeatKey = key
-            keyRepeatStartTime = currentTime
-            keyRepeatLastTime = currentTime
+            keyRepeatStartTime = CurrentTime
+            keyRepeatLastTime = CurrentTime
             keyRepeatActive = False
             Return False  ' First press handled by KeyHit
         EndIf
         
         ' Check if we're past the initial delay
-        Local elapsed:Int = currentTime - keyRepeatStartTime
+        Local elapsed:Int = CurrentTime - keyRepeatStartTime
         If elapsed < TEXTAREA_KEY_REPEAT_DELAY
             Return False  ' Still in initial delay
         EndIf
         
         ' We're in repeat mode - check if enough time has passed since last repeat
-        Local timeSinceLastRepeat:Int = currentTime - keyRepeatLastTime
+        Local timeSinceLastRepeat:Int = CurrentTime - keyRepeatLastTime
         If timeSinceLastRepeat >= TEXTAREA_KEY_REPEAT_INTERVAL
-            keyRepeatLastTime = currentTime
+            keyRepeatLastTime = CurrentTime
             keyRepeatActive = True
             Return True  ' Trigger repeat action
         EndIf

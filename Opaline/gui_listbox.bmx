@@ -430,15 +430,15 @@ Type TListBox Extends TWidget
         For Local col:TListColumn = EachIn columns
             ' Header text
             Local textX:Int
-            Local textY:Int = headerY + (headerHeight - TextHeight(col.title)) / 2
+            Local textY:Int = headerY + (headerHeight - TWidget.GuiTextHeight(col.title)) / 2
             
             Select col.alignment
                 Case LABEL_ALIGN_LEFT
                     textX = headerX + 6
                 Case LABEL_ALIGN_CENTER
-                    textX = headerX + (col.width - TextWidth(col.title)) / 2
+                    textX = headerX + (col.width - TWidget.GuiTextWidth(col.title)) / 2
                 Case LABEL_ALIGN_RIGHT
-                    textX = headerX + col.width - TextWidth(col.title) - 6
+                    textX = headerX + col.width - TWidget.GuiTextWidth(col.title) - 6
             End Select
             
             TWidget.GuiDrawText(textX, textY, col.title, TEXT_STYLE_SHADOW, COLOR_LISTBOX_HEADER_TEXT_R, COLOR_LISTBOX_HEADER_TEXT_G, COLOR_LISTBOX_HEADER_TEXT_B)
@@ -493,16 +493,16 @@ Type TListBox Extends TWidget
                     ' Multi-column mode - clip each cell individually
                     For Local col:TListColumn = EachIn columns
                         Local cellText:String = item.GetCell(colIndex)
-                        Local textY:Int = drawY + (itemHeight - TextHeight("X")) / 2
+                        Local textY:Int = drawY + (itemHeight - TWidget.GuiTextHeight("X")) / 2
                         Local textX:Int
                         
                         Select col.alignment
                             Case LABEL_ALIGN_LEFT
                                 textX = cellX + 6
                             Case LABEL_ALIGN_CENTER
-                                textX = cellX + (col.width - TextWidth(cellText)) / 2
+                                textX = cellX + (col.width - TWidget.GuiTextWidth(cellText)) / 2
                             Case LABEL_ALIGN_RIGHT
-                                textX = cellX + col.width - TextWidth(cellText) - 6
+                                textX = cellX + col.width - TWidget.GuiTextWidth(cellText) - 6
                         End Select
                         
                         ' Calculate visible cell bounds (intersection with content area)
@@ -531,7 +531,7 @@ Type TListBox Extends TWidget
                     ' Single-column mode - no extra clipping needed (already clipped to content area)
                     Local cellText:String = item.GetCell(0)
                     Local textX:Int = cellX + 6
-                    Local textY:Int = drawY + (itemHeight - TextHeight("X")) / 2
+                    Local textY:Int = drawY + (itemHeight - TWidget.GuiTextHeight("X")) / 2
                     TWidget.GuiDrawText(textX, textY, cellText, TEXT_STYLE_NORMAL, COLOR_LISTBOX_ITEM_R, COLOR_LISTBOX_ITEM_G, COLOR_LISTBOX_ITEM_B)
                 EndIf
                 

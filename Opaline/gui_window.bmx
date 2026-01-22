@@ -5,20 +5,20 @@
 ' Supports MODAL windows that block input to other windows
 ' =============================================================================
 
-' -----------------------------------------------------------------------------
+' ----------------------------
 ' Global Modal Window Tracking
-' -----------------------------------------------------------------------------
+' ----------------------------
 Global g_ModalWindow:TWindow = Null  ' Currently active modal window
 Global g_DesktopActive:Int = False   ' True when user clicked on desktop (no window active)
 
-' -----------------------------------------------------------------------------
+' ----------------
 ' Resize Constants
-' -----------------------------------------------------------------------------
+' ----------------
 Const DEFAULT_RESIZE_GRIP_SIZE:Int = 16  ' Size of the resize grip zone (bottom-right corner)
 
-' -----------------------------------------------------------------------------
+' -------------------------------------------------------------
 ' Status Bar Section - represents one section of the status bar
-' -----------------------------------------------------------------------------
+' -------------------------------------------------------------
 Type TStatusSection
     Field text:String = ""           ' Text to display
     Field width:Int = -1             ' Width in pixels (-1 = auto/flexible)
@@ -35,9 +35,9 @@ Type TStatusSection
     End Method
 End Type
 
-' -----------------------------------------------------------------------------
+' -------------
 ' Window Widget
-' -----------------------------------------------------------------------------
+' -------------
 Type TWindow Extends TWidget
     Field title:String
     Field isDragging:Int = False
@@ -433,25 +433,18 @@ Type TWindow Extends TWidget
             ' Bas visuel = ay + TITLEBAR_HEIGHT + ClientHeight
             Local gripY:Int = ay + TITLEBAR_HEIGHT + ClientHeight - gripSize - 2
             
-            SetBlend(ALPHABLEND)
-            SetAlpha(0.7)
-            
             ' Draw diagonal lines (grip pattern)
-            SetColor 150, 150, 170
             For Local i:Int = 0 To 2
                 Local offset:Int = i * 4
-                DrawLine gripX + offset + 2, gripY + gripSize - 2, gripX + gripSize - 2, gripY + offset + 2
+				TWidget.GuiDrawLine(gripX + offset + 2, gripY + gripSize - 2, gripX + gripSize - 2, gripY + offset + 2, 1, 150, 150, 170)
             Next
             
             ' Darker lines for depth
             SetColor 30, 30, 50
             For Local i:Int = 0 To 2
                 Local offset:Int = i * 4
-                DrawLine gripX + offset + 3, gripY + gripSize - 2, gripX + gripSize - 2, gripY + offset + 3
+				TWidget.GuiDrawLine(gripX + offset + 3, gripY + gripSize - 2, gripX + gripSize - 2, gripY + offset + 3, 1, 100, 100, 110)
             Next
-            
-            SetAlpha(1.0)
-            SetColor 255, 255, 255
         EndIf
 
         ' First draw title bar buttons (they should appear on top of title bar)
@@ -478,7 +471,7 @@ Type TWindow Extends TWidget
         TWidget.GuiDrawRect(ax + 2, statusY, rect.w - 4, STATUSBAR_HEIGHT, 3, COLOR_STATUSBAR_BG_R, COLOR_STATUSBAR_BG_G, COLOR_STATUSBAR_BG_B)
         
         Local padding:Int = 6
-        Local textY:Int = statusY + (STATUSBAR_HEIGHT - TextHeight("X")) / 2
+        Local textY:Int = statusY + (STATUSBAR_HEIGHT - TWidget.GuiTextHeight("X")) / 2
         
         ' If we have sections, draw them
         If statusSections.Count() > 0
@@ -524,9 +517,9 @@ Type TWindow Extends TWidget
                     Case LABEL_ALIGN_LEFT
                         textX = currentX
                     Case LABEL_ALIGN_CENTER
-                        textX = currentX + (sectionWidth - TextWidth(section.text)) / 2
+                        textX = currentX + (sectionWidth - TWidget.GuiTextWidth(section.text)) / 2
                     Case LABEL_ALIGN_RIGHT
-                        textX = currentX + sectionWidth - TextWidth(section.text)
+                        textX = currentX + sectionWidth - TWidget.GuiTextWidth(section.text)
                 End Select
                 
                 ' Clip and draw text

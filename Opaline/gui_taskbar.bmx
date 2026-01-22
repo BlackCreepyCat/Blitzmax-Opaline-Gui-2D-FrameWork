@@ -10,9 +10,9 @@
 ' -----------------------------------------------------------------------------
 Global g_TaskBar:TTaskBar = Null
 
-' -----------------------------------------------------------------------------
+' ---------------------------------------------------
 ' TaskBar Item - Links a button to a minimized window
-' -----------------------------------------------------------------------------
+' ---------------------------------------------------
 Type TTaskBarItem
     Field window:TWindow           ' Reference to the minimized window
     Field button:TButton           ' The button in the taskbar
@@ -25,9 +25,9 @@ Type TTaskBarItem
     End Method
 End Type
 
-' -----------------------------------------------------------------------------
+' --------------
 ' TaskBar Widget
-' -----------------------------------------------------------------------------
+' --------------
 Type TTaskBar Extends TWidget
     Field panel:TPanel             ' The taskbar panel
     Field items:TList = New TList  ' List of TTaskBarItem
@@ -45,10 +45,10 @@ Type TTaskBar Extends TWidget
     Field blue:Int = COLOR_TASKBAR_BG_B
     
     ' Animation
-    Field targetY:Int              ' Target Y position (where we want to be)
-    Field currentY:Float           ' Current Y position (animated)
-    Field animationSpeed:Float = 0.15  ' Animation speed (0.0 to 1.0, higher = faster)
-    Field screenHeight:Int         ' Store screen height for calculations
+    Field targetY:Int              		' Target Y position (where we want to be)
+    Field currentY:Float           		' Current Y position (animated)
+    Field animationSpeed:Float = 0.15  	' Animation speed (0.0 to 1.0, higher = faster)
+    Field screenHeight:Int         		' Store screen height for calculations
     
     ' =========================================================================
     '                         CONSTRUCTOR
@@ -170,6 +170,7 @@ Type TTaskBar Extends TWidget
         For Local item:TTaskBarItem = EachIn items
             If item.window = win Then Return True
         Next
+
         Return False
     End Method
     
@@ -390,7 +391,7 @@ Type TTaskBar Extends TWidget
         
         ' Calculate position (right side of taskbar)
         Local clockX:Int = ax + rect.w - (TASKBAR_CLOCK_WIDTH )
-        Local clockY:Int = ay + (TASKBAR_HEIGHT - TextHeight(timeStr)) / 2
+        Local clockY:Int = ay + (TASKBAR_HEIGHT - TWidget.GuiTextHeight(timeStr)) / 2
         
         ' Draw clock background
         TWidget.GuiDrawRect(clockX - 5, ay + 5, TASKBAR_CLOCK_WIDTH - 10, TASKBAR_HEIGHT - 10, 3, red - 10, green - 10, blue - 10)

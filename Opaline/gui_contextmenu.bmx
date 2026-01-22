@@ -13,9 +13,9 @@ Const MENUITEM_SEPARATOR:Int = 1
 Const MENUITEM_CHECKBOX:Int = 2
 Const MENUITEM_DISABLED:Int = 3
 
-' -----------------------------------------------------------------------------
+' -------------------
 ' Menu Item Structure
-' -----------------------------------------------------------------------------
+' -------------------
 Type TMenuItem
     Field text:String = ""
     Field id:String = ""              ' Unique identifier for callbacks
@@ -40,14 +40,14 @@ Type TMenuItem
     End Function
 End Type
 
-' -----------------------------------------------------------------------------
+' -------------------------
 ' Global Context Menu State
-' -----------------------------------------------------------------------------
+' -------------------------
 Global g_ActiveContextMenu:TContextMenu = Null
 
-' -----------------------------------------------------------------------------
+' ------------------
 ' Context Menu Class
-' -----------------------------------------------------------------------------
+' ------------------
 Type TContextMenu
     Field items:TList = New TList     ' List of TMenuItem
     Field x:Int, y:Int                ' Screen position
@@ -150,18 +150,22 @@ Type TContextMenu
     ' Update menu width based on content
     Method UpdateWidth()
         Local maxW:Int = 100
+
         For Local item:TMenuItem = EachIn items
+
             If item.itemType <> MENUITEM_SEPARATOR
-                Local textW:Int = TextWidth(item.text)
+                Local textW:Int = TWidget.GuiTextWidth(item.text)
                 If item.shortcut.Length > 0
-                    textW :+ TextWidth(item.shortcut) + 30
+                    textW :+ TWidget.GuiTextWidth(item.shortcut) + 30
                 EndIf
                 If item.itemType = MENUITEM_CHECKBOX
                     textW :+ 24  ' Space for checkmark
                 EndIf
                 maxW = Max(maxW, textW)
             EndIf
+
         Next
+
         width = maxW + paddingX * 2 + 20
     End Method
     
@@ -308,28 +312,16 @@ Type TContextMenu
         Local menuH:Int = GetHeight()
         
         ' Draw shadow
-        SetBlend(ALPHABLEND)
-        SetAlpha(0.3)
-        SetColor(0, 0, 0)
-        DrawRect(x + 4, y + 4, width, menuH)
-        SetAlpha(1.0)
-        
+		TWidget.GuiDrawRect(x + 4, y + 4, width, menuH, 1, 0,0,0,0.3)
+   
         ' Draw background
-        SetColor(bgR, bgG, bgB)
-        DrawRect(x, y, width, menuH)
-        
-        ' Draw border
-        SetColor(separatorR, separatorG, separatorB)
-        DrawLine(x, y, x + width, y)
-        DrawLine(x, y + menuH, x + width, y + menuH)
-        DrawLine(x, y, x, y + menuH)
-        DrawLine(x + width, y, x + width, y + menuH)
+		TWidget.GuiDrawRect(x, y, width, menuH,2, bgR, bgG, bgB)
         
         ' Draw items
         Local currentY:Int = y + paddingY
         Local idx:Int = 0
         
-        SetImageFont(Gui_SystemFont)
+     '   SetImageFont(Gui_SystemFont)
         
         For Local item:TMenuItem = EachIn items
             If item.itemType = MENUITEM_SEPARATOR
@@ -340,8 +332,10 @@ Type TContextMenu
             Else
                 ' Draw hover highlight
                 If idx = hoverIndex
-                    SetColor(hoverR, hoverG, hoverB)
-                    DrawRect(x + 2, currentY, width - 4, itemHeight)
+                 '   SetColor(hoverR, hoverG, hoverB)
+                 '   DrawRect(x + 2, currentY, width - 4, itemHeight)
+
+					TWidget.GuiDrawRect(x + 2, currentY, width - 4, itemHeight, 1, hoverR, hoverG, hoverB)
                 EndIf
                 
                 ' Draw checkbox mark
@@ -362,7 +356,10 @@ Type TContextMenu
                 Else
                     SetColor(disabledR, disabledG, disabledB)
                 EndIf
+
                 DrawText(item.text, textStartX, currentY + (itemHeight - TextHeight(item.text)) / 2)
+
+				
                 
                 ' Draw shortcut text (right-aligned)
                 If item.shortcut.Length > 0

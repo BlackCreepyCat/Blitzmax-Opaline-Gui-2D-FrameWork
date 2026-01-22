@@ -70,7 +70,7 @@ Type TPanel Extends TWidget
             
             ' Draw title text with shadow effect
             Local textX:Int = ax + padding
-            Local textY:Int = ay + (titleHeight - TextHeight(title)) / 2 + 2
+            Local textY:Int = ay + (titleHeight - TWidget.GuiTextHeight(title)) / 2 + 2
             TWidget.GuiDrawText(textX, textY, title, TEXT_STYLE_SHADOW, COLOR_PANEL_TITLE_R, COLOR_PANEL_TITLE_G, COLOR_PANEL_TITLE_B)
             
             ' Thin separator line under title

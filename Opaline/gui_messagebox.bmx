@@ -5,31 +5,31 @@
 ' Uses callback function to return result
 ' =============================================================================
 
-' -----------------------------------------------------------------------------
+' ----------------------------------------
 ' MessageBox Types (button configurations)
-' -----------------------------------------------------------------------------
+' ----------------------------------------
 Const MSGBOX_OK:Int = 0
 Const MSGBOX_OK_CANCEL:Int = 1
 Const MSGBOX_YES_NO:Int = 2
 Const MSGBOX_YES_NO_CANCEL:Int = 3
 
-' -----------------------------------------------------------------------------
+' ------------------
 ' MessageBox Results
-' -----------------------------------------------------------------------------
+' ------------------
 Const MSGBOX_RESULT_NONE:Int = -1
 Const MSGBOX_RESULT_OK:Int = 0
 Const MSGBOX_RESULT_CANCEL:Int = 1
 Const MSGBOX_RESULT_YES:Int = 2
 Const MSGBOX_RESULT_NO:Int = 3
 
-' -----------------------------------------------------------------------------
+' -----------------------
 ' Global MessageBox State
-' -----------------------------------------------------------------------------
+' -----------------------
 Global g_ActiveMessageBox:TMessageBox = Null
 
-' -----------------------------------------------------------------------------
+' ----------------
 ' MessageBox Class
-' -----------------------------------------------------------------------------
+' ----------------
 Type TMessageBox
     Field window:TWindow
     Field msgType:Int
@@ -66,8 +66,8 @@ Type TMessageBox
         mb.callback = callback
         
         ' Calculate window size based on message length
-        Local msgWidth:Int = TextWidth(message) + 60
-        Local titleWidth:Int = TextWidth(title) + 100
+        Local msgWidth:Int = TWidget.GuiTextWidth(message) + 60
+        Local titleWidth:Int = TWidget.GuiTextWidth(title) + 100
         Local winWidth:Int = Max(Max(msgWidth, titleWidth), 300)
         winWidth = Min(winWidth, 500)  ' Cap max width
         
