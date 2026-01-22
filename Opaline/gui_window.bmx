@@ -5,20 +5,14 @@
 ' Supports MODAL windows that block input to other windows
 ' =============================================================================
 
-' ----------------------------
 ' Global Modal Window Tracking
-' ----------------------------
 Global g_ModalWindow:TWindow = Null  ' Currently active modal window
 Global g_DesktopActive:Int = False   ' True when user clicked on desktop (no window active)
 
-' ----------------
 ' Resize Constants
-' ----------------
 Const DEFAULT_RESIZE_GRIP_SIZE:Int = 16  ' Size of the resize grip zone (bottom-right corner)
 
-' -------------------------------------------------------------
 ' Status Bar Section - represents one section of the status bar
-' -------------------------------------------------------------
 Type TStatusSection
     Field text:String = ""           ' Text to display
     Field width:Int = -1             ' Width in pixels (-1 = auto/flexible)
@@ -35,9 +29,7 @@ Type TStatusSection
     End Method
 End Type
 
-' -------------
 ' Window Widget
-' -------------
 Type TWindow Extends TWidget
     Field title:String
     Field isDragging:Int = False
@@ -684,7 +676,7 @@ Type TWindow Extends TWidget
 
         ' If clicked anywhere in the window (but not handled above), bring to front
         If draggedWindow = Null And resizingWindow = Null And GuiMouse.Hit()
-            If lx >= 0 And lx < rect.w And ly >= 0 And ly < rect.h
+            If lx >= 0 And lx < rect.w And ly >= 0 And ly < rect.h + STATUSBAR_HEIGHT
                 If parent And Not isModal Then parent.BringToFront(Self)
                 g_DesktopActive = False
                 Return True

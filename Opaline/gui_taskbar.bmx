@@ -5,14 +5,10 @@
 ' Automatically manages window minimize/restore functionality
 ' =============================================================================
 
-' -----------------------------------------------------------------------------
 ' Global TaskBar Reference
-' -----------------------------------------------------------------------------
 Global g_TaskBar:TTaskBar = Null
 
-' ---------------------------------------------------
 ' TaskBar Item - Links a button to a minimized window
-' ---------------------------------------------------
 Type TTaskBarItem
     Field window:TWindow           ' Reference to the minimized window
     Field button:TButton           ' The button in the taskbar
@@ -25,9 +21,7 @@ Type TTaskBarItem
     End Method
 End Type
 
-' --------------
 ' TaskBar Widget
-' --------------
 Type TTaskBar Extends TWidget
     Field panel:TPanel             ' The taskbar panel
     Field items:TList = New TList  ' List of TTaskBarItem
