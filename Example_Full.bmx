@@ -211,7 +211,7 @@ Local modalTitle:TLabel = New TLabel(20, 20, 360, 30, "Opaline GUI Framework", L
 modalTitle.SetColor(255, 220, 100)  ' Gold color
 winModal.AddChild modalTitle
 
-Local modalVersion:TLabel = New TLabel(20, 55, 360, 20, "Version 1.0 - Modal Window Demo", LABEL_ALIGN_CENTER)
+Local modalVersion:TLabel = New TLabel(20, 55, 360, 20, "Version 1.5 - Modal Window Demo", LABEL_ALIGN_CENTER)
 modalVersion.SetColor(200, 200, 220)
 winModal.AddChild modalVersion
 
@@ -236,7 +236,7 @@ winModal.AddChild btnModalOK
 ' =============================================================================
 
 ' --- Title Label ---
-Local titleLabel:TLabel = New TLabel(20, 20, 500, 24, "Welcome to the CreepyCat Opaline GUI Framework! (C)2026", LABEL_ALIGN_CENTER)
+Local titleLabel:TLabel = New TLabel(20, 20, 500, 24, "Welcome to the CreepyCat Opaline GUI Framework 1.5! (C)2026", LABEL_ALIGN_CENTER)
 titleLabel.SetColor(255, 220, 100)  ' Gold color
 titleLabel.SetAnchors(ANCHOR_LEFT | ANCHOR_TOP | ANCHOR_RIGHT)  ' S'étire horizontalement
 win1.AddChild titleLabel
@@ -638,13 +638,15 @@ win6.AddChild comboColor
 Local comboInfoPanel:TPanel = New TPanel(20, 185, 460, 80, "Selection Info", PANEL_STYLE_SUNKEN)
 win6.AddChild comboInfoPanel
 
-Local lblComboInfo:TLabel = New TLabel(15, 25, 430, 20, "Click on a ComboBox to open dropdown")
+Local lblComboInfo:TLabel = New TLabel(15, 10, 430, 20, "Click on a ComboBox to open dropdown")
 lblComboInfo.SetColor(180, 200, 220)
 comboInfoPanel.AddChild lblComboInfo
 
-Local lblComboValue:TLabel = New TLabel(15, 50, 430, 20, "Selected: (none)")
+Local lblComboValue:TLabel = New TLabel(15, 30, 430, 20, "Selected: (none)")
 lblComboValue.SetColor(150, 255, 150)
 comboInfoPanel.AddChild lblComboValue
+
+
 
 ' --- Note about ComboBox ---
 Local lblComboNote:TLabel = New TLabel(20, 280, 460, 40, "Note: ComboBox uses TListBox internally for the dropdown")
