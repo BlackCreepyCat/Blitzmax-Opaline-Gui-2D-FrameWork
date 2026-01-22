@@ -16,6 +16,9 @@ Graphics 1024,768, 0
 ' Initialize the GUI
 TWidget.GuiInit()
 
+' Creating the animated background
+TBackground.Init()
+
 ' Create root container
 Global root:TContainer = New TContainer(GraphicsWidth(), GraphicsHeight())
 TWidget.GuiSetRoot(root)
@@ -30,9 +33,9 @@ Local title:TLabel = New TLabel(20, 20, 660, 24, "Opaline GUI - Context Menu Dem
 title.SetColor(220, 180, 220)
 win.AddChild title
 
-Local instr:TLabel = New TLabel(30, 80, 640, 40, "Right-click anywhere in this window to open the context menu", LABEL_ALIGN_CENTER)
-instr.SetColor(255, 220, 140)
-win.AddChild instr
+Local Instr:TLabel = New TLabel(30, 80, 640, 40, "Right-click anywhere in this window to open the context menu", LABEL_ALIGN_CENTER)
+Instr.SetColor(255, 220, 140)
+win.AddChild Instr
 
 ' Create the context menu
 Global ctxMenu:TContextMenu = New TContextMenu()
@@ -65,6 +68,8 @@ info.AddChild detail
 ' =============================================================================
 While Not KeyHit(KEY_ESCAPE)
     Cls()
+
+	TBackground.Refresh()
     TWidget.GuiRefresh()
 
     ' Show context menu on right-click (button 2)

@@ -23,12 +23,15 @@ Global tasksequence:Int = 0, str_result:String = ""
 ' Initialize GUI system
 TWidget.GuiInit()
 
+' Creating the animated background
+TBackground.Init()
+
 ' Create root container
 Global root:TContainer = New TContainer(GraphicsWidth(), GraphicsHeight())
 TWidget.GuiSetRoot(root)
 
 ' Create a window
-Local win:TWindow = New TWindow(475, 100, 235, 350, "My Calculator",false)
+Local win:TWindow = New TWindow(475, 100, 235, 350, "My Calculator",False)
 win.SetResizable(False)
 root.AddChild(win)
 
@@ -118,6 +121,8 @@ End Function
 ' Main loop
 While Not AppTerminate() And Not KeyHit(KEY_ESCAPE)
     Cls
+
+	TBackground.Refresh()
     TWidget.GuiRefresh()
     
     ' Reset calculator

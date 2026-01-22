@@ -18,6 +18,9 @@ Graphics 1024, 768, 0
 ' Init the GUI
 TWidget.GuiInit()
 
+' Creating the animated background
+TBackground.Init()
+
 ' Create root container
 Global root:TContainer = New TContainer(GraphicsWidth(), GraphicsHeight())
 TWidget.GuiSetRoot(root)
@@ -115,6 +118,8 @@ infoPanel.AddChild lblMultiSelected
 While Not KeyHit(KEY_ESCAPE)
 	Cls()
 
+	TBackground.Refresh()
+	
     ' Update GUI
     Twidget.GuiRefresh()
     

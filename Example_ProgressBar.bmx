@@ -16,6 +16,9 @@ Graphics 1024,768, 0
 ' Init the GUI
 TWidget.GuiInit()
 
+' Creating the animated background
+TBackground.Init()
+
 ' Create root container
 Global root:TContainer = New TContainer(GraphicsWidth(), GraphicsHeight())
 TWidget.GuiSetRoot(root)
@@ -77,6 +80,8 @@ info.AddChild val4
 ' =============================================================================
 While Not KeyHit(KEY_ESCAPE)
     Cls()
+
+	TBackground.Refresh()
     TWidget.GuiRefresh()
 
     Local t:Float = (MilliSecs() Mod 5000) / 5000.0

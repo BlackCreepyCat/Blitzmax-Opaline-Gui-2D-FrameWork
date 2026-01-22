@@ -16,6 +16,9 @@ Graphics 1024,768, 0
 ' Initialize the GUI
 TWidget.GuiInit()
 
+' Creating the animated background
+TBackground.Init()
+
 ' Create root container
 Global root:TContainer = New TContainer(GraphicsWidth(), GraphicsHeight())
 TWidget.GuiSetRoot(root)
@@ -75,6 +78,8 @@ info.AddChild info3
 ' =============================================================================
 While Not KeyHit(KEY_ESCAPE)
     Cls()
+
+	TBackground.Refresh()
     TWidget.GuiRefresh()
 
     info1.SetText(MouseX())   ' ← commented example - you can uncomment to test

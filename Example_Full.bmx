@@ -31,6 +31,11 @@ Graphics 1920, 1080, 0
 
 TWidget.GuiInit()
 
+' Creating the animated background
+TBackground.Init()
+
+
+
 ' Create root container that covers the entire screen
 ' All windows will be children of this root container
 Global root:TContainer = New TContainer(GraphicsWidth(), GraphicsHeight())
@@ -914,12 +919,16 @@ Local lblImgInfo:TLabel = New TLabel(15, 12, 330, 24, "Click on the clickable Im
 lblImgInfo.SetColor(150, 200, 255)
 imgInfoPanel.AddChild lblImgInfo
 
+
+
+
 ' =============================================================================
 '                              MAIN LOOP
 ' =============================================================================
 While Not AppTerminate()
     Cls
 
+	TBackground.Refresh()
     TWidget.GuiRefresh()
 
     ' =============================================================================

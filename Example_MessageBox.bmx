@@ -16,6 +16,9 @@ Graphics 1024,768, 0
 ' Initialize the GUI
 TWidget.GuiInit()
 
+' Creating the animated background
+TBackground.Init()
+
 ' Create root container
 Global root:TContainer = New TContainer(GraphicsWidth(), GraphicsHeight())
 TWidget.GuiSetRoot(root)
@@ -45,7 +48,7 @@ win.AddChild btnYesNoCancel
 Local info:TPanel = New TPanel(30, 220, 640, 220, "MessageBox Result", PANEL_STYLE_RAISED)
 win.AddChild info
 
-global result:TLabel = New TLabel(20, 35, 600, 24, "No message shown yet")
+Global result:TLabel = New TLabel(20, 35, 600, 24, "No message shown yet")
 result.SetColor(220, 255, 180)
 info.AddChild result
 
@@ -79,6 +82,8 @@ End Function
 ' =============================================================================
 While Not KeyHit(KEY_ESCAPE)
     Cls()
+
+	TBackground.Refresh()
     TWidget.GuiRefresh()
 
     If btnOK.WasClicked()
