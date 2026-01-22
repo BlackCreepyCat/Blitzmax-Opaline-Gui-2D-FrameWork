@@ -1,0 +1,28 @@
+Include "gui_constants.bmx"
+Include "gui_core.bmx"
+Include "gui_mouse.bmx"
+Include "gui_container.bmx"
+Include "gui_window.bmx"
+Include "gui_button.bmx"
+Include "gui_checkbox.bmx"
+Include "gui_radio.bmx"
+Include "gui_label.bmx"
+Include "gui_panel.bmx"
+Include "gui_progressbar.bmx"
+Include "gui_slider.bmx"
+Include "gui_textinput.bmx"
+Include "gui_textarea.bmx"
+Include "gui_listbox.bmx"
+Include "gui_combobox.bmx"
+Include "gui_tabber.bmx"
+Include "gui_imagebox.bmx"
+Include "gui_messagebox.bmx"
+Include "gui_contextmenu.bmx"
+Include "gui_taskbar.bmx"
+Include "gui_events.bmx"
+
+' TTF Font for text and symbol
+Incbin "Arial.ttf"
+Incbin "Symbol.ttf"
+
+
