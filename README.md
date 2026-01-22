@@ -54,7 +54,12 @@ https://www.syntaxboom.net/forum/blitzmax-ng/code-archives-ad/1116-short-gui-ker
 
 <img width="1920" height="1106" alt="image" src="https://github.com/user-attachments/assets/c9658c1a-e940-4794-bd9c-b134af37748b" />
 
+Work with Open B3D:
+-------------------
+<img width="1027" height="796" alt="image" src="https://github.com/user-attachments/assets/754d2ea3-d310-42fb-bb8d-20af181d958d" />
 
+What is Opaline:
+----------------
 # 🎨 Opaline GUI Framework
 
 **A lightweight, fully-featured GUI framework for BlitzMax NG**
