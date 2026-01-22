@@ -6,9 +6,9 @@
 ' =============================================================================
 
 ' Layout Constants
-Const TITLEBAR_HEIGHT:Int = 30
-Const TITLE_BUTTON_SIZE:Int = 26
-Const TITLE_BUTTON_MARGIN:Int = 2
+Const TITLEBAR_HEIGHT:Int = 33
+Const TITLE_BUTTON_SIZE:Int = 27
+Const TITLE_BUTTON_MARGIN:Int = 3
 Const STATUSBAR_HEIGHT:Int = 24
 Const WIN_SHADOW_OFFSET:Int=7
 
@@ -46,7 +46,7 @@ Const LISTBOX_DEFAULT_ITEM_HEIGHT:Int = 24
 Const LISTBOX_HEADER_HEIGHT:Int = 26
 
 ' ComboBox Constants
-Const COMBOBOX_BUTTON_WIDTH:Int = 24
+Const COMBOBOX_BUTTON_WIDTH:Int = 28
 Const COMBOBOX_DEFAULT_HEIGHT:Int = 28
 Const COMBOBOX_MAX_VISIBLE_ITEMS:Int = 8
 Const COMBOBOX_ITEM_HEIGHT:Int = 24
@@ -192,9 +192,9 @@ Const COLOR_PANEL_BORDER_R:Int = 80
 Const COLOR_PANEL_BORDER_G:Int = 80
 Const COLOR_PANEL_BORDER_B:Int = 100
 
-Const COLOR_PANEL_TITLE_R:Int = 200
-Const COLOR_PANEL_TITLE_G:Int = 200
-Const COLOR_PANEL_TITLE_B:Int = 220
+Const COLOR_PANEL_TITLE_R:Int = 230
+Const COLOR_PANEL_TITLE_G:Int = 230
+Const COLOR_PANEL_TITLE_B:Int = 230
 
 ' ------------------
 ' ProgressBar Colors

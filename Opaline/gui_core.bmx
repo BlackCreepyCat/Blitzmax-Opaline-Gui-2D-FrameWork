@@ -488,12 +488,22 @@ Type TWidget Abstract
 		
         Select style
         
+		' Unfilled
+		Case 0
+		    SetColor red/2, green/2, blue/2	
+            DrawLine px, py + ty, px + tx, py + ty
+            DrawLine px + tx, py, px + tx, py + ty	
+                        
+            SetColor red*2, green*2, blue*2	
+            DrawLine px, py, px + tx, py
+            DrawLine px, py, px, py + ty
+		
         ' Flat filled rectangle
         Case 1
             SetColor red, green, blue
             DrawRect px, py, tx, ty
         
-        ' Raised/embossed look
+        ' Raised look
         Case 2
             SetColor red, green, blue
             DrawRect px, py, tx, ty
@@ -506,7 +516,7 @@ Type TWidget Abstract
             DrawLine px, py, px + tx, py
             DrawLine px, py, px, py + ty	
         
-        ' Pressed/clicked look (inverted bevel)
+        ' Pressed look 
         Case 3
             SetColor red, green, blue
             DrawRect px, py, tx, ty
@@ -517,7 +527,22 @@ Type TWidget Abstract
                         
             SetColor red/2, green/2, blue/2	
             DrawLine px, py, px + tx, py
-            DrawLine px, py, px, py + ty		
+            DrawLine px, py, px, py + ty	
+
+        ' Raised look B
+        Case 4
+            SetColor 5,10,15
+            DrawRect px, py, tx, ty
+
+			GuiDrawRect(px+1, py+1, tx-3, ty-3, 2, red, green, blue)
+			
+        ' Raised look B
+        Case 5
+            SetColor 5,10,15
+            DrawRect px, py, tx, ty
+
+			GuiDrawRect(px+1, py+1, tx-3, ty-3, 3, red, green, blue)
+		
         End Select
         
         ' Reset color

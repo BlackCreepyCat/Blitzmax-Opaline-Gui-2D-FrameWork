@@ -380,6 +380,7 @@ Type TWindow Extends TWidget
     ' Static function to deselect all windows (activate desktop)
     Function DeselectAll()
         g_DesktopActive = True
+
         ' Also unfocus any text input
         If g_FocusedTextInput <> Null
             g_FocusedTextInput.focused = False
@@ -392,9 +393,9 @@ Type TWindow Extends TWidget
         Return g_DesktopActive
     End Function
 
-    ' =========================================================================
+    ' ========================================================
     '                         DRAWING
-    ' =========================================================================
+    ' ========================================================
     
     Method Draw(px:Int=0, py:Int=0)
         If Not visible Then Return
@@ -409,26 +410,22 @@ Type TWindow Extends TWidget
 		TWidget.GuiDrawRect(ax+WIN_SHADOW_OFFSET, ay +WIN_SHADOW_OFFSET , rect.w, ClientHeight + TITLEBAR_HEIGHT, 1, 10,15,20,0.2)
 		
 		
-        ' Draw title bar with different color depending on active/inactive state
-        ' Modal windows are ALWAYS drawn as active
+        ' Draw title bar with different color depending on active/inactive state, modal windows are ALWAYS drawn as active
         If IsTopWindow() Or isModal
-            TWidget.GuiDrawRect(ax, ay, rect.w, TITLEBAR_HEIGHT, 2, COLOR_TITLEBAR_ACTIVE_R, COLOR_TITLEBAR_ACTIVE_G, COLOR_TITLEBAR_ACTIVE_B)
+            TWidget.GuiDrawRect(ax, ay, rect.w + 1, TITLEBAR_HEIGHT , 4, COLOR_TITLEBAR_ACTIVE_R, COLOR_TITLEBAR_ACTIVE_G, COLOR_TITLEBAR_ACTIVE_B)
         Else
-            TWidget.GuiDrawRect(ax, ay, rect.w, TITLEBAR_HEIGHT, 2, COLOR_TITLEBAR_INACTIVE_R, COLOR_TITLEBAR_INACTIVE_G, COLOR_TITLEBAR_INACTIVE_B)
+            TWidget.GuiDrawRect(ax, ay, rect.w + 1, TITLEBAR_HEIGHT , 4, COLOR_TITLEBAR_INACTIVE_R, COLOR_TITLEBAR_INACTIVE_G, COLOR_TITLEBAR_INACTIVE_B)
         EndIf
 
         ' Draw title text with shadow
-        TWidget.GuiDrawText(ax + 8, ay + 6, title, TEXT_STYLE_SHADOW, COLOR_WINDOW_TITLE_R, COLOR_WINDOW_TITLE_G, COLOR_WINDOW_TITLE_B)
-
-
-
+        TWidget.GuiDrawText(ax + 8, ay + 8, title, TEXT_STYLE_SHADOW, COLOR_WINDOW_TITLE_R, COLOR_WINDOW_TITLE_G, COLOR_WINDOW_TITLE_B)
 
         ' Draw client area background
-        TWidget.GuiDrawRect(ax, ay + TITLEBAR_HEIGHT, rect.w, ClientHeight, 2, red, green, blue)
+        TWidget.GuiDrawRect(ax, ay + TITLEBAR_HEIGHT -1 , rect.w + 1, ClientHeight , 4, red, green, blue)
 
         ' Draw status bar if enabled
         If showStatusBar
-            DrawStatusBar(ax, ay + TITLEBAR_HEIGHT + ClientHeight)
+            DrawStatusBar(ax , ay + TITLEBAR_HEIGHT  + ClientHeight)
         EndIf
         
         ' Draw resize grip indicator (bottom-right corner) if resizable
@@ -438,7 +435,7 @@ Type TWindow Extends TWidget
             Local gripSize:Int = 14
             Local gripX:Int = ax + rect.w - gripSize - 2
             ' Bas visuel = ay + TITLEBAR_HEIGHT + ClientHeight
-            Local gripY:Int = ay + TITLEBAR_HEIGHT + ClientHeight - gripSize - 2
+            Local gripY:Int = ay + TITLEBAR_HEIGHT + ClientHeight - gripSize - 4
             
             ' Draw diagonal lines (grip pattern)
             For Local i:Int = 0 To 2
@@ -472,13 +469,13 @@ Type TWindow Extends TWidget
     ' Draw the status bar
     Method DrawStatusBar(ax:Int, ay:Int)
         ' Calculate the actual Y position of the status bar
-        Local statusY:Int = ay - (STATUSBAR_HEIGHT + 2)
+        Local statusY:Int = ay - STATUSBAR_HEIGHT 
         
         ' Draw status bar background (sunken style)
-        TWidget.GuiDrawRect(ax + 2, statusY, rect.w - 4, STATUSBAR_HEIGHT, 3, COLOR_STATUSBAR_BG_R, COLOR_STATUSBAR_BG_G, COLOR_STATUSBAR_BG_B)
+        TWidget.GuiDrawRect(ax + 3, statusY - 2 , rect.w - 6, STATUSBAR_HEIGHT - 3, 3, COLOR_STATUSBAR_BG_R, COLOR_STATUSBAR_BG_G, COLOR_STATUSBAR_BG_B)
         
         Local padding:Int = 6
-        Local textY:Int = statusY + (STATUSBAR_HEIGHT - TWidget.GuiTextHeight("X")) / 2
+        Local textY:Int = statusY + (STATUSBAR_HEIGHT - (TWidget.GuiTextHeight("X") + 5) ) / 2
         
         ' If we have sections, draw them
         If statusSections.Count() > 0
@@ -514,12 +511,12 @@ Type TWindow Extends TWidget
                 
                 ' Draw separator before section (except first)
                 If sectionIndex > 0
-                    SetColor COLOR_STATUSBAR_SEPARATOR_R, COLOR_STATUSBAR_SEPARATOR_G, COLOR_STATUSBAR_SEPARATOR_B
-                    DrawLine currentX - 1, statusY + 4, currentX - 1, statusY + STATUSBAR_HEIGHT - 4
+					GuiDrawLine(currentX - 1, statusY + 4, currentX - 1, statusY + STATUSBAR_HEIGHT - 4, 2, COLOR_STATUSBAR_SEPARATOR_R, COLOR_STATUSBAR_SEPARATOR_G, COLOR_STATUSBAR_SEPARATOR_B)
                 EndIf
                 
                 ' Calculate text position based on alignment
                 Local textX:Int
+
                 Select section.alignment
                     Case LABEL_ALIGN_LEFT
                         textX = currentX
@@ -531,7 +528,9 @@ Type TWindow Extends TWidget
                 
                 ' Clip and draw text
                 TWidget.GuiSetViewport(currentX, statusY, sectionWidth, STATUSBAR_HEIGHT)
-                TWidget.GuiDrawText(textX, textY, section.text, TEXT_STYLE_NORMAL, section.textR, section.textG, section.textB)
+
+                TWidget.GuiDrawText(textX, textY  , section.text, TEXT_STYLE_NORMAL, section.textR, section.textG, section.textB)
+
                 TWidget.GuiSetViewport(0, 0,  GUI_GRAPHICSWIDTH, GUI_GRAPHICSHEIGHT)
                 
                 currentX :+ sectionWidth + 2
@@ -545,9 +544,9 @@ Type TWindow Extends TWidget
         EndIf
     End Method
 
-    ' =========================================================================
+    ' ============================================================
     '                         UPDATE / INPUT
-    ' =========================================================================
+    ' ============================================================
     
     Method Update:Int(mx:Int, my:Int)
         If Not visible Then Return False

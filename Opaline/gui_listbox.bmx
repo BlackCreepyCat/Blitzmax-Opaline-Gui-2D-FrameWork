@@ -73,7 +73,7 @@ End Type
 ' │                             │░░│
 ' │                             │▼ │
 ' ├─────────────────────────────┼──┤
-' │◄░░░░░░░░░░░░░░░░░░░░░░░░░░►│  │ scrollH (external)
+' │◄░░░░░░░░░░░░░░░░░░░░░░░░░░► │  │ scrollH (external)
 ' └─────────────────────────────┴──┘
 ' -----------------------------------------------------------------------------
 Type TListBox Extends TWidget
@@ -132,7 +132,7 @@ Type TListBox Extends TWidget
         blue = COLOR_LISTBOX_BG_B
         
         ' Create scrollbars (positions will be set in UpdateLayout)
-        scrollV = New TSlider(0, 0, LISTBOX_SCROLLBAR_WIDTH, 100, 0.0, SLIDER_STYLE_VERTICAL)
+        scrollV = New TSlider(0, 0, LISTBOX_SCROLLBAR_WIDTH  , 100, 0.0, SLIDER_STYLE_VERTICAL)
         scrollV.SetRange(0.0, 1.0)
         scrollV.SetWheelEnabled(False)  ' We handle wheel ourselves
         
@@ -320,10 +320,10 @@ Type TListBox Extends TWidget
         
         ' Position scrollbars OUTSIDE content area
         If needScrollV
-            scrollV.rect.x = rect.w - LISTBOX_SCROLLBAR_WIDTH
-            scrollV.rect.y = headerHeight
+            scrollV.rect.x = rect.w - (LISTBOX_SCROLLBAR_WIDTH )
+            scrollV.rect.y = headerHeight + 1
             scrollV.rect.w = LISTBOX_SCROLLBAR_WIDTH 
-            scrollV.rect.h = contentAreaH - 2
+            scrollV.rect.h = contentAreaH - 3
         EndIf
         
         If needScrollH
@@ -382,7 +382,7 @@ Type TListBox Extends TWidget
         absY = ay
         
         ' Draw main background (entire widget area)
-        TWidget.GuiDrawRect(ax-2, ay-2, rect.w+4, rect.h+4, 2, red, green, blue)
+        TWidget.GuiDrawRect(ax-2, ay-2, rect.w+4, rect.h+4, 4, red, green, blue)
         
         ' Draw column headers (full width of content area)
         If showHeader And columns.Count() > 0

@@ -84,12 +84,12 @@ Type TButton Extends TWidget
         Local ax:Int = px + rect.x
         Local ay:Int = py + rect.y
         
-        Local style:Int = 2
+        Local style:Int = 4
         Local drawR:Int, drawG:Int, drawB:Int
         
         ' === Determine appearance based on current state ===
         If pressed
-            style = 3  ' Pressed style (usually inset/embossed down)
+            style = 5  ' Pressed style (usually inset/embossed down)
             
             If useCustomColor
                 drawR = Max(0, baseR - 30)

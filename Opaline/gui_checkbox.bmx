@@ -59,11 +59,11 @@ Type TCheckBox Extends TWidget
         Local ay:Int = py + rect.y
 
         ' Determine current visual style and color based on state
-        Local style:Int = 2
+        Local style:Int = 4
         Local drawR:Int, drawG:Int, drawB:Int
         
         If pressed
-            style = 3
+            style = 5
             If useCustomColor
                 drawR = Max(0, baseR - 30)
                 drawG = Max(0, baseG - 30)

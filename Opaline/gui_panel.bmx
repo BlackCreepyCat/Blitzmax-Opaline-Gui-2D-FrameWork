@@ -26,12 +26,13 @@ Type TPanel Extends TWidget
 
     Method New(x:Int, y:Int, w:Int, h:Int, title:String = "", panelStyle:Int = PANEL_STYLE_RAISED)
         Super.New(x, y, w, h)
+
         Self.title = title
         Self.style = panelStyle
         
         ' Reserve space for title if one is provided
         If title.Length > 0
-            titleHeight = 20
+            titleHeight = 23
         EndIf
 
         ' Cache background color from constants
@@ -56,25 +57,23 @@ Type TPanel Extends TWidget
                     TWidget.GuiDrawRect(ax, ay, rect.w, rect.h, 1, red, green, blue)
                 Case PANEL_STYLE_RAISED
                     ' 3D raised bevel effect
-                    TWidget.GuiDrawRect(ax, ay, rect.w, rect.h, 2, red, green, blue)
+                    TWidget.GuiDrawRect(ax, ay, rect.w, rect.h, 4, red, green, blue)
                 Case PANEL_STYLE_SUNKEN
                     ' 3D sunken/inset effect
-                    TWidget.GuiDrawRect(ax, ay, rect.w, rect.h, 3, red, green, blue)
+                    TWidget.GuiDrawRect(ax, ay, rect.w, rect.h, 5, red, green, blue)
             End Select
         EndIf
 
         ' Draw optional title bar
         If title.Length > 0
             ' Title background
-			TWidget.GuiDrawRect(ax + 2, ay + 2, rect.w - 4, titleHeight, 1, COLOR_PANEL_BORDER_R, COLOR_PANEL_BORDER_G, COLOR_PANEL_BORDER_B)
+			TWidget.GuiDrawRect(ax + 3, ay + 3, rect.w - 6, titleHeight, 1, COLOR_PANEL_BORDER_R, COLOR_PANEL_BORDER_G, COLOR_PANEL_BORDER_B)
             
             ' Draw title text with shadow effect
             Local textX:Int = ax + padding
             Local textY:Int = ay + (titleHeight - TWidget.GuiTextHeight(title)) / 2 + 2
+
             TWidget.GuiDrawText(textX, textY, title, TEXT_STYLE_SHADOW, COLOR_PANEL_TITLE_R, COLOR_PANEL_TITLE_G, COLOR_PANEL_TITLE_B)
-            
-            ' Thin separator line under title
-			TWidget.GuiDrawLine(ax + 2, ay + titleHeight + 2, ax + rect.w - 2, ay + titleHeight + 2, 1 , COLOR_PANEL_BORDER_R + 30, COLOR_PANEL_BORDER_G + 30, COLOR_PANEL_BORDER_B + 30)
         EndIf
 
         ' Draw all child widgets below the title area

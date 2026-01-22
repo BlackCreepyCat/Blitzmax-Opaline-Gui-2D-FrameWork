@@ -61,9 +61,9 @@ Type TTextInput Extends TWidget
         
         ' Draw background with slight highlight when focused
         If focused
-            TWidget.GuiDrawRect(ax, ay, rect.w, rect.h, 3, bgR + 10, bgG + 10, bgB + 10)
+            TWidget.GuiDrawRect(ax, ay, rect.w, rect.h, 5, bgR + 10, bgG + 10, bgB + 10)
         Else
-            TWidget.GuiDrawRect(ax, ay, rect.w, rect.h, 3, bgR, bgG, bgB)
+            TWidget.GuiDrawRect(ax, ay, rect.w, rect.h, 5, bgR, bgG, bgB)
         EndIf
         
         Local padding:Int = 4

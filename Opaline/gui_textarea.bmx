@@ -115,35 +115,65 @@ Type TTextArea Extends TWidget
     ' =========================================================================
     '                         METRICS & SCROLLBARS
     ' =========================================================================
-    
-    Method UpdateMetrics()
-        lineHeight = TWidget.GuiTextHeight("Xg") + 2
-        charWidth = TWidget.GuiTextWidth("X")
-        
-        ' Calculate content area (accounting for scrollbars)
-        Local contentHeight:Int = rect.h - padding * 2
-        Local contentWidth:Int = rect.w - padding * 2
-        If showLineNumbers Then contentWidth :- lineNumberWidth
-        
-        ' Première estimation
-        visibleLines = contentHeight / lineHeight
-        If visibleLines < 1 Then visibleLines = 1
-        
-        Local needsV:Int = NeedsVScrollbar()
-        Local needsH:Int = NeedsHScrollbar()
-        
-        If needsV Then contentWidth :- scrollbarWidth
-        If needsH Then contentHeight :- scrollbarWidth
-        
-        ' Recalcul si interdépendance change
-        If needsV <> NeedsVScrollbar() Or needsH <> NeedsHScrollbar()
-            visibleLines = contentHeight / lineHeight
-            If visibleLines < 1 Then visibleLines = 1
-        EndIf
-        
-        UpdateMaxLineWidth()
-    End Method
-    
+	Method UpdateMetrics()
+		lineHeight = TWidget.GuiTextHeight("Xg") + 2
+		charWidth = TWidget.GuiTextWidth("X")
+		
+		' Calcul de maxLineWidth (indépendant des scrollbars)
+		maxLineWidth = 0
+		For Local line:String = EachIn lines
+			Local w:Int = TWidget.GuiTextWidth(line)
+			If w > maxLineWidth Then maxLineWidth = w
+		Next
+		
+		' Boucle pour résoudre l'interdépendance (converge rapidement)
+		Local converged:Int = False
+		Local assumedNeedsV:Int = False
+		Local assumedNeedsH:Int = False
+
+		While Not converged
+			Local contentHeight:Int = rect.h - padding * 2
+			If assumedNeedsH Then contentHeight :- scrollbarWidth
+			
+			visibleLines = contentHeight / lineHeight
+			If visibleLines < 1 Then visibleLines = 1
+			
+			' Calcul temporaire de maxScrollY basé sur visibleLines actuel
+			Local tempMaxScrollY:Int = Max(0, lines.Count() - visibleLines)
+			Local tempScrollY:Int = Max(0, Min(scrollY, tempMaxScrollY))
+			
+			' Calcul needsV avec tempScrollY reclampé (évite forçage avec valeur obsolète)
+			Local calcNeedsV:Int = showVScrollbar And (lines.Count() > visibleLines Or tempScrollY > 0)
+			
+			Local contentWidth:Int = rect.w - padding * 2
+			If showLineNumbers Then contentWidth :- lineNumberWidth
+			If calcNeedsV Then contentWidth :- scrollbarWidth
+			
+			' Calcul needsH basé sur contentWidth actuel
+			Local calcNeedsH:Int = showHScrollbar And (maxLineWidth > contentWidth)
+			
+			If calcNeedsV = assumedNeedsV And calcNeedsH = assumedNeedsH
+				converged = True
+			Else
+				assumedNeedsV = calcNeedsV
+				assumedNeedsH = calcNeedsH
+			EndIf
+		Wend
+		
+		' Mise à jour finale de maxScrollX avec les valeurs cohérentes
+		Local finalContentWidth:Int = rect.w - padding * 2
+
+		If showLineNumbers Then finalContentWidth :- lineNumberWidth
+		If NeedsVScrollbar() Then finalContentWidth :- scrollbarWidth
+		maxScrollX = Max(0, maxLineWidth - finalContentWidth + charWidth * 2)
+		
+		' Reclamp final de scrollY et scrollX pour cohérence
+		Local finalMaxScrollY:Int = Max(0, lines.Count() - visibleLines)
+
+		scrollY = Max(0, Min(scrollY, finalMaxScrollY))
+		scrollX = Max(0, Min(scrollX, maxScrollX))
+	End Method
+
     Method UpdateMaxLineWidth()
         maxLineWidth = 0
 
@@ -218,6 +248,7 @@ Type TTextArea Extends TWidget
     Method GetText:String()
         Local result:String = ""
         Local first:Int = True
+
         For Local line:String = EachIn lines
             If Not first Then result :+ "~n"
             result :+ line
@@ -1066,9 +1097,9 @@ Type TTextArea Extends TWidget
         Local ay:Int = py + rect.y
         
         If focused
-            TWidget.GuiDrawRect(ax, ay, rect.w, rect.h, 3, bgR + 10, bgG + 10, bgB + 10)
+            TWidget.GuiDrawRect(ax, ay, rect.w, rect.h, 5, bgR + 10, bgG + 10, bgB + 10)
         Else
-            TWidget.GuiDrawRect(ax, ay, rect.w, rect.h, 3, bgR, bgG, bgB)
+            TWidget.GuiDrawRect(ax, ay, rect.w, rect.h, 5, bgR, bgG, bgB)
         EndIf
         
         Local contentX:Int = ax + padding
@@ -1076,8 +1107,9 @@ Type TTextArea Extends TWidget
         Local contentW:Int = GetContentWidth()
         Local contentH:Int = GetContentHeight()
         
+		' Line number rectangle
         If showLineNumbers
-            TWidget.GuiDrawRect(ax+1, ay+1, lineNumberWidth-2, rect.h-1, 1, lineNumBgR, lineNumBgG, lineNumBgB)
+            TWidget.GuiDrawRect(ax+2, ay+2, lineNumberWidth-4, rect.h-4, 1, lineNumBgR, lineNumBgG, lineNumBgB)
             contentX :+ lineNumberWidth
         EndIf
         
@@ -1120,24 +1152,29 @@ Type TTextArea Extends TWidget
             TWidget.GuiSetViewport(0, 0,GUI_GRAPHICSWIDTH, GUI_GRAPHICSHEIGHT)
         EndIf
         
+		' Draw fake scrollbar V
         If NeedsVScrollbar()
             Local bx:Int, by:Int, bw:Int, bh:Int
             GetVScrollbarRect(bx, by, bw, bh)
 
-            TWidget.GuiDrawRect(ax + bx, ay + by, bw, bh, 1, scrollBgR, scrollBgG, scrollBgB)
+			TWidget.GuiDrawRect(ax + bx - 2, ay + by + 2 , bw , bh - 4, 1, scrollBgR, scrollBgG, scrollBgB)
 
             Local tx:Int, ty:Int, tw:Int, th:Int
             GetVScrollThumbRect(tx, ty, tw, th)
             
             If draggingVScroll
-				TWidget.GuiDrawRect(ax + tx, ay + ty, tw, th, 1, scrollThumbDragR, scrollThumbDragG, scrollThumbDragB)
+
+				TWidget.GuiDrawRect(ax + tx - 3, ay + ty, tw + 3 , th, 1, scrollThumbDragR, scrollThumbDragG, scrollThumbDragB)
+				
             ElseIf hoverVScroll
-				TWidget.GuiDrawRect(ax + tx, ay + ty, tw, th, 1, scrollThumbDragR, scrollThumbDragG, scrollThumbDragB)
+				TWidget.GuiDrawRect(ax + tx - 3 , ay + ty, tw + 3 , th, 1, scrollThumbDragR, scrollThumbDragG, scrollThumbDragB)
+				
             Else
-				TWidget.GuiDrawRect(ax + tx, ay + ty, tw, th, 1, scrollThumbDragR, scrollThumbDragG, scrollThumbDragB)
+				TWidget.GuiDrawRect(ax + tx - 3 , ay + ty, tw + 3 , th, 1, scrollThumbDragR, scrollThumbDragG, scrollThumbDragB)
             EndIf
         EndIf
         
+		' Draw fake scrollbar H
         If NeedsHScrollbar()
             Local bx:Int, by:Int, bw:Int, bh:Int
             GetHScrollbarRect(bx, by, bw, bh)

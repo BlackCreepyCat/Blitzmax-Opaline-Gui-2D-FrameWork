@@ -44,7 +44,7 @@ Type TComboBox Extends TWidget
         blue  = COLOR_COMBOBOX_BG_B
 
         ' Create internal listbox (position will be set dynamically when opened)
-        dropdownList = New TListBox(0, 0, w, 100)
+        dropdownList = New TListBox(0, 0, w , 100)
         dropdownList.SetShowHeader(False)
         dropdownList.SetAlternateRows(True)
         dropdownList.SetItemHeight(COMBOBOX_ITEM_HEIGHT)
@@ -151,8 +151,9 @@ Type TComboBox Extends TWidget
         EndIf
 
         ' Resize & update internal listbox
-        dropdownList.rect.w = rect.w
+        dropdownList.rect.w = rect.w - 3
         dropdownList.rect.h = dropdownHeight
+
         dropdownList.UpdateLayout()
 
         ' Synchronize selection and scroll to it
@@ -218,11 +219,11 @@ Type TComboBox Extends TWidget
         EndIf
 
         ' Draw main background
-        TWidget.GuiDrawRect(ax, ay, rect.w, rect.h, 2, bgR, bgG, bgB)
+        TWidget.GuiDrawRect(ax, ay, rect.w - COMBOBOX_BUTTON_WIDTH , rect.h + 1, 4, bgR, bgG, bgB)
 
         ' Draw right button area
         Local btnX:Int = ax + rect.w - COMBOBOX_BUTTON_WIDTH
-        TWidget.GuiDrawRect(btnX, ay, COMBOBOX_BUTTON_WIDTH, rect.h, 2, btnR, btnG, btnB)
+        TWidget.GuiDrawRect(btnX, ay, COMBOBOX_BUTTON_WIDTH +1, rect.h + 1, 4, btnR, btnG, btnB)
 
         ' Draw arrow symbol (up/down depending on open state)
         Local arrowX:Int = btnX + (COMBOBOX_BUTTON_WIDTH / 2) - (TWidget.GuiTextWidth("X", True) / 2)
@@ -258,8 +259,8 @@ Type TComboBox Extends TWidget
         Local dropX:Int = absX
         Local dropY:Int = absY + rect.h
 
-        dropdownList.rect.x = 0
-        dropdownList.rect.y = 0
+        dropdownList.rect.x = 2
+        dropdownList.rect.y = 3
         dropdownList.Draw(dropX, dropY)
     End Method
 

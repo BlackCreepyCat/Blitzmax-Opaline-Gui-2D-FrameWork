@@ -51,10 +51,10 @@ Type TSlider Extends TWidget
         
         ' Draw the track (background bar)
         If style = SLIDER_STYLE_HORIZONTAL
-            TWidget.GuiDrawRect(ax-1, ay, rect.w+2, rect.h, 3, red, green, blue)
+            TWidget.GuiDrawRect(ax-1, ay, rect.w+2, rect.h, 5, red, green, blue)
 			thumbSize = rect.h - 2
         Else
-            TWidget.GuiDrawRect(ax, ay-1, rect.w, rect.h+2, 3, red, green, blue)
+            TWidget.GuiDrawRect(ax, ay-1, rect.w, rect.h+2, 5, red, green, blue)
 			thumbSize = rect.w - 2
         EndIf
 
@@ -90,7 +90,7 @@ Type TSlider Extends TWidget
         EndIf
         
         ' Draw the draggable thumb
-        TWidget.GuiDrawRect(thumbX, thumbY, thumbSize, thumbSize, 2, tR, tG, tB)
+        TWidget.GuiDrawRect(thumbX+1, thumbY+1, thumbSize-3, thumbSize-3, 2, tR, tG, tB)
 
         ' Draw children if any
         For Local c:TWidget = EachIn children
