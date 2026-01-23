@@ -54,6 +54,7 @@ Function ProcessWindowControlEvents(widget:TWidget)
 End Function
 
 ' Clear all events in a widget tree
+' Clear all events in a widget tree
 Function ClearAllEvents(widget:TWidget)
     ' Clear events depending on widget type
     If TButton(widget)
@@ -72,6 +73,8 @@ Function ClearAllEvents(widget:TWidget)
         TListBox(widget).ClearEvents()
     ElseIf TComboBox(widget)
         TComboBox(widget).ClearEvents()
+    ElseIf TTreeView(widget)  
+        TTreeView(widget).ClearEvents()
     EndIf
     
     ' Recursively clear children events

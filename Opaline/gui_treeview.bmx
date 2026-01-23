@@ -587,24 +587,27 @@ Type TTreeView Extends TWidget
                 hoverNode = nodeUnderMouse
 
                 If GuiMouse.Hit(1) And draggedWindow = Null   ' Left mouse button clicked
-                    ' Check if click was on expand/collapse icon
-                    Local iconAreaLeft:Int  = contentAreaX + nodeUnderMouse.level * indent + 2
-                    Local iconAreaRight:Int = iconAreaLeft + TREEVIEW_ICON_SIZE + 8
 
-                    If nodeUnderMouse.HasChildren() And showIcons And mx >= iconAreaLeft And mx <= iconAreaRight
-                       
-                        nodeUnderMouse.Toggle()
-                        UpdateLayout()                    ' Important: refresh layout after expand/collapse
-                        EnsureNodeVisible(nodeUnderMouse) ' Nice UX: keep clicked node in view
-                        FireEvent("NodeExpanded")
-                        Return True
-                        
-                    Else
-                        ' Normal node click → select it
-                        SelectNode(nodeUnderMouse)
-                        FireEvent("NodeClicked")
-                        Return True
-                    EndIf
+					' Check if click was on expand/collapse icon
+					Local iconAreaLeft:Int  = nodeUnderMouse.level * indent + 2
+					Local iconAreaRight:Int = iconAreaLeft + TREEVIEW_ICON_SIZE + 8  ' ou TREEVIEW_ICON_CLICK_PADDING
+
+					If nodeUnderMouse.HasChildren() And showIcons And mx >= iconAreaLeft And mx <= iconAreaRight
+						' Click on expand/collapse icon
+						nodeUnderMouse.Toggle()
+						UpdateLayout()                    ' Important: refresh layout after expand/collapse
+						EnsureNodeVisible(nodeUnderMouse) ' Nice UX: keep clicked node in view
+						FireEvent("NodeExpanded")
+						Return True
+					Else
+						' Normal node click → select it
+						SelectNode(nodeUnderMouse)
+						FireEvent("NodeClicked")
+						Return True
+					EndIf
+
+
+
                 EndIf
             EndIf
         EndIf
