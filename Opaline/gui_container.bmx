@@ -112,19 +112,23 @@ Type TContainer Extends TWidget
         Next
         
         ' Check windows first - find if mouse is over any VISIBLE window
-        For Local c:TWidget = EachIn rev
-            If TWindow(c)
-                Local win:TWindow = TWindow(c)
-                ' Skip invisible (minimized) windows
-                If Not win.visible Then Continue
-                ' Mouse is over this window?
-                If mx >= win.rect.x And mx < win.rect.x + win.rect.w And my >= win.rect.y And my < win.rect.y + win.rect.h
-                    ' Yes - this window gets the input
-                    Return win.Update(mx, my)
-                EndIf
-            EndIf
-        Next
+For Local c:TWidget = EachIn rev
+    If TWindow(c)
+        Local win:TWindow = TWindow(c)
+        ' Skip invisible (minimized) windows
+        If Not win.visible Then Continue
         
+        ' Calculate actual visual height (titlebar + client area, excluding status bar overflow)
+        Local visualHeight:Int = TITLEBAR_HEIGHT + win.GetClientHeight()
+        
+        ' Mouse is over this window?
+        If mx >= win.rect.x And mx < win.rect.x + win.rect.w And my >= win.rect.y And my < win.rect.y + visualHeight
+            ' Yes - this window gets the input
+            Return win.Update(mx, my)
+        EndIf
+    EndIf
+Next
+
         ' PRIORITY 4: Mouse is NOT over any window - check screen widgets
         For Local c:TWidget = EachIn rev
             If Not TWindow(c)

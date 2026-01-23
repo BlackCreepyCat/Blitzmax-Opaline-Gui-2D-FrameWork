@@ -79,8 +79,7 @@ Type TWindow Extends TWidget
     '   showMax       - Show maximize button
     '   showStatus    - Show status bar at bottom
     Method New(x:Int, y:Int, w:Int, h:Int, windowTitle:String, showClose:Int=True, showMin:Int=True, showMax:Int=True, showStatus:Int=False)
-        ' Calculate total height: titlebar + client + optional statusbar
-        ' Super.New MUST be first, so we calculate inline
+        ' Calculate total height: titlebar + client + optional statusbar, super.New MUST be first, so we calculate inline
         Super.New(x, y, w, h + TITLEBAR_HEIGHT + (showStatus * STATUSBAR_HEIGHT))
         
         title = windowTitle
@@ -675,13 +674,21 @@ Type TWindow Extends TWidget
         EndIf
 
         ' If clicked anywhere in the window (but not handled above), bring to front
-        If draggedWindow = Null And resizingWindow = Null And GuiMouse.Hit()
-            If lx >= 0 And lx < rect.w And ly >= 0 And ly < rect.h + STATUSBAR_HEIGHT
-                If parent And Not isModal Then parent.BringToFront(Self)
-                g_DesktopActive = False
-                Return True
-            EndIf
-        EndIf
+' If clicked anywhere in the window (but not handled above), bring to front
+If draggedWindow = Null And resizingWindow = Null And GuiMouse.Hit()
+    ' Calculate the clickable zone (exclude status bar area)
+    Local maxClickY:Int = rect.h
+    If showStatusBar Then maxClickY :- STATUSBAR_HEIGHT
+    
+    If lx >= 0 And lx < rect.w And ly >= 0 And ly < maxClickY
+        If parent And Not isModal Then parent.BringToFront(Self)
+        g_DesktopActive = False
+        Return True
+    EndIf
+EndIf
+
+
+
 
         Return False
     End Method
