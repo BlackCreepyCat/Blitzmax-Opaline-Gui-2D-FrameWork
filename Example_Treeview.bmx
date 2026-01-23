@@ -44,7 +44,7 @@ win.AddChild title
 '                                 TREEVIEW
 ' =============================================================================
 
-Global tree:TTreeView = New TTreeView(20, 60, 520, 520)
+Global tree:TTreeView = New TTreeView(20, 60, 520, 525)
 tree.SetAnchors(ANCHOR_LEFT | ANCHOR_TOP | ANCHOR_RIGHT | ANCHOR_BOTTOM)
 tree.SetShowIcons(True)
 tree.SetShowLines(True)
@@ -87,7 +87,7 @@ searchInput.SetPlaceholder("type to highlight...")
 ctrlPanel.AddChild searchInput
 
 ' Info en bas
-Global infoLabel:TLabel = New TLabel(20, 580, 860, 24, "Select / expand / collapse nodes – right-click for future context menu", LABEL_ALIGN_CENTER)
+Global infoLabel:TLabel = New TLabel(20, 600, 860, 24, "Select / expand / collapse nodes – right-click for future context menu", LABEL_ALIGN_CENTER)
 infoLabel.SetColor(140,220,255)
 win.AddChild infoLabel
 
@@ -208,30 +208,6 @@ While Not KeyHit(KEY_ESCAPE) And Not AppTerminate()
     EndIf
 
     ' Boutons de contrôle
-	If btnExpand.WasClicked()
-		tree.scrollOffsetY = 0                      ' ← reset scroll en haut
-		For Local n:TTreeNode = EachIn tree.rootNodes
-			n.ExpandAll()
-		Next
-		tree.UpdateLayout()                         ' recalcul totalVisibleItems + maxScrollY
-		tree.scrollOffsetY = 0                      ' ← reset encore (sécurité)
-		tree.UpdateScrollbarFromOffset()            ' synchronise le slider
-		infoLabel.SetText("Everything expanded")
-		infoLabel.SetColor(120,220,255)
-	EndIf
-
-
-	If btnCollapse.WasClicked()
-		tree.scrollOffsetY = 0
-		For Local n:TTreeNode = EachIn tree.rootNodes
-			n.CollapseAll()
-		Next
-		tree.UpdateLayout()
-		tree.scrollOffsetY = 0
-		tree.UpdateScrollbarFromOffset()
-		infoLabel.SetText("Everything collapsed")
-		infoLabel.SetColor(255,200,120)
-	EndIf
 
 	If btnExpand.WasClicked()
 		tree.ExpandAll()  
@@ -244,7 +220,13 @@ While Not KeyHit(KEY_ESCAPE) And Not AppTerminate()
 		infoLabel.SetText("Everything collapsed")
 		infoLabel.SetColor(255,200,120)
 	EndIf
-
+	
+	
+	If btnClear.WasClicked()
+		tree.ClearAll()
+		infoLabel.SetText("Tree cleared")
+	EndIf
+	
     If btnAddChild.WasClicked()
         Local sel:TTreeNode = tree.GetSelectedNode()
 
@@ -260,6 +242,17 @@ While Not KeyHit(KEY_ESCAPE) And Not AppTerminate()
         EndIf
 
     EndIf
+
+	If btnAddRoot.WasClicked()
+		Local rootNode:TTreeNode = tree.AddRootNode("Root " + (tree.rootNodes.Count() + 1))
+		rootNode.icon = ICON_FOLDER
+		rootNode.Expand()
+		tree.UpdateLayout()
+
+		infoLabel.SetText("Root node added")
+		infoLabel.SetColor(120,220,255)
+	EndIf
+
 
     ' Options d'affichage
     If chkIcons.StateChanged()  Then tree.SetShowIcons (chkIcons.IsChecked())
