@@ -356,7 +356,21 @@ Type TTreeView Extends TWidget
 		EndIf
 	End Method
 	
-	
+	Method CountVisibleNodesRecursive:Int(node:TTreeNode)
+
+		If Not node.expanded Then Return 0
+
+		Local count:Int = 0
+
+		For Local child:TTreeNode = EachIn node.children
+			count :+ 1
+			If child.expanded Then
+				count :+ CountVisibleNodesRecursive(child)
+			EndIf
+		Next
+
+		Return count
+	End Method	
 
     
     ' Scrolls the view so the specified node becomes visible
@@ -364,7 +378,12 @@ Type TTreeView Extends TWidget
         If Not node Then Return
         
         Local visualIndex:Int = GetVisualIndexOfNode(node)
-        If visualIndex < 0 Then Return  ' Node not visible (collapsed ancestor)
+
+If visualIndex < 0 Then
+    UpdateLayout()
+    visualIndex = GetVisualIndexOfNode(node)
+    If visualIndex < 0 Then Return
+EndIf
         
         Local itemY:Int = visualIndex * itemHeight
         
@@ -382,75 +401,122 @@ Type TTreeView Extends TWidget
     End Method
     
     ' Returns the visual row index of a node (-1 if not visible)
-    Method GetVisualIndexOfNode:Int(targetNode:TTreeNode)
-        Local index:Int = 0
-        For Local root:TTreeNode = EachIn rootNodes
-            If root = targetNode Then Return index
-            index :+ 1
-            
-            Local childIndex:Int = GetVisualIndexRecursive(root, targetNode, index)
-            If childIndex >= 0 Then Return childIndex
-        Next
-        Return -1
-    End Method
+	Method GetVisualIndexOfNode:Int(targetNode:TTreeNode)
+
+		Local index:Int = 0
+
+		For Local root:TTreeNode = EachIn rootNodes
+
+			If root = targetNode Then Return index
+			index :+ 1
+
+			GetVisualIndexRecursive(root, targetNode, index)
+
+			If index < 0 Then
+				Return -1
+			EndIf
+		Next
+
+		Return -1
+	End Method
     
     ' Recursive helper for GetVisualIndexOfNode (index passed by reference)
-    Method GetVisualIndexRecursive:Int(node:TTreeNode, targetNode:TTreeNode, index:Int Var)
-        If Not node.expanded Then Return -1
-        
-        For Local child:TTreeNode = EachIn node.children
-            If child = targetNode Then Return index
-            index :+ 1
-            
-            If child.expanded And child.HasChildren()
-                Local childIndex:Int = GetVisualIndexRecursive(child, targetNode, index)
-                If childIndex >= 0 Then Return childIndex
-            EndIf
-        Next
-        Return -1
-    End Method
+Method GetVisualIndexRecursive:Int(node:TTreeNode, targetNode:TTreeNode, index:Int Var)
+
+    If Not node.expanded Then Return 0
+
+    For Local child:TTreeNode = EachIn node.children
+
+        If child = targetNode Then
+            Return index
+        EndIf
+
+        index :+ 1
+
+        If child.expanded Then
+            Local found:Int = GetVisualIndexRecursive(child, targetNode, index)
+            If found >= 0 Then Return found
+        EndIf
+    Next
+
+    Return -1
+End Method
     
+
+
     ' --------------------------
     ' Layout & Rendering Helpers
     ' --------------------------
     
-    ' Recalculates layout, visible count, scrollbar need and positions
-    Method UpdateLayout()
-        ' Count all currently visible items
-        totalVisibleItems = 0
-        For Local root:TTreeNode = EachIn rootNodes
-            totalVisibleItems :+ 1
-            totalVisibleItems = CountVisibleNodesRecursive(root, totalVisibleItems)
-        Next
-        
-        Local contentHeight:Int = totalVisibleItems * itemHeight
-        
-        needScrollV = (contentHeight > rect.h)
-        
-        ' Define content area (excluding scrollbar if present)
-        contentAreaX = 0
-        contentAreaY = 0
-        contentAreaW = rect.w
-        contentAreaH = rect.h
-        
-        If needScrollV
-            contentAreaW :- TREEVIEW_SCROLLBAR_WIDTH
-        EndIf
-        
-        ' Position and size scrollbar (outside content area)
-        If needScrollV
-            scrollV.rect.x = rect.w - TREEVIEW_SCROLLBAR_WIDTH
-            scrollV.rect.y = 3
-            scrollV.rect.w = TREEVIEW_SCROLLBAR_WIDTH - 2
-            scrollV.rect.h = rect.h - 6
-        EndIf
-        
-        ' Clamp scroll offset to valid range
-        Local maxScrollY:Int = Max(0, contentHeight - contentAreaH)
-        scrollOffsetY = Max(0, Min(scrollOffsetY, maxScrollY))
-        
-        UpdateScrollbarFromOffset()
-    End Method
+Method UpdateLayout()
+
+    ' --------------------------------------------------
+    ' 1) Recalcul exact du nombre d’items visibles
+    ' --------------------------------------------------
+    totalVisibleItems = 0
+
+    For Local root:TTreeNode = EachIn rootNodes
+        totalVisibleItems :+ 1
+        totalVisibleItems :+ CountVisibleNodesRecursive(root)
+    Next
+
+    Local contentHeight:Int = totalVisibleItems * itemHeight
+
+
+    ' --------------------------------------------------
+    ' 2) Détermination de la nécessité du scrollbar
+    ' --------------------------------------------------
+    needScrollV = (contentHeight > rect.h)
+
+
+    ' --------------------------------------------------
+    ' 3) Définition de la zone de contenu
+    ' --------------------------------------------------
+    contentAreaX = 0
+    contentAreaY = 0
+    contentAreaW = rect.w
+    contentAreaH = rect.h
+
+    If needScrollV
+        contentAreaW :- TREEVIEW_SCROLLBAR_WIDTH
+    EndIf
+
+
+    ' --------------------------------------------------
+    ' 4) Clamp du scrollOffsetY AVANT synchro slider
+    ' --------------------------------------------------
+    Local maxScrollY:Int = Max(0, contentHeight - contentAreaH)
+    scrollOffsetY = Max(0, Min(scrollOffsetY, maxScrollY))
+
+
+    ' --------------------------------------------------
+    ' 5) Configuration / synchronisation du scrollbar
+    ' --------------------------------------------------
+    If needScrollV
+
+        scrollV.SetEnabled(True)
+
+        ' Position & taille
+        scrollV.rect.x = rect.w - TREEVIEW_SCROLLBAR_WIDTH
+        scrollV.rect.y = 3
+        scrollV.rect.w = TREEVIEW_SCROLLBAR_WIDTH - 2
+        scrollV.rect.h = rect.h - 6
+
+        ' Range EN PIXELS (clé de la stabilité)
+        scrollV.SetRange(0.0, Float(maxScrollY))
+
+        ' Synchronisation valeur ← offset
+        scrollV.SetValue(Float(scrollOffsetY))
+
+    Else
+        ' Scroll inutile → reset complet
+        scrollV.SetEnabled(False)
+        scrollV.SetRange(0.0, 0.0)
+        scrollV.SetValue(0.0)
+        scrollOffsetY = 0
+    EndIf
+
+End Method
     
     ' Recursively counts visible descendants (helper for totalVisibleItems)
     Method CountVisibleNodesRecursive:Int(node:TTreeNode, count:Int)
@@ -466,24 +532,14 @@ Type TTreeView Extends TWidget
     End Method
     
     ' Updates scroll offset based on scrollbar position
-    Method UpdateOffsetFromScrollbar()
-        Local contentHeight:Int = totalVisibleItems * itemHeight
-        Local maxScrollY:Int = Max(0, contentHeight - contentAreaH)
-        
-        scrollOffsetY = Int(scrollV.GetValue() * maxScrollY)
-    End Method
+Method UpdateOffsetFromScrollbar()
+    scrollOffsetY = Int(scrollV.GetValue())
+End Method
     
     ' Updates scrollbar position based on current scroll offset
-    Method UpdateScrollbarFromOffset()
-        Local contentHeight:Int = totalVisibleItems * itemHeight
-        Local maxScrollY:Int = Max(0, contentHeight - contentAreaH)
-        
-        If maxScrollY > 0
-            scrollV.SetValue(Float(scrollOffsetY) / Float(maxScrollY))
-        Else
-            scrollV.SetValue(0.0)
-        EndIf
-    End Method
+Method UpdateScrollbarFromOffset()
+    scrollV.SetValue(Float(scrollOffsetY))
+End Method
     
     ' ------------------------
     ' Anchor / Resize handling
