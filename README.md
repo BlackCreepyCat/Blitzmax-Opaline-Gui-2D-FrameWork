@@ -54,513 +54,406 @@ https://www.syntaxboom.net/forum/blitzmax-ng/code-archives-ad/1116-short-gui-ker
 
 <img width="1923" height="1108" alt="image" src="https://github.com/user-attachments/assets/f933c388-e862-4707-9a95-2e8b85685291" />
 
-
-
 Work with Open B3D:
 -------------------
 <img width="1027" height="796" alt="image" src="https://github.com/user-attachments/assets/754d2ea3-d310-42fb-bb8d-20af181d958d" />
 
-What is Opaline:
-----------------
-# 🎨 Opaline GUI Framework
 
-**A lightweight, fully-featured GUI framework for BlitzMax NG**
 
-![Version](https://img.shields.io/badge/version-1.0-blue.svg)
-![License](https://img.shields.io/badge/license-Free-green.svg)
-![BlitzMax NG](https://img.shields.io/badge/BlitzMax-NG-orange.svg)
 
-By **Creepy Cat** © 2025/2026
+<p align="center">
+  <img src="https://via.placeholder.com/1200x300/2c3e50/ecf0f1?text=Opaline+GUI+Framework" alt="Opaline GUI Banner" width="100%">
+</p>
+
+<h1 align="center">🎨 Opaline GUI – Lightweight 2D Framework for BlitzMax NG</h1>
+
+<p align="center">
+  <strong>A from-scratch, portable GUI kernel for building interactive interfaces</strong><br>
+  By <a href="https://github.com/BlackCreepyCat">Creepy Cat</a> © 2025–2026
+</p>
+
+<p align="center">
+  <a href="https://github.com/BlackCreepyCat/Blitzmax-Opaline-Gui-2D-FrameWork/stargazers"><img src="https://img.shields.io/github/stars/BlackCreepyCat/Blitzmax-Opaline-Gui-2D-FrameWork?style=social" alt="Stars"></a>
+  <a href="https://github.com/BlackCreepyCat/Blitzmax-Opaline-Gui-2D-FrameWork/releases"><img src="https://img.shields.io/github/v/release/BlackCreepyCat/Blitzmax-Opaline-Gui-2D-FrameWork?color=green" alt="Latest Release"></a>
+  <a href="https://github.com/BlackCreepyCat/Blitzmax-Opaline-Gui-2D-FrameWork/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-Free%20Use-green" alt="License"></a>
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c8358eda-b1c8-4e43-8be3-8bb32d76c700" alt="Opaline GUI Example" width="600">
+</p>
 
 ---
 
-## ✨ Features
+## Table of Contents
 
-- 🪟 **17 Widget Types** - Windows, Buttons, Labels, Panels, TextInputs, TextAreas, ListBoxes, ComboBoxes, CheckBoxes, Radio Buttons, Sliders, ProgressBars, Tabbers, ImageBoxes, MessageBoxes, Context Menus
-- 🎯 **Modal Windows** - Block input to other windows with overlay effect
-- 📐 **Anchor System** - Automatic widget resizing when parent resizes
-- 🖱️ **Window Resizing** - Drag the bottom-right grip to resize windows
-- 🎨 **Theming** - Easily customizable colors and styles via constants
-- ⌨️ **Keyboard Support** - Full text editing with Ctrl+C/X/V, cursor navigation
-- 📋 **Clipboard Integration** - System clipboard support for copy/paste
-- 🔄 **Z-Ordering** - Proper window stacking and focus management
-- 📜 **Scrolling** - Built-in scrollbar support for lists and text areas
+- [Why Opaline?](#-why-opaline)
+- [Features](#-features)
+- [Installation](#-installation)
+- [Quick Start](#-quick-start)
+- [Widget Reference](#-widget-reference)
+  - [TWindow](#twindow)
+  - [TButton](#tbutton)
+  - [TLabel](#tlabel)
+  - [TPanel](#tpanel)
+  - [TTextInput](#ttextinput)
+  - [TTextArea](#ttextarea)
+  - [TCheckBox](#tcheckbox)
+  - [TRadio](#tradio)
+  - [TSlider](#tslider)
+  - [TProgressBar](#tprogressbar)
+  - [TListBox](#tlistbox)
+  - [TComboBox](#tcombobox)
+  - [TTabber](#ttabber)
+  - [TImageBox](#timagebox)
+  - [TMessageBox](#tmessagebox)
+  - [TContextMenu](#tcontextmenu)
+- [Anchoring System](#-anchoring-system)
+- [Customization & Theming](#-customization--theming)
+- [License](#️-license)
+- [Contributions & Support](#-contributions--support)
+
+---
+
+## ✨ Why Opaline?
+
+Opaline is a **low-level GUI kernel** built from scratch in BlitzMax NG. It's designed to be:
+
+- **Understandable and Portable**: Easily convert to other languages like C++, SDL, Raylib, or even FreeBasic/Monkey (as long as linked lists are supported).
+- **Dependency-Free**: No complex externals—just core BlitzMax modules.
+- **Behavior-Focused**: Prioritizes widget logic (events, focus, anchoring) over fancy visuals. It's intentionally "ugly" so you can customize the look!
+- **Solid Core**: Handles invisible complexities like z-order, modality, scrolling, and clipboard integration.
+
+The GUI might look basic, but its behavior is mature and robust. Perfect for games, tools, or apps.
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/8502a366-f630-4ee7-b8f2-b3f57e68500a" alt="Opaline GUI Screenshot" width="800">
+</p>
+
+Compatible with OpenB3D for 3D integration:
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/754d2ea3-d310-42fb-bb8d-20af181d958d" alt="OpenB3D Integration" width="600">
+</p>
+
+---
+
+## 🚀 Features
+
+- **17+ Widgets**: Fully-featured with mature behaviors.
+- **Resizable & Modal Windows**: Drag grips, overlays, and status bars.
+- **Powerful Anchoring**: Widgets stretch/stick automatically on resize.
+- **Theming**: Simple color constants for quick customization.
+- **Keyboard Handling**: Full text editing, shortcuts (Ctrl+C/X/V), navigation.
+- **Clipboard Support**: System-integrated copy/paste.
+- **Z-Order & Focus**: Automatic management.
+- **Scrolling**: Built-in for lists and text areas.
+- **Context Menus & Message Boxes**: Advanced right-click and dialogs.
+- **Event System**: Check for "click", "change", etc., in your loop.
 
 ---
 
 ## 📦 Installation
 
-1. Clone or download this repository
-2. Place the GUI files in your project folder
-3. Include the main file in your BlitzMax project:
+1. **Clone or Download**: Get this repo.
+2. **Add to Project**: Copy the `.bmx` files to your project folder.
+3. **Include Main File**:
 
-```blitzmax
+```bmx
 SuperStrict
-Import BRL.GLMax2D
-Import BRL.LinkedList
 
-Include "gui_opaline.bmx"
-```
-
----
-
-## 🚀 Quick Start
-
-```blitzmax
-SuperStrict
 Import BRL.GLMax2D
 Import BRL.LinkedList
 
 Include "gui_opaline.bmx"
 
-' Create graphics window
+Requirements:BlitzMax NG: blitzmax.org or GitHub.
+Recommended IDE: VS Code with BlitzMax Extension.
+
+ Quick StartA minimal example to get a window and button working:bmx
+
+SuperStrict
+Import BRL.GLMax2D
+Import BRL.LinkedList
+Include "gui_opaline.bmx"
+
 Graphics 1280, 720, 0
 
-' Initialize GUI system
 TWidget.GuiInit()
-
-' Create root container
 Global root:TContainer = New TContainer(GraphicsWidth(), GraphicsHeight())
 TWidget.GuiSetRoot(root)
 
-' Create a window
-Local win:TWindow = New TWindow(100, 100, 400, 300, "My Window")
+Local win:TWindow = New TWindow(180, 120, 520, 380, "Opaline Test", True, True, True, True)
 win.SetResizable(True)
+win.SetMinSize(320, 240)
 root.AddChild(win)
 
-' Add a button to the window
-Local btn:TButton = New TButton(20, 20, 150, 35, "Click Me!")
+Local btn:TButton = New TButton(30, 40, 180, 45, "Click Me!")
 win.AddChild(btn)
 
-' Main loop
 While Not AppTerminate() And Not KeyHit(KEY_ESCAPE)
     Cls
     TWidget.GuiRefresh()
     
-    ' Check for button click
     If btn.HasEvent("click")
-        Print "Button clicked!"
+        Print "Button clicked! :3"
     EndIf
     
     TWidget.GuiClearEvents()
     Flip
 Wend
-```
 
----
+ Widget ReferenceDetailed explanations, constructors, methods, and examples for each widget.TWindowDraggable, resizable window with title bar, buttons, and optional status bar.Constructor:bmx
 
-## 📚 Widget Reference
+Local win:TWindow = New TWindow(x:Int, y:Int, width:Int, height:Int, title:String, showClose:Bool, showMin:Bool, showMax:Bool, showStatusBar:Bool)
 
-### TWindow
+Key Methods:SetResizable(resizable:Bool): Enable/disable resizing.
+SetMinSize(width:Int, height:Int): Set minimum client area size.
+SetStatusText(text:String): Set simple status bar text.
+AddStatusSection(text:String, width:Int): Add a status bar section (-1 for flexible).
+SetStatusSection(index:Int, text:String): Update a section.
+SetModalState(modal:Bool): Make modal (blocks others).
+Close(): Close and remove the window.
 
-Draggable window with title bar, control buttons, and optional status bar.
+Example:bmx
 
-```blitzmax
-' Constructor
-Local win:TWindow = New TWindow(x, y, width, height, title, showClose, showMin, showMax, showStatusBar)
+Local win:TWindow = New TWindow(100, 100, 400, 300, "My Window", True, True, True, True)
+win.SetResizable(True)
+win.SetMinSize(200, 150)
+win.AddStatusSection("Status", -1)
+root.AddChild(win)
 
-' Methods
-win.SetResizable(True)              ' Enable window resizing
-win.SetMinSize(200, 150)            ' Set minimum size (client area)
-win.SetStatusText("Ready")          ' Simple status bar text
-win.AddStatusSection("Text", -1)    ' Add status bar section (-1 = flexible width)
-win.SetStatusSection(0, "New Text") ' Update section text
-win.SetModalState(True)             ' Make window modal
-win.Close()                         ' Close and remove window
-```
+TButtonClickable button with hover/pressed states.Constructor:bmx
 
-### TButton
+Local btn:TButton = New TButton(x:Int, y:Int, width:Int, height:Int, label:String)
 
-Clickable button with hover and pressed states.
+Key Methods:HasEvent(event:String): Check for "click".
 
-```blitzmax
-Local btn:TButton = New TButton(x, y, width, height, "Label")
+Example:bmx
 
-' Check for click event
+Local btn:TButton = New TButton(20, 20, 150, 35, "Click Me!")
 If btn.HasEvent("click")
-    ' Handle click
+    Print "Clicked!"
 EndIf
-```
 
-### TLabel
+TLabelText display with alignment.Constructor:bmx
 
-Text display widget with alignment options.
+Local lbl:TLabel = New TLabel(x:Int, y:Int, width:Int, height:Int, text:String, alignment:Int)
 
-```blitzmax
-Local lbl:TLabel = New TLabel(x, y, width, height, "Text", alignment)
+Alignments: LABEL_ALIGN_LEFT, LABEL_ALIGN_CENTER, LABEL_ALIGN_RIGHT.Key Methods:SetColor(r:Int, g:Int, b:Int): Set text color.
+SetText(text:String): Update text.
 
-' Alignments: LABEL_ALIGN_LEFT, LABEL_ALIGN_CENTER, LABEL_ALIGN_RIGHT
-lbl.SetColor(255, 200, 100)  ' Set text color
-lbl.SetText("New Text")       ' Change text
-```
+Example:bmx
 
-### TPanel
+Local lbl:TLabel = New TLabel(20, 20, 200, 20, "Hello", LABEL_ALIGN_CENTER)
+lbl.SetColor(255, 0, 0)
 
-Container with optional title and border styles.
+TPanelContainer with title and border style.Constructor:bmx
 
-```blitzmax
-Local panel:TPanel = New TPanel(x, y, width, height, "Title", style)
+Local panel:TPanel = New TPanel(x:Int, y:Int, width:Int, height:Int, title:String, style:Int)
 
-' Styles: PANEL_STYLE_FLAT, PANEL_STYLE_RAISED, PANEL_STYLE_SUNKEN
-panel.AddChild(someWidget)  ' Add widgets to panel
-```
+Styles: PANEL_STYLE_FLAT, PANEL_STYLE_RAISED, PANEL_STYLE_SUNKEN.Key Methods:AddChild(widget:TWidget): Add sub-widgets.
 
-### TTextInput
+Example:bmx
 
-Single-line text input field.
+Local panel:TPanel = New TPanel(20, 20, 300, 200, "Group", PANEL_STYLE_RAISED)
+panel.AddChild(New TButton(10, 10, 100, 30, "Inside"))
 
-```blitzmax
-Local input:TTextInput = New TTextInput(x, y, width, height, "Default text")
+TTextInputSingle-line text input.Constructor:bmx
 
-input.SetPlaceholder("Enter name...")  ' Placeholder text
-input.SetMaxLength(50)                  ' Character limit
-input.SetPasswordMode(True)             ' Hide characters
-Local text:String = input.GetText()     ' Get current text
-```
+Local input:TTextInput = New TTextInput(x:Int, y:Int, width:Int, height:Int, defaultText:String)
 
-### TTextArea
+Key Methods:SetPlaceholder(text:String): Set placeholder.
+SetMaxLength(max:Int): Character limit.
+SetPasswordMode(mode:Bool): Hide input.
+GetText():String: Get current text.
 
-Multi-line text editor with optional line numbers.
+Example:bmx
 
-```blitzmax
-Local textArea:TTextArea = New TTextArea(x, y, width, height, "Initial text")
+Local input:TTextInput = New TTextInput(20, 20, 200, 30, "")
+input.SetPlaceholder("Username")
+input.SetMaxLength(20)
 
-textArea.SetShowLineNumbers(True)   ' Show line numbers
-textArea.SetReadOnly(True)          ' Make read-only
-textArea.SetText("New content")     ' Set text
-Local text:String = textArea.GetText()
-Local lineCount:Int = textArea.GetLineCount()
-```
+TTextAreaMulti-line text editor.Constructor:bmx
 
-### TCheckBox
+Local area:TTextArea = New TTextArea(x:Int, y:Int, width:Int, height:Int, initialText:String)
 
-Toggle checkbox with label.
+Key Methods:SetShowLineNumbers(show:Bool): Toggle line numbers.
+SetReadOnly(readOnly:Bool): Make uneditable.
+SetText(text:String): Set content.
+GetText():String: Get content.
+GetLineCount():Int: Get number of lines.
 
-```blitzmax
-Local chk:TCheckBox = New TCheckBox(x, y, width, height, "Option", initialState)
+Example:bmx
 
-If chk.IsChecked()
-    ' Checkbox is checked
-EndIf
-chk.SetChecked(True)  ' Set state programmatically
-```
+Local area:TTextArea = New TTextArea(20, 20, 300, 200, "Line1\nLine2")
+area.SetShowLineNumbers(True)
 
-### TRadio
+TCheckBoxToggle checkbox.Constructor:bmx
 
-Radio button for mutually exclusive options.
+Local chk:TCheckBox = New TCheckBox(x:Int, y:Int, width:Int, height:Int, label:String, initialState:Bool)
 
-```blitzmax
-' Create a group (TList) for mutual exclusion
+Key Methods:IsChecked():Bool: Check state.
+SetChecked(checked:Bool): Set state.
+
+Example:bmx
+
+Local chk:TCheckBox = New TCheckBox(20, 20, 150, 20, "Enable Feature", False)
+If chk.IsChecked() Then Print "Enabled!"
+
+TRadioGrouped radio buttons.Constructor:bmx
+
+Local radio:TRadio = New TRadio(x:Int, y:Int, width:Int, height:Int, label:String, group:TList)
+
+Key Methods:Use a shared TList for grouping (mutual exclusion).
+selected:Bool: Check/set selection.
+
+Example:bmx
+
 Local group:TList = New TList
+Local r1:TRadio = New TRadio(20, 20, 150, 20, "Option 1", group)
+Local r2:TRadio = New TRadio(20, 50, 150, 20, "Option 2", group)
+r1.selected = True
 
-Local r1:TRadio = New TRadio(x, y, 20, 20, "Option 1", group)
-Local r2:TRadio = New TRadio(x, y+30, 20, 20, "Option 2", group)
-Local r3:TRadio = New TRadio(x, y+60, 20, 20, "Option 3", group)
+TSliderValue slider.Constructor:bmx
 
-r2.selected = True  ' Set default selection
-```
+Local slider:TSlider = New TSlider(x:Int, y:Int, width:Int, height:Int, minValue:Float, maxValue:Float)
 
-### TSlider
+Key Methods:SetValue(value:Float): Set position.
+GetValue():Float: Get current value.
 
-Horizontal slider for value selection.
+Example:bmx
 
-```blitzmax
-Local slider:TSlider = New TSlider(x, y, width, height, minValue, maxValue)
+Local slider:TSlider = New TSlider(20, 20, 200, 20, 0, 100)
+slider.SetValue(50)
 
-slider.SetValue(50)                  ' Set current value
-Local val:Float = slider.GetValue()  ' Get current value
-```
+TProgressBarProgress indicator.Constructor:bmx
 
-### TProgressBar
+Local prog:TProgressBar = New TProgressBar(x:Int, y:Int, width:Int, height:Int)
 
-Progress indicator bar.
+Key Methods:SetValue(value:Float): Set progress (0.0-1.0).
+SetShowText(show:Bool): Show percentage.
 
-```blitzmax
-Local progress:TProgressBar = New TProgressBar(x, y, width, height)
+Example:bmx
 
-progress.SetValue(0.75)  ' Set progress (0.0 to 1.0)
-progress.SetShowText(True)  ' Show percentage text
-```
+Local prog:TProgressBar = New TProgressBar(20, 20, 200, 20)
+prog.SetValue(0.75)
+prog.SetShowText(True)
 
-### TListBox
+TListBoxScrollable list.Constructor:bmx
 
-Scrollable list with optional multi-column support.
+Local list:TListBox = New TListBox(x:Int, y:Int, width:Int, height:Int)
 
-```blitzmax
-Local list:TListBox = New TListBox(x, y, width, height)
+Key Methods:AddItem(item:String): Add entry.
+GetSelectedIndex():Int: Get selection.
+GetSelectedItem():String: Get selected text.
+SetColumns(columns:String[]): For multi-column (comma-separated items).
 
-list.AddItem("Item 1")
-list.AddItem("Item 2")
-list.AddItem("Item 3")
+Example:bmx
 
-Local selected:Int = list.GetSelectedIndex()
-Local text:String = list.GetSelectedItem()
+Local list:TListBox = New TListBox(20, 20, 200, 150)
+list.AddItem("Apple")
+list.AddItem("Banana")
 
-' Multi-column support
-list.SetColumns(["Name", "Size", "Date"])
-list.AddItem("File.txt,1.2 KB,2025-01-15")
-```
+TComboBoxDropdown selector.Constructor:bmx
 
-### TComboBox
+Local combo:TComboBox = New TComboBox(x:Int, y:Int, width:Int, height:Int)
 
-Dropdown selection box.
+Key Methods:SetPlaceholder(text:String): Default text.
+AddItem(item:String): Add option.
+SetSelectedIndex(index:Int): Select item.
+GetSelectedText():String: Get selection.
 
-```blitzmax
-Local combo:TComboBox = New TComboBox(x, y, width, height)
+Example:bmx
 
-combo.SetPlaceholder("Select...")
-combo.AddItem("Option 1")
-combo.AddItem("Option 2")
-combo.AddItem("Option 3")
+Local combo:TComboBox = New TComboBox(20, 20, 200, 30)
+combo.AddItem("Red")
+combo.AddItem("Blue")
 
-combo.SetSelectedIndex(0)  ' Select first item
-Local selected:String = combo.GetSelectedText()
-```
+TTabberTab organizer.Constructor:bmx
 
-### TTabber
+Local tabber:TTabber = New TTabber(x:Int, y:Int, width:Int, height:Int)
 
-Tab control for organizing content.
+Key Methods:AddTab(title:String): Add tab.
+AddWidgetToTab(tabIndex:Int, widget:TWidget): Assign widget to tab.
 
-```blitzmax
-Local tabber:TTabber = New TTabber(x, y, width, height)
+Example:bmx
 
-tabber.AddTab("General")
-tabber.AddTab("Settings")
-tabber.AddTab("About")
+Local tabber:TTabber = New TTabber(20, 20, 400, 300)
+tabber.AddTab("Tab 1")
+tabber.AddTab("Tab 2")
+Local lbl:TLabel = New TLabel(10, 10, 100, 20, "Content")
+tabber.AddWidgetToTab(0, lbl)
 
-' Add widgets to specific tabs
-Local lbl:TLabel = New TLabel(20, 30, 200, 20, "General content")
-tabber.AddChild(lbl)
-tabber.AddWidgetToTab(0, lbl)  ' Assign to first tab
-```
+TImageBoxImage viewer.Constructor:bmx
 
-### TImageBox
+Local img:TImageBox = New TImageBox(x:Int, y:Int, width:Int, height:Int)
 
-Image display with scaling options.
+Key Methods:SetImage(pixmap:TPixmap): Set from pixmap.
+SetImageFromFile(file:String): Load from file.
+SetScaleMode(mode:Int): SCALE_NONE, SCALE_FIT, SCALE_STRETCH.
 
-```blitzmax
-Local imgBox:TImageBox = New TImageBox(x, y, width, height)
+Example:bmx
 
-imgBox.SetImage(myPixmap)           ' Set image from TPixmap
-imgBox.SetImageFromFile("pic.png")  ' Load from file
-imgBox.SetScaleMode(SCALE_FIT)      ' SCALE_NONE, SCALE_FIT, SCALE_STRETCH
-```
+Local img:TImageBox = New TImageBox(20, 20, 200, 150)
+img.SetImageFromFile("image.png")
+img.SetScaleMode(SCALE_FIT)
 
-### TMessageBox
+TMessageBoxModal dialogs.Static Methods:Show(title:String, message:String, type:Int, callback:Function(result:Int))
 
-Modal dialog boxes.
+Types: MSGBOX_OK, MSGBOX_OKCANCEL, MSGBOX_YESNO, MSGBOX_YESNOCANCEL.Results: MSGBOX_RESULT_OK, MSGBOX_RESULT_CANCEL, etc.Example:bmx
 
-```blitzmax
-' Show a message box
-TMessageBox.Show("Title", "Message text", MSGBOX_OK, callbackFunction)
-
-' Types: MSGBOX_OK, MSGBOX_OKCANCEL, MSGBOX_YESNO, MSGBOX_YESNOCANCEL
-
-' Callback function
-Function OnResult:Int(result:Int)
-    Select result
-        Case MSGBOX_RESULT_OK    Print "OK clicked"
-        Case MSGBOX_RESULT_YES   Print "Yes clicked"
-        Case MSGBOX_RESULT_NO    Print "No clicked"
-    End Select
+Function OnMsgResult(result:Int)
+    If result = MSGBOX_RESULT_YES Then Print "Yes!"
 End Function
-```
 
-### TContextMenu
+TMessageBox.Show("Confirm", "Are you sure?", MSGBOX_YESNO, OnMsgResult)
 
-Right-click context menus.
+TContextMenuRight-click menu.Constructor:bmx
 
-```blitzmax
 Local menu:TContextMenu = New TContextMenu()
 
+Key Methods:AddItem(label:String, action:String, shortcut:String): Add entry.
+AddSeparator(): Add divider.
+AddCheckItem(label:String, action:String, checked:Bool): Toggle item.
+AddDisabledItem(label:String, action:String): Disabled entry.
+ShowAt(x:Int, y:Int): Display at position.
+HasEvent(event:String): Check "select".
+GetSelectedAction():String: Get chosen action.
+
+Example:bmx
+
+Local menu:TContextMenu = New TContextMenu()
 menu.AddItem("Cut", "cut", "Ctrl+X")
-menu.AddItem("Copy", "copy", "Ctrl+C")
-menu.AddItem("Paste", "paste", "Ctrl+V")
 menu.AddSeparator()
-menu.AddCheckItem("Word Wrap", "wrap", True)
-menu.AddDisabledItem("Unavailable", "disabled")
-
-' Show menu at mouse position
 menu.ShowAt(MouseX(), MouseY())
+If menu.HasEvent("select") And menu.GetSelectedAction() = "cut" Then Print "Cut!"
 
-' Check for selection
-If menu.HasEvent("select")
-    Local action:String = menu.GetSelectedAction()
-    Select action
-        Case "cut"   ' Handle cut
-        Case "copy"  ' Handle copy
-    End Select
-EndIf
-```
+ Anchoring SystemWidgets anchor to parent edges for auto-resizing.Constants:ANCHOR_NONE = 0 (centers)
+ANCHOR_LEFT = 1
+ANCHOR_TOP = 2
+ANCHOR_RIGHT = 4
+ANCHOR_BOTTOM = 8
+ANCHOR_ALL = 15 (stretches)
 
----
+Method:bmx
 
-## 📐 Anchor System
+widget.SetAnchors(anchors:Int)
 
-The anchor system allows widgets to automatically resize and reposition when their parent window is resized.
+Example:bmx
 
-### Anchor Constants
+btn.SetAnchors(ANCHOR_RIGHT | ANCHOR_BOTTOM)  // Sticks to bottom-right
 
-```blitzmax
-ANCHOR_NONE   = 0   ' No anchor (centers on resize)
-ANCHOR_LEFT   = 1   ' Distance to left edge stays fixed
-ANCHOR_TOP    = 2   ' Distance to top edge stays fixed
-ANCHOR_RIGHT  = 4   ' Distance to right edge stays fixed
-ANCHOR_BOTTOM = 8   ' Distance to bottom edge stays fixed
-ANCHOR_ALL    = 15  ' Anchored to all edges (stretches)
-```
+ Customization & ThemingEdit gui_constants.bmx for colors:bmx
 
-### Usage Examples
+Const GUI_COLOR_WINDOW_BG:Int = $2C2C2C
+Const GUI_COLOR_TEXT:Int = $E0E0E0
+' ... more constants
 
-```blitzmax
-' TextArea that stretches with window
-textArea.SetAnchors(ANCHOR_ALL)
+Override Draw() methods in widgets for custom rendering. LicenseFree to use for any purpose (free/paid apps/games). Porting encouraged! Just credit me if used extensively. No selling as-is. Contributions & SupportOpen issues/PRs welcome!
+Original Forum: syntaxbomb.net
+Tag me on X: @BlackCreepy_Cat
 
-' Button that stays in bottom-right corner
-btnOK.SetAnchors(ANCHOR_RIGHT | ANCHOR_BOTTOM)
+Have fun building creepy UIs! ‍
 
-' Label that stretches horizontally but stays at top
-titleLabel.SetAnchors(ANCHOR_LEFT | ANCHOR_TOP | ANCHOR_RIGHT)
 
-' Panel that only stretches vertically
-sidePanel.SetAnchors(ANCHOR_LEFT | ANCHOR_TOP | ANCHOR_BOTTOM)
-
-' Widget that centers (moves proportionally)
-logo.SetAnchors(ANCHOR_NONE)
-```
-
-### Behavior
-
-| Anchors | Horizontal Behavior | Vertical Behavior |
-|---------|--------------------|--------------------|
-| LEFT only | Fixed position | - |
-| RIGHT only | Moves with right edge | - |
-| LEFT + RIGHT | Stretches width | - |
-| TOP only | - | Fixed position |
-| BOTTOM only | - | Moves with bottom edge |
-| TOP + BOTTOM | - | Stretches height |
-| NONE | Centers (moves half) | Centers (moves half) |
-
----
-
-## 🎨 Theming
-
-Customize the look by modifying constants in `gui_constants.bmx`:
-
-```blitzmax
-' Window colors
-Const COLOR_TITLEBAR_ACTIVE_R:Int = 60
-Const COLOR_TITLEBAR_ACTIVE_G:Int = 60
-Const COLOR_TITLEBAR_ACTIVE_B:Int = 80
-
-' Button colors
-Const COLOR_BUTTON_NORMAL_R:Int = 70
-Const COLOR_BUTTON_NORMAL_G:Int = 70
-Const COLOR_BUTTON_NORMAL_B:Int = 90
-
-' Text colors
-Const COLOR_TEXT_R:Int = 220
-Const COLOR_TEXT_G:Int = 220
-Const COLOR_TEXT_B:Int = 230
-
-' And many more...
-```
-
----
-
-## 📁 File Structure
-
-```
-gui_opaline.bmx       ' Main include file (imports all modules)
-gui_constants.bmx     ' Theme colors and layout constants
-gui_core.bmx          ' Base TWidget class and utilities
-gui_mouse.bmx         ' Mouse state management
-gui_container.bmx     ' Root container
-gui_window.bmx        ' TWindow widget
-gui_button.bmx        ' TButton widget
-gui_label.bmx         ' TLabel widget
-gui_panel.bmx         ' TPanel widget
-gui_checkbox.bmx      ' TCheckBox widget
-gui_radio.bmx         ' TRadio widget
-gui_slider.bmx        ' TSlider widget
-gui_progressbar.bmx   ' TProgressBar widget
-gui_textinput.bmx     ' TTextInput widget
-gui_textarea.bmx      ' TTextArea widget
-gui_listbox.bmx       ' TListBox widget
-gui_combobox.bmx      ' TComboBox widget
-gui_tabber.bmx        ' TTabber widget
-gui_imagebox.bmx      ' TImageBox widget
-gui_messagebox.bmx    ' TMessageBox widget
-gui_taskbar.bmx       ' TTaskbar widget
-gui_contextmenu.bmx   ' TContextMenu widget
-```
-
----
-
-## 🔄 Main Loop Structure
-
-```blitzmax
-' Initialize
-Graphics 1920, 1080, 0
-TWidget.GuiInit()
-Global root:TContainer = New TContainer(GraphicsWidth(), GraphicsHeight())
-TWidget.GuiSetRoot(root)
-
-' Create your UI here...
-
-' Main loop
-While Not AppTerminate()
-    Cls
-    
-    ' Update and draw all widgets
-    TWidget.GuiRefresh()
-    
-    ' Handle your events here
-    If myButton.HasEvent("click")
-        ' Do something
-    EndIf
-    
-    ' Clear events at end of frame
-    TWidget.GuiClearEvents()
-    
-    Flip
-Wend
-```
-
----
-
-## 📝 License
-
-**Free to use** with the following conditions:
-
-- ✅ Use in commercial or free applications/games
-- ✅ Convert to other programming languages
-- ✅ Modify and extend
-- ❌ Sell the framework itself
-- 📌 Please include a small credit/citation somewhere
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Feel free to:
-
-- Report bugs
-- Suggest features
-- Submit pull requests
-- Share your projects using Opaline
-
----
-
-## 📧 Contact
-
-- **GitHub**: [BlackCreepyCat](https://github.com/BlackCreepyCat)
-
----
-
-## 🙏 Acknowledgments
-
-Built with ❤️ for the BlitzMax community.
-
-Special thanks to all contributors and users!
 
