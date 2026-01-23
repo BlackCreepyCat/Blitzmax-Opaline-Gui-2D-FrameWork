@@ -283,6 +283,81 @@ Type TTreeView Extends TWidget
             FireEvent("SelectionChanged")
         EndIf
     End Method
+
+
+
+
+	' Expands all nodes in the tree (root and descendants) , automatically resets scroll position to top and updates layout
+	Method ExpandAll()
+		' Reset scroll to top before expanding (prevents visual glitches)
+		scrollOffsetY = 0
+		
+		' Expand all root nodes and their descendants
+		For Local root:TTreeNode = EachIn rootNodes
+			root.ExpandAll()
+		Next
+		
+		' Recalculate layout (totalVisibleItems, scrollbar range, etc.)
+		UpdateLayout()
+		
+		' Ensure scroll is at top (security, in case UpdateLayout modified it)
+		scrollOffsetY = 0
+		UpdateScrollbarFromOffset()
+		
+		' Fire event to notify listeners
+		FireEvent("TreeExpanded")
+	End Method
+
+	' Collapses all nodes in the tree (root and descendants) , automatically resets scroll position to top and updates layout
+	Method CollapseAll()
+		' Reset scroll to top before collapsing
+		scrollOffsetY = 0
+		
+		' Collapse all root nodes and their descendants
+		For Local root:TTreeNode = EachIn rootNodes
+			root.CollapseAll()
+		Next
+		
+		' Recalculate layout
+		UpdateLayout()
+		
+		' Ensure scroll is at top
+		scrollOffsetY = 0
+		UpdateScrollbarFromOffset()
+		
+		' Fire event to notify listeners
+		FireEvent("TreeCollapsed")
+	End Method
+
+	' Expands all nodes up to a specific depth level , depth: 0 = only roots visible, 1 = roots + first children, etc.
+	Method ExpandToLevel(depth:Int)
+		scrollOffsetY = 0
+		
+		For Local root:TTreeNode = EachIn rootNodes
+			ExpandNodeToLevel(root, 0, depth)
+		Next
+		
+		UpdateLayout()
+		scrollOffsetY = 0
+		UpdateScrollbarFromOffset()
+		
+		FireEvent("TreeExpanded")
+	End Method
+
+	' Helper method for ExpandToLevel (recursive)
+	Method ExpandNodeToLevel(node:TTreeNode, currentLevel:Int, targetLevel:Int)
+		If currentLevel < targetLevel
+			node.Expand()
+			For Local child:TTreeNode = EachIn node.children
+				ExpandNodeToLevel(child, currentLevel + 1, targetLevel)
+			Next
+		Else
+			node.Collapse()
+		EndIf
+	End Method
+	
+	
+
     
     ' Scrolls the view so the specified node becomes visible
     Method EnsureNodeVisible(node:TTreeNode)
@@ -520,19 +595,12 @@ Type TTreeView Extends TWidget
         
         ' Draw node text
         Local textY:Int = drawY + (itemHeight - TWidget.GuiTextHeight("X")) / 2
-        TWidget.GuiDrawText(itemX, textY, node.text, TEXT_STYLE_NORMAL, 
-            COLOR_LISTBOX_ITEM_R, COLOR_LISTBOX_ITEM_G, COLOR_LISTBOX_ITEM_B)
+        TWidget.GuiDrawText(itemX + 3 , textY, node.text, TEXT_STYLE_NORMAL, COLOR_LISTBOX_ITEM_R, COLOR_LISTBOX_ITEM_G, COLOR_LISTBOX_ITEM_B)
         
         ' Draw optional tree connection lines
         If showLines And node.level > 0
             Local lineX:Int = ax + node.level * indent - indent / 2
-            SetColor 80, 80, 100
-            
-            If node.parent
-                DrawLine lineX, drawY, lineX, drawY + itemHeight / 2
-            EndIf
-            
-            DrawLine lineX, drawY + itemHeight / 2, lineX + indent / 2 - 4, drawY + itemHeight / 2
+			TWidget.GuiDrawtext(lineX, drawY, "├", TEXT_STYLE_NORMAL, 200, 200, 220)
         EndIf
     End Method
     
@@ -647,6 +715,22 @@ Type TTreeView Extends TWidget
     ' ------------
     ' Event System
     ' ------------
+	' Returns True if a TreeExpanded event is pending
+	Method TreeExpanded:Int()
+		For Local ev:TEvent = EachIn events
+			If ev.eventType = "TreeExpanded" Then Return True
+		Next
+		Return False
+	End Method
+
+	' Returns True if a TreeCollapsed event is pending
+	Method TreeCollapsed:Int()
+		For Local ev:TEvent = EachIn events
+			If ev.eventType = "TreeCollapsed" Then Return True
+		Next
+		Return False
+	End Method
+
     Method FireEvent(eventType:String)
         Local ev:TEvent = New TEvent
         ev.target = Self
