@@ -29,7 +29,7 @@ TWidget.GuiSetRoot(root)
 '                               FENÊTRE PRINCIPALE
 ' =============================================================================
 
-Local win:TWindow = New TWindow(40, 40, 900, 680, "TTreeView - Demo", True, True, True,true)
+Local win:TWindow = New TWindow(40, 40, 900, 680, "TTreeView - Demo", True, True, True,True)
 win.SetResizable(True)
 win.SetMinSize(900, 680)
 root.AddChild win
@@ -101,52 +101,56 @@ win.AddStatusSection("Selected: —", 240, LABEL_ALIGN_RIGHT)
 ' =============================================================================
 
 Local pc:TTreeNode = tree.AddRootNode("This Computer")
-pc.icon = ""   ' icône ordinateur
+pc.icon = ICON_COMPUTER   ' icône ordinateur
 pc.Expand()
 
-    Local cdrive:TTreeNode = pc.AddChild("C: (Windows)")
-    cdrive.icon = ""
-    cdrive.Expand()
+Local cdrive:TTreeNode = pc.AddChild("C: (Windows)")
+cdrive.icon = ICON_DRIVE
+cdrive.Expand()
 
-        Local progfiles:TTreeNode = cdrive.AddChild("Program Files")
-        progfiles.icon = "m"
-        progfiles.Expand()
+Local progfiles:TTreeNode = cdrive.AddChild("Program Files")
+progfiles.icon = ICON_FOLDER
+progfiles.Expand()
 
-            Local blitzmax:TTreeNode = progfiles.AddChild("BlitzMax NG")
-            blitzmax.icon = "m"
+Local blitzmax:TTreeNode = progfiles.AddChild("BlitzMax NG")
+blitzmax.icon = ICON_FOLDER
 
-                blitzmax.AddChild("bin").icon = "m"
-                blitzmax.AddChild("mod").icon = "m"
-                blitzmax.AddChild("samples").icon = "m"
+blitzmax.AddChild("Test.zip").icon = ICON_FILE_ARCHIVE
+blitzmax.AddChild("Test.bmp").icon = ICON_FILE_IMAGE
+blitzmax.AddChild("Test.wav").icon = ICON_FILE_AUDIO
+blitzmax.AddChild("Test.avi").icon = ICON_FILE_VIDEO
 
-        Local users:TTreeNode = cdrive.AddChild("Users")
-        users.icon = "m"
-        users.Expand()
+blitzmax.AddChild("mod").icon = ICON_FOLDER
+blitzmax.AddChild("samples").icon = ICON_FOLDER
 
-            Local moi:TTreeNode = users.AddChild("CreepyCat")
-            moi.icon = "5"
-            moi.Expand()
+Local users:TTreeNode = cdrive.AddChild("Users")
+users.icon = ICON_FOLDER
+users.Expand()
 
-                moi.AddChild("Desktop").icon   = "m"
-                moi.AddChild("Documents").icon = "m"
-                moi.AddChild("Downloads").icon = "m"
-                moi.AddChild("Pictures").icon  = "m"
-                moi.AddChild("Music").icon     = "m"
-                moi.AddChild("Videos").icon    = "m"
+Local moi:TTreeNode = users.AddChild("CreepyCat")
+moi.icon = ICON_FOLDER
+moi.Expand()
 
-    Local ddrive:TTreeNode = pc.AddChild("D: (Data)")
-    ddrive.icon = "3"
+moi.AddChild("Desktop").icon   = ICON_FOLDER
+moi.AddChild("Documents").icon = ICON_FOLDER
+moi.AddChild("Downloads").icon = ICON_FOLDER
+moi.AddChild("Pictures").icon  = ICON_FOLDER
+moi.AddChild("Music").icon     = ICON_FOLDER
+moi.AddChild("Videos").icon    = ICON_FOLDER
 
-        ddrive.AddChild("Games").icon   = "0"
-        ddrive.AddChild("Movies").icon  = "0"
-        ddrive.AddChild("Projects").icon = "0"
-        ddrive.AddChild("Backups").icon = "0"
+Local ddrive:TTreeNode = pc.AddChild("D: (Data)")
+ddrive.icon = ICON_DRIVE
+
+ddrive.AddChild("Games").icon   = ICON_FOLDER
+ddrive.AddChild("Movies").icon  = ICON_FOLDER
+ddrive.AddChild("Projects").icon = ICON_FOLDER
+ddrive.AddChild("Backups").icon = ICON_FOLDER
 
 Local network:TTreeNode = tree.AddRootNode("Network")
-network.icon = "6"
-network.AddChild("NAS-Home").icon    = "4"
-network.AddChild("WORKGROUP").icon   = "4"
-network.AddChild("Printer-Laser").icon = "7"
+network.icon = ICON_GLOBE
+network.AddChild("NAS-Home").icon    = ICON_NETWORK
+network.AddChild("WORKGROUP").icon   = ICON_NETWORK
+network.AddChild("Printer-Laser").icon = ICON_PRINTER
 
 tree.UpdateLayout()
 
