@@ -31,7 +31,7 @@ Const ANCHOR_ALL:Int    = 15  ' Anchored to all edges (stretches both ways)
 ' =============================================================================
 '                          GLOBAL GUI STATE
 ' =============================================================================
-Global Gui_Version:String="1.6"
+Global Gui_Version:String="1.7"
 
 Global Gui_SymbolFont:TImageFont
 Global Gui_SymbolFontSize:Int = 18

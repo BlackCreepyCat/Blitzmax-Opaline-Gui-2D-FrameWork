@@ -126,12 +126,17 @@ Type TTextArea Extends TWidget
 			If w > maxLineWidth Then maxLineWidth = w
 		Next
 		
-		' Boucle pour résoudre l'interdépendance (converge rapidement)
+		' Algorithme de convergence amélioré avec limite d'itérations
 		Local converged:Int = False
 		Local assumedNeedsV:Int = False
 		Local assumedNeedsH:Int = False
-
-		While Not converged
+		Local iterations:Int = 0
+		Local maxIterations:Int = 5  ' Limite de sécurité
+		
+		While Not converged And iterations < maxIterations
+			iterations :+ 1
+			
+			' Calcul de la hauteur de contenu disponible
 			Local contentHeight:Int = rect.h - padding * 2
 			If assumedNeedsH Then contentHeight :- scrollbarWidth
 			
@@ -142,16 +147,19 @@ Type TTextArea Extends TWidget
 			Local tempMaxScrollY:Int = Max(0, lines.Count() - visibleLines)
 			Local tempScrollY:Int = Max(0, Min(scrollY, tempMaxScrollY))
 			
-			' Calcul needsV avec tempScrollY reclampé (évite forçage avec valeur obsolète)
+			' Vérification si scrollbar verticale nécessaire
+			' IMPORTANT: Utiliser tempScrollY recalculé pour éviter forçage avec valeur obsolète
 			Local calcNeedsV:Int = showVScrollbar And (lines.Count() > visibleLines Or tempScrollY > 0)
 			
+			' Calcul de la largeur de contenu disponible
 			Local contentWidth:Int = rect.w - padding * 2
 			If showLineNumbers Then contentWidth :- lineNumberWidth
 			If calcNeedsV Then contentWidth :- scrollbarWidth
 			
-			' Calcul needsH basé sur contentWidth actuel
+			' Vérification si scrollbar horizontale nécessaire
 			Local calcNeedsH:Int = showHScrollbar And (maxLineWidth > contentWidth)
 			
+			' Vérification de convergence
 			If calcNeedsV = assumedNeedsV And calcNeedsH = assumedNeedsH
 				converged = True
 			Else
@@ -160,20 +168,44 @@ Type TTextArea Extends TWidget
 			EndIf
 		Wend
 		
+		' Si pas convergé après maxIterations, forcer un état stable
+		If Not converged
+			' État le plus conservateur : afficher les deux scrollbars
+			assumedNeedsV = True
+			assumedNeedsH = True
+			
+			Local contentHeight:Int = rect.h - padding * 2 - scrollbarWidth
+			visibleLines = contentHeight / lineHeight
+			If visibleLines < 1 Then visibleLines = 1
+		EndIf
+		
 		' Mise à jour finale de maxScrollX avec les valeurs cohérentes
 		Local finalContentWidth:Int = rect.w - padding * 2
-
 		If showLineNumbers Then finalContentWidth :- lineNumberWidth
 		If NeedsVScrollbar() Then finalContentWidth :- scrollbarWidth
 		maxScrollX = Max(0, maxLineWidth - finalContentWidth + charWidth * 2)
 		
 		' Reclamp final de scrollY et scrollX pour cohérence
 		Local finalMaxScrollY:Int = Max(0, lines.Count() - visibleLines)
-
 		scrollY = Max(0, Min(scrollY, finalMaxScrollY))
 		scrollX = Max(0, Min(scrollX, maxScrollX))
 	End Method
 
+' =============================================================================
+'           Méthode OnParentResize() à ajouter à TTextArea
+' =============================================================================
+' Cette méthode devrait être ajoutée pour gérer correctement le redimensionnement
+
+Method OnParentResize(deltaW:Int, deltaH:Int)
+    ' Appeler la méthode parente pour gérer les anchors
+    Super.OnParentResize(deltaW, deltaH)
+    
+    ' Recalculer les métriques après redimensionnement
+    UpdateMetrics()
+    
+    ' S'assurer que le curseur reste visible
+    EnsureCursorVisible()
+End Method
     Method UpdateMaxLineWidth()
         maxLineWidth = 0
 
