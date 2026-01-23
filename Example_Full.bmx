@@ -1005,139 +1005,139 @@ Local computer:TTreeNode = tree.AddRootNode("My Computer")
 computer.icon = ""  ' Computer icon
 computer.Expand()
 
-    ' C: Drive
-    Local driveC:TTreeNode = computer.AddChild("C: (System)")
-    driveC.icon = ""  ' Drive icon
-    driveC.Expand()
-    
-        ' Windows folder
-        Local windows:TTreeNode = driveC.AddChild("Windows")
-        windows.icon = "m"
-        
-            Local system32:TTreeNode = windows.AddChild("System32")
-            system32.icon = ""
-            
-                system32.AddChild("cmd.exe").icon = ""
-                system32.AddChild("notepad.exe").icon = ""
-                system32.AddChild("explorer.exe").icon = ""
-                system32.AddChild("calc.exe").icon = ""
-            
-            Local drivers:TTreeNode = windows.AddChild("Drivers")
-            drivers.icon = ""
-            
-                drivers.AddChild("audio.sys").icon = "2"
-                drivers.AddChild("network.sys").icon = "2"
-        
-        ' Program Files
-        Local programFiles:TTreeNode = driveC.AddChild("Program Files")
-        programFiles.icon = "m"
-        programFiles.Expand()
-        
-            Local blitzmax:TTreeNode = programFiles.AddChild("BlitzMax")
-            blitzmax.icon = "m"
-            
-                Local Bin:TTreeNode = blitzmax.AddChild("bin")
-                Bin.icon = "m"
-                
-                    Bin.AddChild("bmk.exe").icon = "2"
-                    Bin.AddChild("bcc.exe").icon = "2"
-                
-                Local ModA:TTreeNode = blitzmax.AddChild("mod")
-                ModA.icon = "m"
-                
-                    ModA.AddChild("brl.mod").icon = "0"
-                    ModA.AddChild("maxgui.mod").icon = "0"
-                
-                Local samples:TTreeNode = blitzmax.AddChild("samples")
-                samples.icon = "m"
-                
-                    samples.AddChild("hello.bmx").icon = "2"
-                    samples.AddChild("graphics.bmx").icon = "2"
-            
-            Local browser:TTreeNode = programFiles.AddChild("Mozilla Firefox")
-            browser.icon = "m"
-            
-                browser.AddChild("firefox.exe").icon = "2"
-                browser.AddChild("updater.exe").icon = "2"
-        
-        ' Users
-        Local users:TTreeNode = driveC.AddChild("Users")
-        users.icon = "m"
-        
-            Local user:TTreeNode = users.AddChild("CreepyCat")
-            user.icon = "5"  ' User icon
-            user.Expand()
-            
-                Local Desktop:TTreeNode = user.AddChild("Desktop")
-                Desktop.icon = "m"
-                
-                    Desktop.AddChild("Project.lnk").icon = "2"
-                    Desktop.AddChild("TODO.txt").icon = "2"
-                
-                Local documents:TTreeNode = user.AddChild("Documents")
-                documents.icon = "m"
-                documents.Expand()
-                
-                    Local work:TTreeNode = documents.AddChild("Work")
-                    work.icon = "m"
-                    
-                        Local projects:TTreeNode = work.AddChild("Projects")
-                        projects.icon = "m"
-                        
-                            projects.AddChild("GUI_Framework.bmx").icon = "2"
-                            projects.AddChild("Game_Engine.bmx").icon = "2"
-                            projects.AddChild("README.md").icon = "2"
-                        
-                        work.AddChild("Reports_2025.pdf").icon = "2"
-                        work.AddChild("Budget.xlsx").icon = "2"
-                    
-                    Local personal:TTreeNode = documents.AddChild("Personal")
-                    personal.icon = "m"
-                    
-                        personal.AddChild("vacation_photos.zip").icon = "2"
-                        personal.AddChild("notes.txt").icon = "2"
-                
-                Local downloads:TTreeNode = user.AddChild("Downloads")
-                downloads.icon = "m"
-                
-                    downloads.AddChild("installer.exe").icon = "2"
-                    downloads.AddChild("document.pdf").icon = "2"
-                    downloads.AddChild("music.mp3").icon = "2"
-                
-                Local pictures:TTreeNode = user.AddChild("Pictures")
-                pictures.icon = "m"
-                
-                    Local vacation:TTreeNode = pictures.AddChild("Vacation 2025")
-                    vacation.icon = "m"
-                    
-                        vacation.AddChild("beach.jpg").icon = "2"
-                        vacation.AddChild("sunset.jpg").icon = "2"
-                        vacation.AddChild("group_photo.jpg").icon = "2"
-    
-    ' D: Drive (Data)
-    Local driveD:TTreeNode = computer.AddChild("D: (Data)")
-    driveD.icon = "3"
-    
-        Local games:TTreeNode = driveD.AddChild("Games")
-        games.icon = "m"
-        
-            games.AddChild("Game1").icon = "0"
-            games.AddChild("Game2").icon = "0"
-        
-        Local media:TTreeNode = driveD.AddChild("Media")
-        media.icon = "m"
-        
-            media.AddChild("Movies").icon = "0"
-            media.AddChild("Music").icon = "0"
-            media.AddChild("Photos").icon = "0"
+' C: Drive
+Local driveC:TTreeNode = computer.AddChild("C: (System)")
+driveC.icon = ""  ' Drive icon
+driveC.Expand()
+
+' Windows folder
+Local windows:TTreeNode = driveC.AddChild("Windows")
+windows.icon = "m"
+
+Local system32:TTreeNode = windows.AddChild("System32")
+system32.icon = ""
+
+system32.AddChild("cmd.exe").icon = ""
+system32.AddChild("notepad.exe").icon = ""
+system32.AddChild("explorer.exe").icon = ""
+system32.AddChild("calc.exe").icon = ""
+
+Local drivers:TTreeNode = windows.AddChild("Drivers")
+drivers.icon = ""
+
+drivers.AddChild("audio.sys").icon = "2"
+drivers.AddChild("network.sys").icon = "2"
+
+' Program Files
+Local programFiles:TTreeNode = driveC.AddChild("Program Files")
+programFiles.icon = "m"
+programFiles.Expand()
+
+Local blitzmax:TTreeNode = programFiles.AddChild("BlitzMax")
+blitzmax.icon = "m"
+
+Local Bin:TTreeNode = blitzmax.AddChild("bin")
+Bin.icon = "m"
+
+Bin.AddChild("bmk.exe").icon = "2"
+Bin.AddChild("bcc.exe").icon = "2"
+
+Local ModA:TTreeNode = blitzmax.AddChild("mod")
+ModA.icon = "m"
+
+ModA.AddChild("brl.mod").icon = "0"
+ModA.AddChild("maxgui.mod").icon = "0"
+
+Local samples:TTreeNode = blitzmax.AddChild("samples")
+samples.icon = "m"
+
+samples.AddChild("hello.bmx").icon = "2"
+samples.AddChild("graphics.bmx").icon = "2"
+
+Local browser:TTreeNode = programFiles.AddChild("Mozilla Firefox")
+browser.icon = "m"
+
+browser.AddChild("firefox.exe").icon = "2"
+browser.AddChild("updater.exe").icon = "2"
+
+' Users
+Local users:TTreeNode = driveC.AddChild("Users")
+users.icon = "m"
+
+Local user:TTreeNode = users.AddChild("CreepyCat")
+user.icon = "5"  ' User icon
+user.Expand()
+
+Local Desktop:TTreeNode = user.AddChild("Desktop")
+Desktop.icon = "m"
+
+Desktop.AddChild("Project.lnk").icon = "2"
+Desktop.AddChild("TODO.txt").icon = "2"
+
+Local documents:TTreeNode = user.AddChild("Documents")
+documents.icon = "m"
+documents.Expand()
+
+Local work:TTreeNode = documents.AddChild("Work")
+work.icon = "m"
+
+Local projects:TTreeNode = work.AddChild("Projects")
+projects.icon = "m"
+
+projects.AddChild("GUI_Framework.bmx").icon = "2"
+projects.AddChild("Game_Engine.bmx").icon = "2"
+projects.AddChild("README.md").icon = "2"
+
+work.AddChild("Reports_2025.pdf").icon = "2"
+work.AddChild("Budget.xlsx").icon = "2"
+
+Local personal:TTreeNode = documents.AddChild("Personal")
+personal.icon = "m"
+
+personal.AddChild("vacation_photos.zip").icon = "2"
+personal.AddChild("notes.txt").icon = "2"
+
+Local downloads:TTreeNode = user.AddChild("Downloads")
+downloads.icon = "m"
+
+downloads.AddChild("installer.exe").icon = "2"
+downloads.AddChild("document.pdf").icon = "2"
+downloads.AddChild("music.mp3").icon = "2"
+
+Local pictures:TTreeNode = user.AddChild("Pictures")
+pictures.icon = "m"
+
+Local vacation:TTreeNode = pictures.AddChild("Vacation 2025")
+vacation.icon = "m"
+
+vacation.AddChild("beach.jpg").icon = "2"
+vacation.AddChild("sunset.jpg").icon = "2"
+vacation.AddChild("group_photo.jpg").icon = "2"
+
+' D: Drive (Data)
+Local driveD:TTreeNode = computer.AddChild("D: (Data)")
+driveD.icon = "3"
+
+Local games:TTreeNode = driveD.AddChild("Games")
+games.icon = "m"
+
+games.AddChild("Game1").icon = "0"
+games.AddChild("Game2").icon = "0"
+
+Local media:TTreeNode = driveD.AddChild("Media")
+media.icon = "m"
+
+media.AddChild("Movies").icon = "0"
+media.AddChild("Music").icon = "0"
+media.AddChild("Photos").icon = "0"
 
 ' Network locations
 Local network:TTreeNode = tree.AddRootNode("Network")
 network.icon = "6"  ' Network icon
 
-    network.AddChild("WORKSTATION-01").icon = "4"
-    network.AddChild("WORKSTATION-02").icon = "4"
-    network.AddChild("FILE-SERVER").icon = "4"
+network.AddChild("WORKSTATION-01").icon = "4"
+network.AddChild("WORKSTATION-02").icon = "4"
+network.AddChild("FILE-SERVER").icon = "4"
 
 tree.UpdateLayout()
 

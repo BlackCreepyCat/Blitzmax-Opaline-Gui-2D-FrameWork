@@ -182,10 +182,12 @@ While Not KeyHit(KEY_ESCAPE) And Not AppTerminate()
 
     If tree.NodeClicked()
         Local node:TTreeNode = tree.GetSelectedNode()
+
         If node
             Print "Node clicked: " + node.GetPath()
             win.SetStatusSection(0, "Clicked: " + node.text)
         EndIf
+
     EndIf
 
     ' Correction : NodeExpanded() détecte à la fois expand et collapse
