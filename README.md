@@ -1,4 +1,4 @@
-# 🎨 Opaline GUI Framework v1.7
+# 🎨 Opaline GUI Framework v1.8
 
 **A lightweight, self-contained 2D GUI framework for BlitzMax NG**
 
