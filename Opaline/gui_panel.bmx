@@ -82,38 +82,47 @@ Type TPanel Extends TWidget
         Next
     End Method
 
-    Method Update:Int(mx:Int, my:Int)
-        If Not visible Then Return False
-        
-        ' Early exit if mouse is outside this panel
-        If Not ContainsPoint(mx, my)
-            Return False
-        EndIf
-        
-        ' Adjust coordinates for content area (below title)
-        Local contentX:Int = mx
-        Local contentY:Int = my - titleHeight
+	Method Update:Int(mx:Int, my:Int)
+		If Not visible Then Return False
+		
+		' Check if any child is currently being dragged
+		Local childDragging:Int = False
+		For Local c:TWidget = EachIn children
+			If TSlider(c) <> Null And TSlider(c).dragging
+				childDragging = True
+				Exit
+			EndIf
+		Next
+		
+		' If a child is dragging, continue processing even if mouse is outside
+		If Not childDragging And Not ContainsPoint(mx, my)
+			Return False
+		EndIf
+		
+		' Adjust coordinates for content area (below title)
+		Local contentX:Int = mx
+		Local contentY:Int = my - titleHeight
 
-        ' Process children in reverse order (topmost first = better z-order handling)
-        Local rev:TList = New TList
-        For Local c:TWidget = EachIn children
-            rev.AddFirst(c)
-        Next
+		' Process children in reverse order (topmost first = better z-order handling)
+		Local rev:TList = New TList
+		For Local c:TWidget = EachIn children
+			rev.AddFirst(c)
+		Next
 
-        For Local c:TWidget = EachIn rev
-            Local relX:Int = contentX - c.rect.x
-            Local relY:Int = contentY - c.rect.y
-            If c.Update(relX, relY) Then Return True    ' Event consumed by child
-        Next
+		For Local c:TWidget = EachIn rev
+			Local relX:Int = contentX - c.rect.x
+			Local relY:Int = contentY - c.rect.y
+			If c.Update(relX, relY) Then Return True    ' Event consumed by child
+		Next
 
-        ' If mouse click happened inside panel but not on any child → consume it
-        ' (prevents click-through to widgets below the panel)
-        If GuiMouse.Hit() And draggedWindow = Null
-            Return True
-        EndIf
+		' If mouse click happened inside panel but not on any child → consume it
+		' (prevents click-through to widgets below the panel)
+		If GuiMouse.Hit() And draggedWindow = Null
+			Return True
+		EndIf
 
-        Return False
-    End Method
+		Return False
+	End Method
 
     ' Public API - Title control
     Method SetTitle(newTitle:String)
