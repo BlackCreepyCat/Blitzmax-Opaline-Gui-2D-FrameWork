@@ -51,19 +51,18 @@ Const COMBOBOX_DEFAULT_HEIGHT:Int = 28
 Const COMBOBOX_MAX_VISIBLE_ITEMS:Int = 8
 Const COMBOBOX_ITEM_HEIGHT:Int = 24
 
-' =============================================================================
-'                          COLOR THEME
-' =============================================================================
-
-' -----------------
 ' TaskBar Constants
-' -----------------
 Const TASKBAR_HEIGHT:Int = 40
 Const TASKBAR_BUTTON_MIN_WIDTH:Int = 80
 Const TASKBAR_BUTTON_MAX_WIDTH:Int = 180
 Const TASKBAR_BUTTON_HEIGHT:Int = 30
 Const TASKBAR_BUTTON_MARGIN:Int = 5
 Const TASKBAR_CLOCK_WIDTH:Int = 70
+
+
+' =============================================================================
+'                          COLOR THEME
+' =============================================================================
 
 ' TaskBar Colors
 Const COLOR_TASKBAR_BG_R:Int = 35
@@ -74,9 +73,8 @@ Const COLOR_TASKBAR_CLOCK_R:Int = 200
 Const COLOR_TASKBAR_CLOCK_G:Int = 220
 Const COLOR_TASKBAR_CLOCK_B:Int = 255
 
-' -------------
+
 ' Window Colors
-' -------------
 Const COLOR_TITLEBAR_ACTIVE_R:Int = 90
 Const COLOR_TITLEBAR_ACTIVE_G:Int = 130
 Const COLOR_TITLEBAR_ACTIVE_B:Int = 210
@@ -105,9 +103,8 @@ Const COLOR_STATUSBAR_SEPARATOR_R:Int = 80
 Const COLOR_STATUSBAR_SEPARATOR_G:Int = 80
 Const COLOR_STATUSBAR_SEPARATOR_B:Int = 100
 
-' -------------
+
 ' Button Colors
-' -------------
 Const COLOR_BUTTON_NORMAL_R:Int = 90
 Const COLOR_BUTTON_NORMAL_G:Int = 140
 Const COLOR_BUTTON_NORMAL_B:Int = 220
@@ -136,9 +133,8 @@ Const COLOR_BUTTON_TEXT_R:Int = 255
 Const COLOR_BUTTON_TEXT_G:Int = 255
 Const COLOR_BUTTON_TEXT_B:Int = 255
 
-' ---------------
+
 ' Checkbox Colors
-' ---------------
 Const COLOR_CHECKBOX_NORMAL_R:Int = 90
 Const COLOR_CHECKBOX_NORMAL_G:Int = 140
 Const COLOR_CHECKBOX_NORMAL_B:Int = 220
@@ -159,9 +155,8 @@ Const COLOR_CHECKBOX_TEXT_R:Int = 240
 Const COLOR_CHECKBOX_TEXT_G:Int = 240
 Const COLOR_CHECKBOX_TEXT_B:Int = 255
 
-' -------------------
+
 ' Radio Button Colors
-' -------------------
 Const COLOR_RADIO_OUTLINE_R:Int = 255
 Const COLOR_RADIO_OUTLINE_G:Int = 255
 Const COLOR_RADIO_OUTLINE_B:Int = 255
@@ -174,16 +169,14 @@ Const COLOR_RADIO_TEXT_R:Int = 255
 Const COLOR_RADIO_TEXT_G:Int = 255
 Const COLOR_RADIO_TEXT_B:Int = 255
 
-' ------------
+
 ' Label Colors
-' ------------
 Const COLOR_LABEL_TEXT_R:Int = 240
 Const COLOR_LABEL_TEXT_G:Int = 240
 Const COLOR_LABEL_TEXT_B:Int = 255
 
-' ------------
+
 ' Panel Colors
-' ------------
 Const COLOR_PANEL_BG_R:Int = 50
 Const COLOR_PANEL_BG_G:Int = 50
 Const COLOR_PANEL_BG_B:Int = 70
@@ -196,9 +189,8 @@ Const COLOR_PANEL_TITLE_R:Int = 230
 Const COLOR_PANEL_TITLE_G:Int = 230
 Const COLOR_PANEL_TITLE_B:Int = 230
 
-' ------------------
+
 ' ProgressBar Colors
-' ------------------
 Const COLOR_PROGRESSBAR_BG_R:Int = 30
 Const COLOR_PROGRESSBAR_BG_G:Int = 30
 Const COLOR_PROGRESSBAR_BG_B:Int = 50
@@ -211,9 +203,9 @@ Const COLOR_PROGRESSBAR_BORDER_R:Int = 100
 Const COLOR_PROGRESSBAR_BORDER_G:Int = 100
 Const COLOR_PROGRESSBAR_BORDER_B:Int = 120
 
-' ----------------
+
+
 ' TextInput Colors
-' ----------------
 Const COLOR_TEXTINPUT_BG_R:Int = 25
 Const COLOR_TEXTINPUT_BG_G:Int = 25
 Const COLOR_TEXTINPUT_BG_B:Int = 35
@@ -234,9 +226,8 @@ Const COLOR_TEXTINPUT_PLACEHOLDER_R:Int = 120
 Const COLOR_TEXTINPUT_PLACEHOLDER_G:Int = 120
 Const COLOR_TEXTINPUT_PLACEHOLDER_B:Int = 140
 
-' -------------
+
 ' Slider Colors
-' -------------
 Const COLOR_SLIDER_TRACK_R:Int = 30
 Const COLOR_SLIDER_TRACK_G:Int = 30
 Const COLOR_SLIDER_TRACK_B:Int = 50
@@ -245,9 +236,8 @@ Const COLOR_SLIDER_THUMB_R:Int = 90
 Const COLOR_SLIDER_THUMB_G:Int = 140
 Const COLOR_SLIDER_THUMB_B:Int = 220
 
-' --------------
+
 ' ListBox Colors
-' --------------
 Const COLOR_LISTBOX_BG_R:Int = 30
 Const COLOR_LISTBOX_BG_G:Int = 30
 Const COLOR_LISTBOX_BG_B:Int = 45
@@ -280,9 +270,8 @@ Const COLOR_LISTBOX_ALT_ROW_R:Int = 35
 Const COLOR_LISTBOX_ALT_ROW_G:Int = 35
 Const COLOR_LISTBOX_ALT_ROW_B:Int = 50
 
-' ---------------
+
 ' ComboBox Colors
-' ---------------
 Const COLOR_COMBOBOX_BG_R:Int = 35
 Const COLOR_COMBOBOX_BG_G:Int = 35
 Const COLOR_COMBOBOX_BG_B:Int = 50
@@ -303,17 +292,15 @@ Const COLOR_COMBOBOX_HOVER_R:Int = 90
 Const COLOR_COMBOBOX_HOVER_G:Int = 120
 Const COLOR_COMBOBOX_HOVER_B:Int = 180
 
-' ----------------
+
 ' Tabber Constants
-' ----------------
 Const TABBER_TAB_HEIGHT:Int = 28
 Const TABBER_TAB_PADDING:Int = 12
 Const TABBER_TAB_SPACING:Int = 2
 Const TABBER_TAB_MIN_WIDTH:Int = 60
 
-' -------------
+
 ' Tabber Colors
-' -------------
 Const COLOR_TABBER_BG_R:Int = 50
 Const COLOR_TABBER_BG_G:Int = 50
 Const COLOR_TABBER_BG_B:Int = 70
@@ -342,10 +329,27 @@ Const COLOR_TABBER_TEXT_INACTIVE_R:Int = 180
 Const COLOR_TABBER_TEXT_INACTIVE_G:Int = 180
 Const COLOR_TABBER_TEXT_INACTIVE_B:Int = 200
 
-' ---------------------------
 ' Modal Window Overlay Colors
-' ---------------------------
 Const COLOR_MODAL_OVERLAY_R:Int = 0
 Const COLOR_MODAL_OVERLAY_G:Int = 0
 Const COLOR_MODAL_OVERLAY_B:Int = 0
 Const COLOR_MODAL_OVERLAY_ALPHA:Float = 0.5
+
+
+' =============================================================================
+'                    ICONS THEME (From the TTF font symbol)
+' =============================================================================
+
+Const ICON_COMPUTER:String 	= ""  			' ordinateur / my computer
+Const ICON_GLOBE:String 	= ""   		' globe 
+Const ICON_NETWORK:String 	= ""   		' network
+Const ICON_DRIVE:String 	= ""   		' disque dur
+Const ICON_PRINTER:String 	= ""			' Printer
+
+Const ICON_FILE:String 			= "b"    ' fichier générique
+Const ICON_FOLDER:String		= "m"	' Icon folder
+Const ICON_FILE_TEXT:String 	= "h"    ' document texte
+Const ICON_FILE_IMAGE:String 	= ""    ' image
+Const ICON_FILE_AUDIO:String 	= "y"    ' musique/audio
+Const ICON_FILE_VIDEO:String 	= ""    ' vidéo
+Const ICON_FILE_ARCHIVE:String 	= ""    ' archive

@@ -23,7 +23,7 @@ Type TTreeNode
     Field level:Int = 0                      ' Depth level (0 = root)
     Field data:Object                        ' User data attached to node
     Field tag:Int                            ' User integer tag
-    Field icon:String = "h"                   ' Optional icon character (from symbol font)
+    Field icon:String = "b"                   ' Optional icon character (from symbol font)
 
 
 
