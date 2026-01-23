@@ -208,48 +208,46 @@ While Not KeyHit(KEY_ESCAPE) And Not AppTerminate()
     EndIf
 
     ' Boutons de contrôle
-If btnExpand.WasClicked()
-    tree.scrollOffsetY = 0                      ' ← reset scroll en haut
-    For Local n:TTreeNode = EachIn tree.rootNodes
-        n.ExpandAll()
-    Next
-    tree.UpdateLayout()                         ' recalcul totalVisibleItems + maxScrollY
-    tree.scrollOffsetY = 0                      ' ← reset encore (sécurité)
-    tree.UpdateScrollbarFromOffset()            ' synchronise le slider
-    infoLabel.SetText("Everything expanded")
-    infoLabel.SetColor(120,220,255)
-EndIf
+	If btnExpand.WasClicked()
+		tree.scrollOffsetY = 0                      ' ← reset scroll en haut
+		For Local n:TTreeNode = EachIn tree.rootNodes
+			n.ExpandAll()
+		Next
+		tree.UpdateLayout()                         ' recalcul totalVisibleItems + maxScrollY
+		tree.scrollOffsetY = 0                      ' ← reset encore (sécurité)
+		tree.UpdateScrollbarFromOffset()            ' synchronise le slider
+		infoLabel.SetText("Everything expanded")
+		infoLabel.SetColor(120,220,255)
+	EndIf
 
 
-If btnCollapse.WasClicked()
-    tree.scrollOffsetY = 0
-    For Local n:TTreeNode = EachIn tree.rootNodes
-        n.CollapseAll()
-    Next
-    tree.UpdateLayout()
-    tree.scrollOffsetY = 0
-    tree.UpdateScrollbarFromOffset()
-    infoLabel.SetText("Everything collapsed")
-    infoLabel.SetColor(255,200,120)
-EndIf
+	If btnCollapse.WasClicked()
+		tree.scrollOffsetY = 0
+		For Local n:TTreeNode = EachIn tree.rootNodes
+			n.CollapseAll()
+		Next
+		tree.UpdateLayout()
+		tree.scrollOffsetY = 0
+		tree.UpdateScrollbarFromOffset()
+		infoLabel.SetText("Everything collapsed")
+		infoLabel.SetColor(255,200,120)
+	EndIf
 
-    If btnClear.WasClicked()
-        tree.ClearAll()
-        tree.UpdateLayout()
-        infoLabel.SetText("Tree cleared – add new nodes")
-        infoLabel.SetColor(255,140,100)
-    EndIf
+	If btnExpand.WasClicked()
+		tree.ExpandAll()  
+		infoLabel.SetText("Everything expanded")
+		infoLabel.SetColor(120,220,255)
+	EndIf
 
-    If btnAddRoot.WasClicked()
-        Local n:TTreeNode = tree.AddRootNode("New Folder " + (tree.rootNodes.Count()+1))
-        n.icon = "0"
-        n.AddChild("file.txt").icon = "2"
-        tree.UpdateLayout()
-        infoLabel.SetText("New root added")
-    EndIf
+	If btnCollapse.WasClicked()
+		tree.CollapseAll()  
+		infoLabel.SetText("Everything collapsed")
+		infoLabel.SetColor(255,200,120)
+	EndIf
 
     If btnAddChild.WasClicked()
         Local sel:TTreeNode = tree.GetSelectedNode()
+
         If sel
             Local child:TTreeNode = sel.AddChild("Item " + (sel.children.Count()+1))
             child.icon = "2"
@@ -260,6 +258,7 @@ EndIf
             infoLabel.SetText("Select a node first!")
             infoLabel.SetColor(255,120,120)
         EndIf
+
     EndIf
 
     ' Options d'affichage

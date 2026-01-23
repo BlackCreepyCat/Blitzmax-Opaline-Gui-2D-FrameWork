@@ -1488,14 +1488,20 @@ While Not AppTerminate()
 
 	' Control buttons
 	If btnExpandAll.WasClicked()
-		tree.ExpandAll()  ' ✨ Une seule ligne !
+		For Local root:TTreeNode = EachIn tree.rootNodes
+			root.ExpandAll()
+		Next
+		tree.UpdateLayout()
 		lblTreeInfo.SetText("All nodes expanded")
 		lblTreeInfo.SetColor(100, 200, 255)
 		winTreeView.SetStatusSection(0, "Expanded all nodes")
 	EndIf
 
 	If btnCollapseAll.WasClicked()
- tree.CollapseAll()  ' ✨ Une seule ligne !
+		For Local root:TTreeNode = EachIn tree.rootNodes
+			root.CollapseAll()
+		Next
+		tree.UpdateLayout()
 		lblTreeInfo.SetText("All nodes collapsed")
 		lblTreeInfo.SetColor(255, 200, 100)
 		winTreeView.SetStatusSection(0, "Collapsed all nodes")
