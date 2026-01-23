@@ -46,6 +46,7 @@ Local win1:TWindow = New TWindow(120, 80, 540, 540, "Opaline Main Window",True,T
 win1.SetResizable(True)
 win1.SetMinSize(540, 540)  
 
+' Simple status text
 'win1.SetStatusText("I like status window text!")
 
 ' More complex status text, sections adding (width = -1 for flexible)
@@ -62,11 +63,6 @@ win1.AddStatusSection("UTF-8", -1, LABEL_ALIGN_RIGHT)       ' Section 3 - 80px
 
 
 Local win2:TWindow = New TWindow(340, 220, 380, 320, "Settings Window",True,True,True,True)
-
-' Simple status text
-
-
-
 Local win3:TWindow = New TWindow(1400, 80, 450, 800, "Progress Demo",False,False,True)
 Local win4:TWindow = New TWindow(700, 400, 450, 350, "Text Input Demo",False,False,False)
 Local win5:TWindow = New TWindow(700, 50, 650, 340, "ListBox Demo",True,True,True)
@@ -925,6 +921,230 @@ imgInfoPanel.AddChild lblImgInfo
 
 
 ' =============================================================================
+'                         WINDOW 10 - TREEVIEW DEMO
+' =============================================================================
+
+Local winTreeView:TWindow = New TWindow(50, 100, 700, 600, "TreeView Demo", True, True, True, True)
+winTreeView.SetResizable(True)
+winTreeView.SetMinSize(500, 400)
+root.AddChild winTreeView
+
+' Titre
+Local lblTreeTitle:TLabel = New TLabel(20, 10, 660, 24, "TreeView - Hierarchical File System Explorer", LABEL_ALIGN_CENTER)
+lblTreeTitle.SetColor(255, 200, 100)
+lblTreeTitle.SetAnchors(ANCHOR_LEFT | ANCHOR_TOP | ANCHOR_RIGHT)
+winTreeView.AddChild lblTreeTitle
+
+' Créer le TreeView
+Global tree:TTreeView = New TTreeView(20, 45, 450, 430)
+tree.SetAnchors(ANCHOR_ALL)  ' S'étire avec la fenêtre
+winTreeView.AddChild tree
+
+' Panel de contrôle à droite
+Local controlPanel:TPanel = New TPanel(480, 45, 200, 460, "Controls", PANEL_STYLE_RAISED)
+controlPanel.SetAnchors(ANCHOR_TOP | ANCHOR_RIGHT | ANCHOR_BOTTOM)
+winTreeView.AddChild controlPanel
+
+' Boutons de contrôle
+Global btnExpandAll:TButton = New TButton(15, 30, 170, 30, "Expand All")
+controlPanel.AddChild btnExpandAll
+
+Global btnCollapseAll:TButton = New TButton(15, 70, 170, 30, "Collapse All")
+controlPanel.AddChild btnCollapseAll
+
+Global btnClearTree:TButton = New TButton(15, 120, 170, 30, "Clear Tree")
+controlPanel.AddChild btnClearTree
+
+Global btnAddRoot:TButton = New TButton(15, 160, 170, 30, "Add Root Folder")
+controlPanel.AddChild btnAddRoot
+
+Global btnAddChild:TButton = New TButton(15, 200, 170, 30, "Add Child Node")
+controlPanel.AddChild btnAddChild
+
+Global btnRemoveNode:TButton = New TButton(15, 240, 170, 30, "Remove Node")
+controlPanel.AddChild btnRemoveNode
+
+' Separator label
+Local lblOptions:TLabel = New TLabel(15, 290, 170, 20, "Display Options:", LABEL_ALIGN_LEFT)
+lblOptions.SetColor(200, 220, 255)
+controlPanel.AddChild lblOptions
+
+' Checkboxes pour options
+Global chkShowIcons:TCheckBox = New TCheckBox(15, 315, 170, 22, "Show Icons", True)
+controlPanel.AddChild chkShowIcons
+
+Global chkShowLines:TCheckBox = New TCheckBox(15, 345, 170, 22, "Show Lines", True)
+controlPanel.AddChild chkShowLines
+
+' Search section
+Local lblSearch:TLabel = New TLabel(15, 385, 170, 20, "Search:", LABEL_ALIGN_LEFT)
+lblSearch.SetColor(200, 220, 255)
+controlPanel.AddChild lblSearch
+
+Global inputTreeSearch:TTextInput = New TTextInput(15, 405, 170, 28, "")
+inputTreeSearch.SetPlaceholder("Search node...")
+controlPanel.AddChild inputTreeSearch
+
+' Info label en bas
+Global lblTreeInfo:TLabel = New TLabel(20, 485, 660, 20, "Click nodes to select, click icons to expand/collapse. Right-click for context menu.")
+lblTreeInfo.SetColor(150, 200, 255)
+lblTreeInfo.SetAnchors(ANCHOR_LEFT | ANCHOR_RIGHT | ANCHOR_BOTTOM)
+winTreeView.AddChild lblTreeInfo
+
+' Status bar avec 3 sections
+winTreeView.AddStatusSection("Ready", -1, LABEL_ALIGN_LEFT)
+winTreeView.AddStatusSection("Nodes: 0", 120, LABEL_ALIGN_CENTER)
+winTreeView.AddStatusSection("Selected: None", 250, LABEL_ALIGN_RIGHT)
+
+' =============================================================================
+'               POPULATE TREE WITH REALISTIC FILE SYSTEM STRUCTURE
+' =============================================================================
+
+' Root: Computer
+Local computer:TTreeNode = tree.AddRootNode("My Computer")
+computer.icon = ""  ' Computer icon
+computer.Expand()
+
+    ' C: Drive
+    Local driveC:TTreeNode = computer.AddChild("C: (System)")
+    driveC.icon = ""  ' Drive icon
+    driveC.Expand()
+    
+        ' Windows folder
+        Local windows:TTreeNode = driveC.AddChild("Windows")
+        windows.icon = "m"
+        
+            Local system32:TTreeNode = windows.AddChild("System32")
+            system32.icon = ""
+            
+                system32.AddChild("cmd.exe").icon = ""
+                system32.AddChild("notepad.exe").icon = ""
+                system32.AddChild("explorer.exe").icon = ""
+                system32.AddChild("calc.exe").icon = ""
+            
+            Local drivers:TTreeNode = windows.AddChild("Drivers")
+            drivers.icon = ""
+            
+                drivers.AddChild("audio.sys").icon = "2"
+                drivers.AddChild("network.sys").icon = "2"
+        
+        ' Program Files
+        Local programFiles:TTreeNode = driveC.AddChild("Program Files")
+        programFiles.icon = "m"
+        programFiles.Expand()
+        
+            Local blitzmax:TTreeNode = programFiles.AddChild("BlitzMax")
+            blitzmax.icon = "m"
+            
+                Local Bin:TTreeNode = blitzmax.AddChild("bin")
+                Bin.icon = "m"
+                
+                    Bin.AddChild("bmk.exe").icon = "2"
+                    Bin.AddChild("bcc.exe").icon = "2"
+                
+                Local ModA:TTreeNode = blitzmax.AddChild("mod")
+                ModA.icon = "m"
+                
+                    ModA.AddChild("brl.mod").icon = "0"
+                    ModA.AddChild("maxgui.mod").icon = "0"
+                
+                Local samples:TTreeNode = blitzmax.AddChild("samples")
+                samples.icon = "m"
+                
+                    samples.AddChild("hello.bmx").icon = "2"
+                    samples.AddChild("graphics.bmx").icon = "2"
+            
+            Local browser:TTreeNode = programFiles.AddChild("Mozilla Firefox")
+            browser.icon = "m"
+            
+                browser.AddChild("firefox.exe").icon = "2"
+                browser.AddChild("updater.exe").icon = "2"
+        
+        ' Users
+        Local users:TTreeNode = driveC.AddChild("Users")
+        users.icon = "m"
+        
+            Local user:TTreeNode = users.AddChild("CreepyCat")
+            user.icon = "5"  ' User icon
+            user.Expand()
+            
+                Local Desktop:TTreeNode = user.AddChild("Desktop")
+                Desktop.icon = "m"
+                
+                    Desktop.AddChild("Project.lnk").icon = "2"
+                    Desktop.AddChild("TODO.txt").icon = "2"
+                
+                Local documents:TTreeNode = user.AddChild("Documents")
+                documents.icon = "m"
+                documents.Expand()
+                
+                    Local work:TTreeNode = documents.AddChild("Work")
+                    work.icon = "m"
+                    
+                        Local projects:TTreeNode = work.AddChild("Projects")
+                        projects.icon = "m"
+                        
+                            projects.AddChild("GUI_Framework.bmx").icon = "2"
+                            projects.AddChild("Game_Engine.bmx").icon = "2"
+                            projects.AddChild("README.md").icon = "2"
+                        
+                        work.AddChild("Reports_2025.pdf").icon = "2"
+                        work.AddChild("Budget.xlsx").icon = "2"
+                    
+                    Local personal:TTreeNode = documents.AddChild("Personal")
+                    personal.icon = "m"
+                    
+                        personal.AddChild("vacation_photos.zip").icon = "2"
+                        personal.AddChild("notes.txt").icon = "2"
+                
+                Local downloads:TTreeNode = user.AddChild("Downloads")
+                downloads.icon = "m"
+                
+                    downloads.AddChild("installer.exe").icon = "2"
+                    downloads.AddChild("document.pdf").icon = "2"
+                    downloads.AddChild("music.mp3").icon = "2"
+                
+                Local pictures:TTreeNode = user.AddChild("Pictures")
+                pictures.icon = "m"
+                
+                    Local vacation:TTreeNode = pictures.AddChild("Vacation 2025")
+                    vacation.icon = "m"
+                    
+                        vacation.AddChild("beach.jpg").icon = "2"
+                        vacation.AddChild("sunset.jpg").icon = "2"
+                        vacation.AddChild("group_photo.jpg").icon = "2"
+    
+    ' D: Drive (Data)
+    Local driveD:TTreeNode = computer.AddChild("D: (Data)")
+    driveD.icon = "3"
+    
+        Local games:TTreeNode = driveD.AddChild("Games")
+        games.icon = "m"
+        
+            games.AddChild("Game1").icon = "0"
+            games.AddChild("Game2").icon = "0"
+        
+        Local media:TTreeNode = driveD.AddChild("Media")
+        media.icon = "m"
+        
+            media.AddChild("Movies").icon = "0"
+            media.AddChild("Music").icon = "0"
+            media.AddChild("Photos").icon = "0"
+
+' Network locations
+Local network:TTreeNode = tree.AddRootNode("Network")
+network.icon = "6"  ' Network icon
+
+    network.AddChild("WORKSTATION-01").icon = "4"
+    network.AddChild("WORKSTATION-02").icon = "4"
+    network.AddChild("FILE-SERVER").icon = "4"
+
+tree.UpdateLayout()
+
+
+
+
+' =============================================================================
 '                              MAIN LOOP
 ' =============================================================================
 While Not AppTerminate()
@@ -1234,10 +1454,190 @@ While Not AppTerminate()
         EndIf
     EndIf
 
-    ' NOTE: Window control buttons (close/min/max) are now handled 
-    ' automatically by GuiRefresh() - no need for manual loop!
-    ' NOTE: MessageBox buttons are also handled automatically!
-    
+	' =============================================================================
+	'       TREEVIEW - Event handling
+	' =============================================================================
+
+	' TreeView event handling
+	If tree.SelectionChanged()
+		Local selected:TTreeNode = tree.GetSelectedNode()
+		If selected
+			lblTreeInfo.SetText("Selected: " + selected.GetPath())
+			lblTreeInfo.SetColor(100, 255, 100)
+			
+			' Update status bar
+			winTreeView.SetStatusSection(2, "Selected: " + selected.text)
+		Else
+			lblTreeInfo.SetText("No selection")
+			winTreeView.SetStatusSection(2, "Selected: None")
+		EndIf
+	EndIf
+
+	If tree.NodeClicked()
+		Local selected:TTreeNode = tree.GetSelectedNode()
+		If selected
+			Print "Node clicked: " + selected.GetPath()
+			winTreeView.SetStatusSection(0, "Clicked: " + selected.text)
+		EndIf
+	EndIf
+
+	If tree.NodeExpanded()
+		tree.UpdateLayout()
+		winTreeView.SetStatusSection(0, "Tree structure changed")
+	EndIf
+
+	' Control buttons
+	If btnExpandAll.WasClicked()
+		For Local root:TTreeNode = EachIn tree.rootNodes
+			root.ExpandAll()
+		Next
+		tree.UpdateLayout()
+		lblTreeInfo.SetText("All nodes expanded")
+		lblTreeInfo.SetColor(100, 200, 255)
+		winTreeView.SetStatusSection(0, "Expanded all nodes")
+	EndIf
+
+	If btnCollapseAll.WasClicked()
+		For Local root:TTreeNode = EachIn tree.rootNodes
+			root.CollapseAll()
+		Next
+		tree.UpdateLayout()
+		lblTreeInfo.SetText("All nodes collapsed")
+		lblTreeInfo.SetColor(255, 200, 100)
+		winTreeView.SetStatusSection(0, "Collapsed all nodes")
+	EndIf
+
+	If btnClearTree.WasClicked()
+		tree.ClearAll()
+		lblTreeInfo.SetText("Tree cleared - click 'Add Root Folder' to rebuild")
+		lblTreeInfo.SetColor(255, 150, 100)
+		winTreeView.SetStatusSection(0, "Tree cleared")
+		winTreeView.SetStatusSection(1, "Nodes: 0")
+		winTreeView.SetStatusSection(2, "Selected: None")
+	EndIf
+
+	If btnAddRoot.WasClicked()
+		Local newRoot:TTreeNode = tree.AddRootNode("New Folder " + (tree.rootNodes.Count()))
+		newRoot.icon = "0"
+		newRoot.AddChild("New File.txt").icon = "2"
+		newRoot.AddChild("Subfolder").icon = "0"
+		tree.UpdateLayout()
+		lblTreeInfo.SetText("Root node added: " + newRoot.text)
+		lblTreeInfo.SetColor(100, 255, 100)
+		winTreeView.SetStatusSection(0, "Added: " + newRoot.text)
+	EndIf
+
+	If btnAddChild.WasClicked()
+		Local selected:TTreeNode = tree.GetSelectedNode()
+		If selected
+			Local newChild:TTreeNode = selected.AddChild("New Item " + (selected.children.Count() + 1))
+			newChild.icon = "2"
+			selected.Expand()
+			tree.UpdateLayout()
+			lblTreeInfo.SetText("Child added to: " + selected.text)
+			lblTreeInfo.SetColor(100, 255, 100)
+			winTreeView.SetStatusSection(0, "Added child to: " + selected.text)
+		Else
+			lblTreeInfo.SetText("No node selected - select a node first!")
+			lblTreeInfo.SetColor(255, 150, 100)
+			winTreeView.SetStatusSection(0, "Error: No node selected")
+		EndIf
+	EndIf
+
+	If btnRemoveNode.WasClicked()
+		Local selected:TTreeNode = tree.GetSelectedNode()
+		If selected
+			Local parentNode:TTreeNode = selected.parent
+			Local removedText:String = selected.text
+			
+			If parentNode
+				' Remove from parent
+				parentNode.RemoveChild(selected)
+				tree.SelectNode(parentNode)
+				lblTreeInfo.SetText("Removed: " + removedText)
+				lblTreeInfo.SetColor(255, 200, 100)
+				winTreeView.SetStatusSection(0, "Removed: " + removedText)
+			Else
+				' Remove root node
+				tree.RemoveRootNode(selected)
+				tree.ClearSelection()
+				lblTreeInfo.SetText("Removed root: " + removedText)
+				lblTreeInfo.SetColor(255, 200, 100)
+				winTreeView.SetStatusSection(0, "Removed root: " + removedText)
+			EndIf
+			
+			tree.UpdateLayout()
+		Else
+			lblTreeInfo.SetText("No node selected - select a node first!")
+			lblTreeInfo.SetColor(255, 150, 100)
+			winTreeView.SetStatusSection(0, "Error: No node selected")
+		EndIf
+	EndIf
+
+	' Options checkboxes
+	If chkShowIcons.StateChanged()
+		tree.SetShowIcons(chkShowIcons.IsChecked())
+		winTreeView.SetStatusSection(0, "Icons: " + chkShowIcons.IsChecked())
+	EndIf
+
+	If chkShowLines.StateChanged()
+		tree.SetShowLines(chkShowLines.IsChecked())
+		winTreeView.SetStatusSection(0, "Lines: " + chkShowLines.IsChecked())
+	EndIf
+
+	' Search functionality
+	If inputTreeSearch.WasSubmitted() Or inputTreeSearch.TextChanged()
+		Local searchText:String = inputTreeSearch.GetText()
+		
+		If searchText.Length > 0
+			' Search through all nodes
+			Local found:TTreeNode = Null
+			Local allNodes:TList = tree.GetAllNodes()
+			
+			For Local node:TTreeNode = EachIn allNodes
+				If node.text.ToLower().Contains(searchText.ToLower())
+					found = node
+					Exit
+				EndIf
+			Next
+			
+			If found
+				tree.SelectNode(found)
+				lblTreeInfo.SetText("Found: " + found.GetPath())
+				lblTreeInfo.SetColor(100, 255, 100)
+				winTreeView.SetStatusSection(0, "Search: Found")
+			Else
+				lblTreeInfo.SetText("Not found: '" + searchText + "'")
+				lblTreeInfo.SetColor(255, 150, 100)
+				winTreeView.SetStatusSection(0, "Search: Not found")
+			EndIf
+		Else
+			winTreeView.SetStatusSection(0, "Ready")
+		EndIf
+	EndIf
+
+	' Update node count in status bar
+	Local nodeCount:Int = tree.GetAllNodes().Count()
+	winTreeView.SetStatusSection(1, "Nodes: " + nodeCount)
+	
+	
+	' Debug : afficher l'index de tous les nœuds visibles
+If KeyHit(KEY_D)
+    Print "=== TREE STRUCTURE ==="
+    Local idx:Int = 0
+    For Local root:TTreeNode = EachIn tree.rootNodes
+        Print "[" + idx + "] " + root.text
+        idx :+ 1
+        If root.expanded
+            idx = DebugPrintChildren(root, idx, 1)
+        EndIf
+    Next
+    Print "Total visible: " + idx
+EndIf
+
+
+
+  
     ' Clear all pending events at the end of the frame
     ' (prevents events from being processed multiple times)
     ClearAllEvents(root)
@@ -1251,3 +1651,21 @@ While Not AppTerminate()
 Wend
 
 End
+
+
+
+Function DebugPrintChildren:Int(node:TTreeNode, startIdx:Int, level:Int)
+    Local idx:Int = startIdx
+    For Local child:TTreeNode = EachIn node.children
+        Local indent:String = ""
+        For Local i:Int = 0 Until level
+            indent :+ "  "
+        Next
+        Print "[" + idx + "] " + indent + "├─ " + child.text
+        idx :+ 1
+        If child.expanded And child.HasChildren()
+            idx = DebugPrintChildren(child, idx, level + 1)
+        EndIf
+    Next
+    Return idx
+End Function
