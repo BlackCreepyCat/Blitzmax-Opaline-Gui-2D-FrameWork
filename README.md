@@ -52,7 +52,8 @@ Forum Link:
 -----------
 https://www.syntaxboom.net/forum/blitzmax-ng/code-archives-ad/1116-short-gui-kernel-skeleton
 
-<img width="1920" height="1107" alt="image" src="https://github.com/user-attachments/assets/8502a366-f630-4ee7-b8f2-b3f57e68500a" />
+<img width="1923" height="1108" alt="image" src="https://github.com/user-attachments/assets/f933c388-e862-4707-9a95-2e8b85685291" />
+
 
 
 Work with Open B3D:
