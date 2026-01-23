@@ -952,28 +952,7 @@ TWidget.GuiSetViewport(x, y, width, height)
 
 ## 🐛 Known Issues & Solutions
 
-### Slider stops when mouse leaves panel
-
-**Issue**: When dragging a slider, if the mouse leaves the panel boundary, the slider stops responding.
-
-**Solution**: The panel's `Update()` method now checks if any child is being dragged and continues processing events even when the mouse is outside:
-
-```blitzmax
-' This is already fixed in the current version
-' The panel checks for active slider dragging
-```
-
-### Window dragging conflicts
-
-**Issue**: Windows might respond to clicks meant for other widgets.
-
-**Solution**: Always check `draggedWindow` before processing clicks:
-
-```blitzmax
-If GuiMouse.Hit() And draggedWindow = Null Then
-    ' Safe to process this click
-EndIf
-```
+### Unknow...
 
 ---
 
