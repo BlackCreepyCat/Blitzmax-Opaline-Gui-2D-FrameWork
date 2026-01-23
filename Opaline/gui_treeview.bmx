@@ -10,7 +10,7 @@
 Const TREEVIEW_INDENT:Int = 20              ' Indentation per level
 Const TREEVIEW_ITEM_HEIGHT:Int = 22         ' Height of each tree item
 Const TREEVIEW_ICON_SIZE:Int = 16           ' Size of expand/collapse icon
-Const TREEVIEW_SCROLLBAR_WIDTH:Int = 26    ' Scrollbar width
+Const TREEVIEW_SCROLLBAR_WIDTH:Int = 28    ' Scrollbar width
 
 ' -----------------------------------------------------------------------------
 ' TreeNode - Single node in the tree
@@ -364,9 +364,9 @@ End Method
         ' Position scrollbar (EXTERNAL to content, like ListBox)
         If needScrollV
             scrollV.rect.x = rect.w - TREEVIEW_SCROLLBAR_WIDTH
-            scrollV.rect.y = 0
-            scrollV.rect.w = TREEVIEW_SCROLLBAR_WIDTH
-            scrollV.rect.h = rect.h
+            scrollV.rect.y = 3
+            scrollV.rect.w = TREEVIEW_SCROLLBAR_WIDTH - 2
+            scrollV.rect.h = rect.h - 6
         EndIf
         
         ' Clamp scroll offset
@@ -417,9 +417,6 @@ End Method
         UpdateLayout()
     End Method
     
-    ' -----------------------------------------------------------------------------
-    ' Drawing
-    ' -----------------------------------------------------------------------------
     ' =============================================================================
     '                              DRAW - CORRIGÉ
     ' =============================================================================
@@ -428,7 +425,7 @@ End Method
         
         ' Coordonnées ABSOLUES du widget
         Local ax:Int = px + rect.x
-        Local ay:Int = py + rect.y
+        Local ay:Int = py + rect.y 
         
         ' Mémoriser pour Update()
         absX = ax
@@ -441,15 +438,15 @@ End Method
         Local contentAbsX:Int = ax + contentAreaX
         Local contentAbsY:Int = ay + contentAreaY
         
-        ' Clip au content area (coordonnées absolues)
-        TWidget.GuiSetViewport(contentAbsX, contentAbsY, contentAreaW, contentAreaH)
+        ' Clip au content area (coordonnées absolues)  *  MODIF TEMPO le +1 / -2
+        TWidget.GuiSetViewport(contentAbsX + 1, contentAbsY + 1, contentAreaW - 2 , contentAreaH - 2)
         
         ' CORRECTION CRITIQUE : drawY doit partir du haut du content area
-        Local drawY:Int = contentAbsY - scrollOffsetY
+        Local drawY:Int = contentAbsY - scrollOffsetY + 2
         
         ' Draw tree items (passer les coordonnées absolues)
         For Local root:TTreeNode = EachIn rootNodes
-            drawY = DrawNodeRecursive(root, ax, contentAbsY, drawY)
+            drawY = DrawNodeRecursive(root, ax  , contentAbsY, drawY)
         Next
         
         ' Reset viewport
@@ -465,8 +462,6 @@ End Method
     '                       DRAWNODERECURSIVE - CORRIGÉ
     ' =============================================================================
     Method DrawNodeRecursive:Int(node:TTreeNode, ax:Int, contentAbsY:Int, drawY:Int)
-        ' CORRECTION : utiliser contentAbsY (position absolue du content area)
-        ' au lieu de rect.y (position relative)
         Local visibleTop:Int = contentAbsY
         Local visibleBottom:Int = contentAbsY + contentAreaH
         
