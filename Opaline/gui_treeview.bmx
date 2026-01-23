@@ -443,7 +443,7 @@ Type TTreeView Extends TWidget
         Local contentAbsY:Int = ay + contentAreaY
         
         ' Temporary adjustment for better clipping / borders (can be refined later)
-        TWidget.GuiSetViewport(contentAbsX + 1, contentAbsY + 1, contentAreaW - 2, contentAreaH - 2)
+        TWidget.GuiSetViewport(contentAbsX + 2, contentAbsY + 2, contentAreaW - 2, contentAreaH - 4)
         
         ' Starting draw position (top of visible content)
         Local drawY:Int = contentAbsY - scrollOffsetY + 2
