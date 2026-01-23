@@ -42,7 +42,7 @@ Maybe compatible or can be converted for:
 - Raylib?
 - SDL/SDL2/C/C++?
 
-![Nouveau projet](https://github.com/user-attachments/assets/be24bc48-856e-46c1-9d74-2a4adb5eb43a)
+
 
 The GUI is really ugly! :) But that's intentional... This way, only the GUI's behavior (the most important part) is coded; all the other graphical improvements take up code and make it less readable.
 
@@ -117,6 +117,8 @@ The GUI intentionally looks "basic" - this is by design! The focus is on **behav
 - ⌨️ **Full Keyboard Support** - Text input, navigation, shortcuts
 - 🪟 **Window Management** - Dragging, minimizing, maximizing, z-ordering
 - 🎭 **Event System** - Comprehensive event handling for all widgets
+
+![Nouveau projet](https://github.com/user-attachments/assets/be24bc48-856e-46c1-9d74-2a4adb5eb43a)
 
 ---
 
