@@ -44,7 +44,7 @@ win.AddChild title
 '                                 TREEVIEW
 ' =============================================================================
 
-Global tree:TTreeView = New TTreeView(20, 60, 520, 525)
+Global tree:TTreeView = New TTreeView(20, 60, 520, 520)
 tree.SetAnchors(ANCHOR_LEFT | ANCHOR_TOP | ANCHOR_RIGHT | ANCHOR_BOTTOM)
 tree.SetShowIcons(True)
 tree.SetShowLines(True)
