@@ -75,6 +75,7 @@ The GUI intentionally looks "basic" - this is by design! The focus is on **behav
 **Optional - VS Code Setup**:
 - VS Code: https://code.visualstudio.com/download
 - BlitzMax Extension: https://marketplace.visualstudio.com/items?itemName=Hezkore.blitzmax
+- Github Blitzmax Ressources: https://github.com/search?q=+language%3ABlitzMax&type=repositories
 
 ### Basic Usage
 
