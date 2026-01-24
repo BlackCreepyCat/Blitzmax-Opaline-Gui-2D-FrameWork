@@ -125,6 +125,8 @@ Create your own tools!
 ----------------------
 <img width="1921" height="1106" alt="image" src="https://github.com/user-attachments/assets/e4b07b34-b23c-4662-a6b0-534bf7fd3c0b" />
 
+<img width="1922" height="1106" alt="image" src="https://github.com/user-attachments/assets/2265e4bc-1934-42c6-a619-5e4349c5f110" />
+
 ---
 
 ## 📦 Widgets Reference
