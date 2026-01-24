@@ -70,6 +70,7 @@ The GUI intentionally looks "basic" - this is by design! The focus is on **behav
 **BlitzMax NG** (free and open-source):
 - Download: https://blitzmax.org/
 - GitHub: https://github.com/bmx-ng
+- https://github.com/markcwm (for the 3D engine)
 
 **Optional - VS Code Setup**:
 - VS Code: https://code.visualstudio.com/download
