@@ -530,7 +530,7 @@ Function GetSmoothColor:Int(mu:Double, maxIt:Int, pal:Int)
     If mu >= maxIt Return $FF000000
  
     Local t:Float = mu / maxIt
-     t = Sqr(t)/2  
+     t = Sqr(t) 
 
     Local r:Int, g:Int, b:Int
     Local boost:Float = 1.35
@@ -604,3 +604,4 @@ Function FormatZoom:String(value:Double)
         Return str + " x"
     EndIf
 End Function
+
