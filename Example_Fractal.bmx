@@ -530,7 +530,7 @@ Function GetSmoothColor:Int(mu:Double, maxIt:Int, pal:Int)
     If mu >= maxIt Return $FF000000
  
     Local t:Float = mu / maxIt
-    ' t = Sqr(t)/2   ← you had this line - I left it commented, it darkens a lot
+     t = Sqr(t)/2  
 
     Local r:Int, g:Int, b:Int
     Local boost:Float = 1.35
