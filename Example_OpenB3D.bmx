@@ -46,40 +46,40 @@ Local btn1:TButton = New TButton(20, 60, 180, 38, "Quit Opaline")
 btn1.SetEnabled(True)
 win.AddChild btn1
 
-' ✅ Créer un joystick et L'AJOUTER à la fenêtre
+' Create a joystick and ADD IT to the window
 Local joy:TJoystick = New TJoystick(250, 60, 160)
 joy.SetDeadZone(0.15)
 joy.SetSnapSpeed(0.4)
 joy.SetStickColor(200, 100, 150)
 joy.SetStickSize(48)
 
-win.AddChild joy  ' ← IMPORTANT : ajouter le joystick à la fenêtre !
+win.AddChild joy  ' ← IMPORTANT : add the joystick to the window!
 
-' Label pour afficher les valeurs du joystick
+' Label to display joystick values
 Local lblJoy:TLabel = New TLabel(250, 250, 200, 20, "Joystick: X=0.0 Y=0.0")
 lblJoy.SetColor(150, 255, 150)
 win.AddChild lblJoy
 
-' OU ajouter directement sur l'écran (root) :
+' OR add it directly to the screen (root):
 'Local joyScreen:TJoystick = New TJoystick(600, 50, 120)
 'joyScreen.SetStickColor(255, 150, 100)
-'root.AddChild joyScreen  ' Joystick directement sur l'écran
+'root.AddChild joyScreen  ' Joystick directly on the screen
 
 'Local lblJoyScreen:TLabel = New TLabel(600, 180, 150, 20, "Screen Joy: 0.0")
 'lblJoyScreen.SetColor(255, 200, 100)
 'root.AddChild lblJoyScreen
 
 While Not KeyDown(KEY_ESCAPE)
-	' Control cube avec le joystick
+	' Control the cube with the joystick
 	Local jx:Float = joy.GetX()
 	Local jy:Float = joy.GetY()
 	Local angle:Float = joy.GetAngle()
 	Local power:Float = joy.GetMagnitude()
 	
-	' Utiliser pour faire tourner le cube
+	' Use to rotate the cube
 	TurnEntity cube1, jy * 2, jx * 2, 0
 	
-	' Afficher les valeurs
+	' Display values
 	lblJoy.SetText("Joy: X=" + Int(jx * 100) / 100.0 + " Y=" + Int(jy * 100) / 100.0)
 	'lblJoyScreen.SetText("Screen: " + Int(joyScreen.GetMagnitude() * 100) + "%")
 	
@@ -90,7 +90,7 @@ While Not KeyDown(KEY_ESCAPE)
 	BeginMax2D()
 	TWidget.GuiRefresh()
 	
-	' Gui check here
+	' GUI checks here
 	If btn1.WasClicked() Then Exit
 	ClearAllEvents(root)
 	
