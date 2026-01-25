@@ -954,6 +954,35 @@ Local h:Int = TWidget.GuiTextHeight("text", symbolFont=False)
 ' Set viewport for clipping
 TWidget.GuiSetViewport(x, y, width, height)
 ```
+## 🕹 TJoystick — Virtual Joystick Widget
+
+A mobile-style **virtual joystick widget** providing smooth analog control.  
+Designed for touch or mouse interaction, it returns **normalized X/Y values**, **angle**, and **magnitude**, making it ideal for player movement, camera control, or any analog input system.
+
+---
+
+### ✨ Features
+
+- Smooth analog movement
+- Normalized output values (**-1.0 to 1.0**)
+- Polar coordinates support (angle & magnitude)
+- Configurable **dead zone**
+- Automatic **snap-back to center**
+- Adjustable snap-back speed
+- Optional X/Y axis inversion
+- Customizable colors and visual style
+- Built-in event system (press, move, release)
+
+---
+
+### ▶ Creation
+
+```blitzmax
+' Create a joystick at position (x, y) with default size
+Local joystick:TJoystick = New TJoystick(50, 50)
+
+' Create a joystick with custom size (diameter)
+Local joystick2:TJoystick = New TJoystick(200, 150, 180)
 
 ---
 
