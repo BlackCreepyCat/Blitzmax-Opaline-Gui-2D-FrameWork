@@ -953,7 +953,7 @@ Local h:Int = TWidget.GuiTextHeight("text", symbolFont=False)
 
 ' Set viewport for clipping
 TWidget.GuiSetViewport(x, y, width, height)
-```
+
 ## 🕹 TJoystick — Virtual Joystick Widget
 
 A mobile-style **virtual joystick widget** providing smooth analog control.  
@@ -972,7 +972,7 @@ Designed for touch or mouse interaction, it returns **normalized X/Y values**, *
 - Optional X/Y axis inversion
 - Customizable colors and visual style
 - Built-in event system (press, move, release)
-
+```
 ---
 
 ### ▶ Creation
