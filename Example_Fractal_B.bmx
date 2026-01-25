@@ -1,7 +1,7 @@
 ' =============================================================================
-' Simple GUI Framework - BlitzMax NG
-' FRACTAL DEMO : Opaline UI - JULIA SET
-' By Creepy Cat (C)2025/2026 : https://github.com/BlackCreepyCat
+' 					Simple GUI Framework - BlitzMax NG
+' 					FRACTAL DEMO : Opaline UI - JULIA SET
+' 		By Creepy Cat (C)2025/2026 : https://github.com/BlackCreepyCat
 ' =============================================================================
 SuperStrict
 

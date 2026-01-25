@@ -530,7 +530,7 @@ Function GetSmoothColor:Int(mu:Double, maxIt:Int, pal:Int)
     If mu >= maxIt Return $FF000000
  
     Local t:Float = mu / maxIt
-     t = Sqr(t) 
+     t = Sqr(t)  
 
     Local r:Int, g:Int, b:Int
     Local boost:Float = 1.35
@@ -539,7 +539,7 @@ Function GetSmoothColor:Int(mu:Double, maxIt:Int, pal:Int)
         Case 0 ' Deep Blue / Cyan
             r = Int( (9   * (1-t) * t^3   ) * 255 * boost )
             g = Int( (22  * (1-t)^2 * t^2 ) * 255 * boost )
-            b = Int( (35  * (1-t)^1.5 * t^2.5 ) * 255 * boost )
+            b = Int( (135  * (1-t)^1.5 * t^2.5 ) * 255 * boost )
      
         Case 1 ' Sunset Fire
             r = Int( (45 * (1-t)^2.5 * t^1.8 ) * 255 * boost )
@@ -547,7 +547,7 @@ Function GetSmoothColor:Int(mu:Double, maxIt:Int, pal:Int)
             b = Int( (12 * (1-t)^1.5 * t^3   ) * 255 * boost )
      
         Case 2 ' Ultra Violet / Pink
-            r = Int( (220 * t^4.2            ) * boost )
+            r = Int( (220 * (1-t) * t^3           ) * boost )
             g = Int( (110 * (1-t)^2.5 * t^3  ) * boost )
             b = Int( (240 * (1-t)^1.8 * t^3.5) * boost )
      
@@ -557,8 +557,8 @@ Function GetSmoothColor:Int(mu:Double, maxIt:Int, pal:Int)
             b = Int( (22  * (1-t)^2   * t^4  ) * 255 * boost )
      
         Case 4 ' Cool Mint
-            r = Int( (15  * t^3.5            ) * 255 * boost )
-            g = Int( (220 * (1-t)^0.8 * t^1.8) * boost )
+            r = Int( (150  * t^6.5            ) * 255 * boost )
+            g = Int( (20 * (1-t)^0.8 * t^1.8) * boost )
             b = Int( (210 * (1-t)^1.2 * t^2.5) * boost )
     End Select
  
@@ -604,4 +604,3 @@ Function FormatZoom:String(value:Double)
         Return str + " x"
     EndIf
 End Function
-

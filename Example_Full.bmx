@@ -936,7 +936,7 @@ lblTreeTitle.SetAnchors(ANCHOR_LEFT | ANCHOR_TOP | ANCHOR_RIGHT)
 winTreeView.AddChild lblTreeTitle
 
 ' Créer le TreeView
-Global tree:TTreeView = New TTreeView(20, 45, 450, 430)
+Global tree:TTreeView = New TTreeView(20, 45, 450, 460)
 tree.SetAnchors(ANCHOR_ALL)  ' S'étire avec la fenêtre
 winTreeView.AddChild tree
 
@@ -965,7 +965,7 @@ Global btnRemoveNode:TButton = New TButton(15, 240, 170, 30, "Remove Node")
 controlPanel.AddChild btnRemoveNode
 
 ' Separator label
-Local lblOptions:TLabel = New TLabel(15, 290, 170, 20, "Display Options:", LABEL_ALIGN_LEFT)
+Local lblOptions:TLabel = New TLabel(15, 270, 170, 20, "Display Options:", LABEL_ALIGN_LEFT)
 lblOptions.SetColor(200, 220, 255)
 controlPanel.AddChild lblOptions
 
@@ -986,7 +986,7 @@ inputTreeSearch.SetPlaceholder("Search node...")
 controlPanel.AddChild inputTreeSearch
 
 ' Info label en bas
-Global lblTreeInfo:TLabel = New TLabel(20, 485, 660, 20, "Click nodes to select, click icons to expand/collapse. Right-click for context menu.")
+Global lblTreeInfo:TLabel = New TLabel(20, 540, 660, 20, "Click nodes to select, click icons to expand/collapse. Right-click for context menu.")
 lblTreeInfo.SetColor(150, 200, 255)
 lblTreeInfo.SetAnchors(ANCHOR_LEFT | ANCHOR_RIGHT | ANCHOR_BOTTOM)
 winTreeView.AddChild lblTreeInfo
@@ -1613,23 +1613,6 @@ While Not AppTerminate()
 	' Update node count in status bar
 	Local nodeCount:Int = tree.GetAllNodes().Count()
 	winTreeView.SetStatusSection(1, "Nodes: " + nodeCount)
-	
-	
-	' Debug : afficher l'index de tous les nœuds visibles
-If KeyHit(KEY_D)
-    Print "=== TREE STRUCTURE ==="
-    Local idx:Int = 0
-    For Local root:TTreeNode = EachIn tree.rootNodes
-        Print "[" + idx + "] " + root.text
-        idx :+ 1
-        If root.expanded
-            idx = DebugPrintChildren(root, idx, 1)
-        EndIf
-    Next
-    Print "Total visible: " + idx
-EndIf
-
-
 
   
     ' Clear all pending events at the end of the frame

@@ -3,16 +3,8 @@
 ' 							OPENB3D DEMO : Opaline UI
 ' 		By Creepy Cat (C)2025/2026 : https://github.com/BlackCreepyCat
 ' =============================================================================
-
-
-' NOTE: Unknow bug! when the taskbar is folded => the windows titlebar diseapear
-' And re-appear when the taskbat is open ? The same example witout openB3D do
-' Not generate it, i don't know why....
-
 Strict
-
 Import Openb3d.B3dglgraphics
-
 Include "opaline/gui_opaline.bmx"
 
 Graphics3D 1024,768,0,2
@@ -29,7 +21,6 @@ PositionEntity light,5,5,-5
 Local light2:TLight=CreateLight(2)
 PositionEntity light2,-5,-5,-5
 
-
 Local cube1:TMesh=CreateCube()
 EntityColor cube1,220,0,0
 PositionEntity cube1,0,0,0
@@ -44,36 +35,67 @@ TWidget.GuiSetRoot(root)
 ' =============================================================
 '                         GUI BUILDING
 ' =============================================================
-Local win:TWindow = New TWindow(50, 50, 530, 300, "Window Demo", False, True, True)
+Local win:TWindow = New TWindow(50, 50, 530, 400, "Window Demo", False, True, True)
 root.AddChild win
 
-Local title:TLabel = New TLabel(20, 20, 660, 24, "Opaline GUI - OPENB3D Demonstration", LABEL_ALIGN_CENTER)
+Local title:TLabel = New TLabel(20, 20, 490, 24, "Opaline GUI - OPENB3D Demonstration", LABEL_ALIGN_CENTER)
 title.SetColor(255, 220, 100)
 win.AddChild title
 
-Local btn1:TButton = New TButton(20, 20, 180, 38, "Quit Opaline")
+Local btn1:TButton = New TButton(20, 60, 180, 38, "Quit Opaline")
 btn1.SetEnabled(True)
 win.AddChild btn1
 
+' ✅ Créer un joystick et L'AJOUTER à la fenêtre
+Local joy:TJoystick = New TJoystick(250, 60, 160)
+joy.SetDeadZone(0.15)
+joy.SetSnapSpeed(0.4)
+joy.SetStickColor(200, 100, 150)
+joy.SetStickSize(48)
+
+win.AddChild joy  ' ← IMPORTANT : ajouter le joystick à la fenêtre !
+
+' Label pour afficher les valeurs du joystick
+Local lblJoy:TLabel = New TLabel(250, 250, 200, 20, "Joystick: X=0.0 Y=0.0")
+lblJoy.SetColor(150, 255, 150)
+win.AddChild lblJoy
+
+' OU ajouter directement sur l'écran (root) :
+'Local joyScreen:TJoystick = New TJoystick(600, 50, 120)
+'joyScreen.SetStickColor(255, 150, 100)
+'root.AddChild joyScreen  ' Joystick directement sur l'écran
+
+'Local lblJoyScreen:TLabel = New TLabel(600, 180, 150, 20, "Screen Joy: 0.0")
+'lblJoyScreen.SetColor(255, 200, 100)
+'root.AddChild lblJoyScreen
 
 While Not KeyDown(KEY_ESCAPE)
-
-	' control cube
-	TurnEntity cube1,1,1,1
-
+	' Control cube avec le joystick
+	Local jx:Float = joy.GetX()
+	Local jy:Float = joy.GetY()
+	Local angle:Float = joy.GetAngle()
+	Local power:Float = joy.GetMagnitude()
+	
+	' Utiliser pour faire tourner le cube
+	TurnEntity cube1, jy * 2, jx * 2, 0
+	
+	' Afficher les valeurs
+	lblJoy.SetText("Joy: X=" + Int(jx * 100) / 100.0 + " Y=" + Int(jy * 100) / 100.0)
+	'lblJoyScreen.SetText("Screen: " + Int(joyScreen.GetMagnitude() * 100) + "%")
+	
 	UpdateWorld 
 	RenderWorld
 	
-	' return 2 max 2D
+	' Return to Max2D
 	BeginMax2D()
-
 	TWidget.GuiRefresh()
+	
 	' Gui check here
+	If btn1.WasClicked() Then Exit
 	ClearAllEvents(root)
 	
 	EndMax2D()
 	
 	Flip
 Wend
-
 End
