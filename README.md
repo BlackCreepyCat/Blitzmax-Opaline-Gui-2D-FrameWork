@@ -664,11 +664,12 @@ g_TaskBar.Hide()
 
 ### Virtual Joystick Widget
 
-A smooth **mobile-style virtual joystick** for BlitzMax with analog control.  
+A smooth virtual joystick for BlitzMax with analog control.  
 Returns normalized X/Y values (-1.0 to +1.0), angle (degrees) and magnitude.
 
 Perfect for touch / mouse-controlled games using the Opaline GUI framework.
 
+```blitzmax
 ' Features
 '- Normalized **X / Y** output in range **[-1.0 … +1.0]**
 '- Polar coordinates: **angle** (0–360°) + **magnitude** (0.0–1.0)
