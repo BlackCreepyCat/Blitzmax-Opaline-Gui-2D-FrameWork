@@ -35,7 +35,7 @@ TWidget.GuiSetRoot(root)
 ' =============================================================
 '                         GUI BUILDING
 ' =============================================================
-Local win:TWindow = New TWindow(50, 50, 530, 400, "Window Demo", False, True, True)
+Local win:TWindow = New TWindow(50, 50, 530, 300, "Window Demo", False, True, True)
 root.AddChild win
 
 Local title:TLabel = New TLabel(20, 20, 490, 24, "Opaline GUI - OPENB3D Demonstration", LABEL_ALIGN_CENTER)
@@ -61,23 +61,26 @@ lblJoy.SetColor(150, 255, 150)
 win.AddChild lblJoy
 
 ' OR add it directly to the screen (root):
-'Local joyScreen:TJoystick = New TJoystick(600, 50, 120)
-'joyScreen.SetStickColor(255, 150, 100)
-'root.AddChild joyScreen  ' Joystick directly on the screen
+Local joyScreen:TJoystick = New TJoystick(30, GraphicsHeight() - 200, 160)
+joyScreen.SetStickColor(255, 150, 100)
+root.AddChild joyScreen  ' Joystick directly on the screen
 
-'Local lblJoyScreen:TLabel = New TLabel(600, 180, 150, 20, "Screen Joy: 0.0")
-'lblJoyScreen.SetColor(255, 200, 100)
-'root.AddChild lblJoyScreen
+Local lblJoyScreen:TLabel = New TLabel(600, 180, 150, 20, "Screen Joy: 0.0")
+lblJoyScreen.SetColor(255, 200, 100)
+root.AddChild lblJoyScreen
 
 While Not KeyDown(KEY_ESCAPE)
 	' Control the cube with the joystick
 	Local jx:Float = joy.GetX()
 	Local jy:Float = joy.GetY()
+	
 	Local angle:Float = joy.GetAngle()
 	Local power:Float = joy.GetMagnitude()
 	
 	' Use to rotate the cube
 	TurnEntity cube1, jy * 2, jx * 2, 0
+	
+	moveentity camera, -joyScreen.GetX()/20,0,joyScreen.GetY()/20
 	
 	' Display values
 	lblJoy.SetText("Joy: X=" + Int(jx * 100) / 100.0 + " Y=" + Int(jy * 100) / 100.0)
