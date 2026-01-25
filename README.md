@@ -662,8 +662,6 @@ g_TaskBar.Hide()
 
 ---
 
-
----
 ### Virtual Joystick Widget
 
 A smooth **mobile-style virtual joystick** for BlitzMax with analog control.  
@@ -671,20 +669,17 @@ Returns normalized X/Y values (-1.0 to +1.0), angle (degrees) and magnitude.
 
 Perfect for touch / mouse-controlled games using the Opaline GUI framework.
 
-![Virtual Joystick in action](https://via.placeholder.com/480x360/2a3a6a/ffffff?text=Virtual+Joystick+Demo)  
-*(replace this placeholder with a real screenshot)*
+' Features
+'- Normalized **X / Y** output in range **[-1.0 … +1.0]**
+'- Polar coordinates: **angle** (0–360°) + **magnitude** (0.0–1.0)
+'- Configurable **dead zone**
+'- Smooth **snap-back** to center with adjustable speed
+'- Axis **inversion** (X and/or Y)
+'- Customizable **colors** for base and stick
+'- Optional **crosshair** + directional guide lines
+'- Simple event system: `JoystickPress` / `JoystickRelease` / `JoystickMove`
+```
 
-## Features
-
-- Normalized **X / Y** output in range **[-1.0 … +1.0]**
-- Polar coordinates: **angle** (0–360°) + **magnitude** (0.0–1.0)
-- Configurable **dead zone**
-- Smooth **snap-back** to center with adjustable speed
-- Axis **inversion** (X and/or Y)
-- Customizable **colors** for base and stick
-- Optional **crosshair** + directional guide lines
-- Simple event system: `JoystickPress` / `JoystickRelease` / `JoystickMove`
-- Works great with **Opaline GUI 2D Framework**
 ---
 
 
