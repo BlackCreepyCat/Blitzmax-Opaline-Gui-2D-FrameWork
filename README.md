@@ -35,7 +35,8 @@ Opaline is a **low-level GUI kernel** designed for creating graphical interfaces
 
 The GUI intentionally looks "basic" - this is by design! The focus is on **behavior and architecture**, not visual polish. Once you understand the core, you can easily customize the appearance.
 
-<img width="1027" height="796" alt="image" src="https://github.com/user-attachments/assets/754d2ea3-d310-42fb-bb8d-20af181d958d" />
+<img width="1025" height="795" alt="image" src="https://github.com/user-attachments/assets/bacb27de-9b65-499c-ac3a-a2e6c977bece" />
+
 
 ---
 
