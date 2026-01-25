@@ -1001,7 +1001,7 @@ Designed for touch or mouse interaction, it returns **normalized X/Y values**, *
 
 ---
 
-### ▶ Creation
+Creation
 
 ```blitzmax
 ' Create a joystick at position (x, y) with default size
