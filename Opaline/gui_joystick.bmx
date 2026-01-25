@@ -97,20 +97,21 @@ Type TJoystick Extends TWidget
         Local centerY:Float = Float(ay) + baseRadius
         
         ' Draw base circle (background)
-		GuiDrawOval(ax, ay, rect.w, rect.h, 3, baseR, baseG, baseB)
-		GuiDrawOval(centerX - (baseRadius/2) , centerY - (baseRadius/2) , baseRadius, baseRadius, 3, baseR/2, baseG/2, baseB/2,0.5)
+		GuiDrawOval(Int(ax), Int(ay), Int(rect.w) , Int(rect.h) , 3, baseR, baseG, baseB)
+		GuiDrawOval(Int(centerX - (baseRadius/2)) , Int(centerY - (baseRadius/2)) , Int(baseRadius), Int(baseRadius), 3, baseR/2, baseG/2, baseB/2,0.5)
 		        
         ' Draw crosshair in center and border
         If showCrosshair
 			GuiDrawLine(Int(centerX - 15),Int( centerY), Int(centerX + 15), Int(centerY) , 2, outlineR - 20, outlineG - 20, outlineB - 20, 1)
-			GuiDrawLine(centerX, centerY - 15, centerX, centerY + 15, 2, outlineR - 20, outlineG - 20, outlineB - 20, 1)
+			GuiDrawLine(Int(centerX), Int(centerY - 15), Int(centerX), Int(centerY + 15), 2, outlineR - 20, outlineG - 20, outlineB - 20, 1)
         EndIf
 		
 		Local LenA:Float = 18
-		GuiDrawLine (centerX-baseRadius+LenA, centerY, centerX-baseRadius, centerY, 2, outlineR,outlineG,outlineB,0.7)
-		GuiDrawLine (centerX+baseRadius-LenA, centerY, centerX+baseRadius, centerY, 2, outlineR,outlineG,outlineB,0.7)
-		GuiDrawLine (centerX, centerY-baseRadius+LenA, centerX, centerY-baseRadius, 2, outlineR,outlineG,outlineB,0.7)
-		GuiDrawLine (centerX, centerY+baseRadius-LenA, centerX, centerY+baseRadius, 2, outlineR,outlineG,outlineB,0.7)
+		GuiDrawLine (Int(centerX-baseRadius+LenA), Int(centerY) , Int(centerX-baseRadius) , Int(centerY) , 2 , outlineR,outlineG,outlineB,0.7)
+		GuiDrawLine (Int(centerX+baseRadius-LenA), Int(centerY) , Int(centerX+baseRadius) , Int(centerY) , 2 , outlineR,outlineG,outlineB,0.7)
+		GuiDrawLine (Int(centerX), Int(centerY-baseRadius+LenA) , Int(centerX) , Int(centerY-baseRadius) , 2 , outlineR,outlineG,outlineB,0.7)
+		GuiDrawLine (Int(centerX), Int(centerY+baseRadius-LenA) , Int(centerX) , Int(centerY+baseRadius) , 2 , outlineR,outlineG,outlineB,0.7)
+		
         ' Calculate stick position on screen
         Local stickScreenX:Float = centerX + stickX
         Local stickScreenY:Float = centerY + stickY
@@ -118,21 +119,21 @@ Type TJoystick Extends TWidget
         ' Draw connection line from center to stick (when active)
         If isActive And magnitude > deadZone
 
-			GuiDrawLine(centerX, centerY, stickScreenX, stickScreenY, 2, stickR /2, stickG /2, stickB /2, 0.6)
+			GuiDrawLine(Int(centerX), Int(centerY), Int(stickScreenX), Int(stickScreenY), 2, stickR /2, stickG /2, stickB /2, 0.6)
         EndIf
         
         ' Draw stick/thumb
 		Local stickDiameter:Float = stickRadius * 2
 
         If isActive
-			GuiDrawOval(stickScreenX - stickRadius + 2, stickScreenY - stickRadius + 2, stickDiameter - 4, stickDiameter - 4 , 3, Min(255, stickR + 30), Min(255, stickG + 30), Min(255, stickB + 30),stickAlpha)
+			GuiDrawOval(Int(stickScreenX - stickRadius + 2) , Int(stickScreenY - stickRadius + 2) , Int(stickDiameter - 4) , Int(stickDiameter - 4) , 3, Min(255, stickR + 30), Min(255, stickG + 30), Min(255, stickB + 30),stickAlpha)
         Else
-			GuiDrawOval(stickScreenX - stickRadius + 2, stickScreenY - stickRadius + 2, stickDiameter - 4, stickDiameter - 4 , 3, stickR, stickG, stickB,stickAlpha)
+			GuiDrawOval(Int(stickScreenX - stickRadius + 2) , Int(stickScreenY - stickRadius + 2) , Int(stickDiameter - 4) , Int(stickDiameter - 4) , 3, stickR, stickG, stickB,stickAlpha)
         EndIf
 
 
 		Local centerDotRadius:Float = stickRadius * 0.5   
-		GuiDrawOval( stickScreenX - centerDotRadius, stickScreenY - centerDotRadius , centerDotRadius*2 , centerDotRadius*2 , 3 , stickR/2 , stickG/2 , stickB/2, 0.2 )
+		GuiDrawOval( Int(stickScreenX - centerDotRadius), Int(stickScreenY - centerDotRadius) , Int(centerDotRadius*2) , Int(centerDotRadius*2) , 3 , stickR/2 , stickG/2 , stickB/2, 0.2 )
 
         
         ' Draw children (if any)
