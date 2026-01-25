@@ -20,6 +20,7 @@ Include "gui_messagebox.bmx"
 Include "gui_contextmenu.bmx"
 Include "gui_taskbar.bmx"
 Include "gui_treeview.bmx"
+Include "gui_joystick.bmx"
 Include "gui_background.bmx"
 Include "gui_events.bmx"
 

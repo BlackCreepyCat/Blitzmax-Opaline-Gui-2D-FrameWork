@@ -8,7 +8,7 @@
 
 ' TreeView constants
 Const TREEVIEW_INDENT:Int = 20              ' Indentation width per hierarchy level
-Const TREEVIEW_ITEM_HEIGHT:Int = 22         ' Fixed height of each tree item row
+Const TREEVIEW_ITEM_HEIGHT:Int = 19        ' Fixed height of each tree item row
 Const TREEVIEW_ICON_SIZE:Int = 16           ' Size of the expand/collapse icon
 Const TREEVIEW_SCROLLBAR_WIDTH:Int = 28     ' Width reserved for the vertical scrollbar
 
@@ -447,7 +447,7 @@ Type TTreeView Extends TWidget
 	Method UpdateLayout()
 
 		' --------------------------------------------------
-		' 1) Recalcul exact du nombre d’items visibles
+		' 1) Recalcul exact du nombre dâ€™items visibles
 		' --------------------------------------------------
 		totalVisibleItems = 0
 
@@ -460,13 +460,13 @@ Type TTreeView Extends TWidget
 
 
 		' --------------------------------------------------
-		' 2) Détermination de la nécessité du scrollbar
+		' 2) DÃ©termination de la nÃ©cessitÃ© du scrollbar
 		' --------------------------------------------------
 		needScrollV = (contentHeight > rect.h)
 
 
 		' --------------------------------------------------
-		' 3) Définition de la zone de contenu
+		' 3) DÃ©finition de la zone de contenu
 		' --------------------------------------------------
 		contentAreaX = 0
 		contentAreaY = 0
@@ -498,14 +498,14 @@ Type TTreeView Extends TWidget
 			scrollV.rect.w = TREEVIEW_SCROLLBAR_WIDTH - 2
 			scrollV.rect.h = rect.h - 6
 
-			' Range EN PIXELS (clé de la stabilité)
+			' Range EN PIXELS (clÃ© de la stabilitÃ©)
 			scrollV.SetRange(0.0, Float(maxScrollY))
 
-			' Synchronisation valeur ← offset
+			' Synchronisation valeur â† offset
 			scrollV.SetValue(Float(scrollOffsetY))
 
 		Else
-			' Scroll inutile → reset complet
+			' Scroll inutile â†’ reset complet
 			scrollV.SetEnabled(False)
 			scrollV.SetRange(0.0, 0.0)
 			scrollV.SetValue(0.0)
@@ -604,11 +604,9 @@ Type TTreeView Extends TWidget
         
         ' Draw selection or hover background
         If node = selectedNode
-            TWidget.GuiDrawRect(ax, drawY, contentAreaW, itemHeight, 1, 
-                COLOR_LISTBOX_SELECTED_R, COLOR_LISTBOX_SELECTED_G, COLOR_LISTBOX_SELECTED_B)
+            TWidget.GuiDrawRect(ax + 2, drawY, contentAreaW - 4, itemHeight, 1, COLOR_LISTBOX_SELECTED_R, COLOR_LISTBOX_SELECTED_G, COLOR_LISTBOX_SELECTED_B)
         ElseIf node = hoverNode
-            TWidget.GuiDrawRect(ax, drawY, contentAreaW, itemHeight, 1, 
-                COLOR_LISTBOX_HOVER_R, COLOR_LISTBOX_HOVER_G, COLOR_LISTBOX_HOVER_B)
+            TWidget.GuiDrawRect(ax + 2, drawY, contentAreaW - 4, itemHeight, 1, COLOR_LISTBOX_HOVER_R, COLOR_LISTBOX_HOVER_G, COLOR_LISTBOX_HOVER_B)
         EndIf
         
         ' Draw expand/collapse icon if applicable
@@ -627,8 +625,7 @@ Type TTreeView Extends TWidget
         
         ' Draw custom icon if defined
         If node.icon.Length > 0
-            TWidget.GuiDrawSymbol(itemX, drawY + (itemHeight - TWidget.GuiTextHeight("X")) / 2, 
-                node.icon, TEXT_STYLE_NORMAL, 180, 200, 255)
+            TWidget.GuiDrawSymbol(itemX, drawY + (itemHeight - TWidget.GuiTextHeight("X")) / 2, node.icon, TEXT_STYLE_NORMAL, 180, 200, 255)
             itemX :+ 20
         EndIf
         
@@ -707,7 +704,7 @@ Type TTreeView Extends TWidget
 						FireEvent("NodeExpanded")
 						Return True
 					Else
-						' Normal node click → select it
+						' Normal node click â†’ select it
 						SelectNode(nodeUnderMouse)
 						FireEvent("NodeClicked")
 						Return True

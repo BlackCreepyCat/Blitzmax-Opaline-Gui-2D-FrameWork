@@ -31,7 +31,7 @@ Const ANCHOR_ALL:Int    = 15  ' Anchored to all edges (stretches both ways)
 ' =============================================================================
 '                          GLOBAL GUI STATE
 ' =============================================================================
-Global Gui_Version:String="1.7"
+Global Gui_Version:String="1.9"
 
 Global Gui_SymbolFont:TImageFont
 Global Gui_SymbolFontSize:Int = 18
@@ -553,7 +553,7 @@ Type TWidget Abstract
     End Function
  
     ' Draw oval/circle with optional shadow
-    Function GuiDrawOval(px:Int, py:Int, RadiusX:Int, RadiusY:Int, style:Int, red:Int, green:Int, blue:Int, alpha:Float=1.0)
+    Function GuiDrawOval(px:Int, py:Int, RadiusX:Int, RadiusY:Int, style:Int, red:Int, green:Int, blue:Int, alpha:Float=1.0, outline:Int = 4)
 		SetBlend(ALPHABLEND)
 		SetAlpha(alpha)
 				
@@ -570,7 +570,16 @@ Type TWidget Abstract
             DrawOval px + 2, py + 2, RadiusX, RadiusY	
             
             SetColor red, green, blue
-            DrawOval px, py, RadiusX, RadiusY	 
+            DrawOval px, py, RadiusX, RadiusY	
+        ' with border
+        Case 3
+			SetAlpha 0.5
+            SetColor 10,15,20
+            DrawOval px , py , RadiusX, RadiusY	
+            
+			SetAlpha alpha
+            SetColor red, green, blue
+            DrawOval px + (outline/2) , py + (outline/2), RadiusX - outline, RadiusY -outline
         End Select
         
         ' Reset color
