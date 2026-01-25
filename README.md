@@ -662,7 +662,7 @@ g_TaskBar.Hide()
 
 ---
 
-### Virtual Joystick Widget
+### 🖥️ Virtual Joystick Widget
 
 A smooth virtual joystick for BlitzMax with analog control.  
 Returns normalized X/Y values (-1.0 to +1.0), angle (degrees) and magnitude.
