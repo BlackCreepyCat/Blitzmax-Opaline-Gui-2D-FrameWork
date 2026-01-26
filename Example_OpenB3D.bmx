@@ -35,8 +35,15 @@ TWidget.GuiSetRoot(root)
 ' =============================================================
 '                         GUI BUILDING
 ' =============================================================
-Local win:TWindow = New TWindow(50, 50, 530, 300, "Window Demo", False, True, True)
+Local win:TWindow = New TWindow(50, 50, 430, 400, "Window Demo", False, True, True)
 root.AddChild win
+
+' Create a knot rotating
+Local volumeKnob:TRotaryKnob = New TRotaryKnob(50, 140, 150, 0.1,11)
+volumeKnob.SetKnobColor(60, 100, 180)
+volumeKnob.SetIndicatorColor(255, 100, 100)
+volumeKnob.SetSnapToTicks(True)
+win.AddChild volumeKnob
 
 Local title:TLabel = New TLabel(20, 20, 490, 24, "Opaline GUI - OPENB3D Demonstration", LABEL_ALIGN_CENTER)
 title.SetColor(255, 220, 100)
@@ -56,7 +63,7 @@ joy.SetStickSize(48)
 win.AddChild joy  ' ← IMPORTANT : add the joystick to the window!
 
 ' Label to display joystick values
-Local lblJoy:TLabel = New TLabel(250, 250, 200, 20, "Joystick: X=0.0 Y=0.0")
+Local lblJoy:TLabel = New TLabel(150, 250, 200, 20, "Joystick: X=0.0 Y=0.0")
 lblJoy.SetColor(150, 255, 150)
 win.AddChild lblJoy
 
@@ -78,7 +85,7 @@ While Not KeyDown(KEY_ESCAPE)
 	Local power:Float = joy.GetMagnitude()
 	
 	' Use to rotate the cube
-	TurnEntity cube1, jy * 2, jx * 2, 0
+	TurnEntity cube1, jy * 2, jx * 2, volumeKnob.GetValue() * 4
 	
 	moveentity camera, -joyScreen.GetX()/20,0,joyScreen.GetY()/20
 	
@@ -86,6 +93,7 @@ While Not KeyDown(KEY_ESCAPE)
 	lblJoy.SetText("Joy: X=" + Int(jx * 100) / 100.0 + " Y=" + Int(jy * 100) / 100.0)
 	'lblJoyScreen.SetText("Screen: " + Int(joyScreen.GetMagnitude() * 100) + "%")
 	
+
 	UpdateWorld 
 	RenderWorld
 	
