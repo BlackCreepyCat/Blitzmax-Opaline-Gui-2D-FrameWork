@@ -691,14 +691,12 @@ dragging, wheel scrolling, and optional tick snapping.
 
 ```blitzmax
 'Value Control
-'
-'- ✅ SetValue(Float) / GetValue():Float
+'-✅ SetValue(Float) / GetValue():Float
 '-✅ SetPercent(Float) / GetPercent():Float
 '-✅ SetRange(minVal, maxVal)
 '-✅ GetAngle():Float
 '
 '-Behavior Settings
-'
 '-✅ SetAngleRange(minAng, maxAng)
 '-✅ SetSensitivity(sens) - clamped 0.1 to 5.0
 '-✅ SetSnapToTicks(snap)
@@ -707,7 +705,6 @@ dragging, wheel scrolling, and optional tick snapping.
 '-✅ SetWheelStep(step) - clamped 0.01 to 0.5
 '
 'Visual Settings
-'
 '-✅ SetShowTicks(show)
 '-✅ SetShowValue(show)
 '-✅ SetShowIndicator(show)
@@ -718,7 +715,6 @@ dragging, wheel scrolling, and optional tick snapping.
 '-✅ SetSize(size)
 '
 'Event Handling
-'
 '-✅ WasPressed():Int - detects click on knob
 '-✅ WasReleased():Int - detects mouse release
 '-✅ IsChanging():Int - detects value change during drag/wheel
