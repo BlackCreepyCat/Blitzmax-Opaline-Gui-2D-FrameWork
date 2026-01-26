@@ -690,13 +690,13 @@ knobs (volume, tone, etc.). It provides intuitive value adjustment through mouse
 dragging, wheel scrolling, and optional tick snapping.
 
 ```blitzmax
-'Value Control
+'Value Control:
 '-✅ SetValue(Float) / GetValue():Float
 '-✅ SetPercent(Float) / GetPercent():Float
 '-✅ SetRange(minVal, maxVal)
 '-✅ GetAngle():Float
 '
-'-Behavior Settings
+'Behavior Settings:
 '-✅ SetAngleRange(minAng, maxAng)
 '-✅ SetSensitivity(sens) - clamped 0.1 to 5.0
 '-✅ SetSnapToTicks(snap)
@@ -704,7 +704,7 @@ dragging, wheel scrolling, and optional tick snapping.
 '-✅ SetWheelEnabled(enabled)
 '-✅ SetWheelStep(step) - clamped 0.01 to 0.5
 '
-'Visual Settings
+'Visual Settings:
 '-✅ SetShowTicks(show)
 '-✅ SetShowValue(show)
 '-✅ SetShowIndicator(show)
@@ -714,7 +714,7 @@ dragging, wheel scrolling, and optional tick snapping.
 '-✅ SetTextColor(r, g, b)
 '-✅ SetSize(size)
 '
-'Event Handling
+'Event Handling:
 '-✅ WasPressed():Int - detects click on knob
 '-✅ WasReleased():Int - detects mouse release
 '-✅ IsChanging():Int - detects value change during drag/wheel
