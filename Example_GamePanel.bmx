@@ -107,15 +107,9 @@ panelVideo.AddChild sliderFOV
 Global lblFOVValue:TLabel = New TLabel(580, 110, 80, 24, "90°", LABEL_ALIGN_LEFT)
 panelVideo.AddChild lblFOVValue
 
-' Gamma
-Local lblGamma:TLabel = New TLabel(20, 145, 120, 24, "Gamma:")
-panelVideo.AddChild lblGamma
 
-Global sliderGamma:TSlider = New TSlider(150, 143, 420, 24, 0.5, SLIDER_STYLE_HORIZONTAL)
-panelVideo.AddChild sliderGamma
 
-Global lblGammaValue:TLabel = New TLabel(580, 145, 80, 24, "1.0", LABEL_ALIGN_LEFT)
-panelVideo.AddChild lblGammaValue
+
 
 ' --- Graphics Quality Panel ---
 Local panelQuality:TPanel = New TPanel(20, 215, 350, 180, "Graphics Quality", PANEL_STYLE_RAISED)
@@ -160,10 +154,6 @@ comboShadow.AddItem("Off")
 comboShadow.SetSelectedIndex(1)
 panelQuality.AddChild comboShadow
 
-' Anti-Aliasing
-Global chkAA:TCheckBox = New TCheckBox(20, 145, 200, 24, "Anti-Aliasing (MSAA)", True)
-panelQuality.AddChild chkAA
-
 ' --- Effects Panel ---
 Local panelEffects:TPanel = New TPanel(390, 215, 350, 180, "Visual Effects", PANEL_STYLE_RAISED)
 tabber.AddChild panelEffects
@@ -181,8 +171,6 @@ panelEffects.AddChild chkAmbientOcclusion
 Global chkDOF:TCheckBox = New TCheckBox(20, 120, 200, 24, "Depth of Field", False)
 panelEffects.AddChild chkDOF
 
-Global chkParticles:TCheckBox = New TCheckBox(20, 150, 200, 24, "High Quality Particles", True)
-panelEffects.AddChild chkParticles
 
 ' =============================================================================
 '                  TAB 2: SOUNDS
@@ -233,15 +221,8 @@ panelVolume.AddChild sliderVoice
 Global lblVoiceVal:TLabel = New TLabel(640, 135, 60, 24, "85%", LABEL_ALIGN_LEFT)
 panelVolume.AddChild lblVoiceVal
 
-' Ambient Volume
-Local lblAmbientVol:TLabel = New TLabel(20, 170, 120, 24, "Ambient Volume:")
-panelVolume.AddChild lblAmbientVol
 
-Global sliderAmbient:TSlider = New TSlider(150, 168, 480, 24, 0.6, SLIDER_STYLE_HORIZONTAL)
-panelVolume.AddChild sliderAmbient
 
-Global lblAmbientVal:TLabel = New TLabel(640, 170, 60, 24, "60%", LABEL_ALIGN_LEFT)
-panelVolume.AddChild lblAmbientVal
 
 ' --- Audio Settings Panel ---
 Local panelAudio:TPanel = New TPanel(20, 235, 350, 160, "Audio Settings", PANEL_STYLE_RAISED)
@@ -275,8 +256,6 @@ panelAudio.AddChild comboAudioQuality
 Global chk3DAudio:TCheckBox = New TCheckBox(20, 110, 200, 24, "3D Audio (HRTF)", True)
 panelAudio.AddChild chk3DAudio
 
-Global chkSubtitles:TCheckBox = New TCheckBox(20, 140, 200, 24, "Show Subtitles", False)
-panelAudio.AddChild chkSubtitles
 
 ' --- Voice Chat Panel ---
 Local panelVoiceChat:TPanel = New TPanel(390, 235, 350, 160, "Voice Chat", PANEL_STYLE_RAISED)
@@ -304,8 +283,6 @@ panelVoiceChat.AddChild sliderMicSens
 Global chkPushToTalk:TCheckBox = New TCheckBox(20, 110, 200, 24, "Push-to-Talk", False)
 panelVoiceChat.AddChild chkPushToTalk
 
-Global chkEchoCancellation:TCheckBox = New TCheckBox(20, 140, 200, 24, "Echo Cancellation", True)
-panelVoiceChat.AddChild chkEchoCancellation
 
 ' =============================================================================
 '                  TAB 3: GAMEPLAY
@@ -343,8 +320,6 @@ panelControls.AddChild chkInvertY
 Global chkInvertX:TCheckBox = New TCheckBox(20, 135, 200, 24, "Invert X Axis", False)
 panelControls.AddChild chkInvertX
 
-Global chkRawInput:TCheckBox = New TCheckBox(20, 165, 200, 24, "Raw Mouse Input", True)
-panelControls.AddChild chkRawInput
 
 ' --- Accessibility Panel ---
 Local panelAccessibility:TPanel = New TPanel(390, 20, 350, 200, "Accessibility", PANEL_STYLE_RAISED)
@@ -363,8 +338,6 @@ panelAccessibility.AddChild chkLargeCrosshair
 Global chkHighContrast:TCheckBox = New TCheckBox(20, 120, 250, 24, "High Contrast UI", False)
 panelAccessibility.AddChild chkHighContrast
 
-Global chkReduceMotion:TCheckBox = New TCheckBox(20, 150, 250, 24, "Reduce Motion Effects", False)
-panelAccessibility.AddChild chkReduceMotion
 
 ' --- Gameplay Settings Panel ---
 Local panelGameplay:TPanel = New TPanel(20, 235, 720, 160, "Gameplay Settings", PANEL_STYLE_RAISED)
@@ -463,12 +436,6 @@ comboBandwidth.AddItem("Low (2 Mbps)")
 comboBandwidth.SetSelectedIndex(0)
 panelConnection.AddChild comboBandwidth
 
-' Network Options
-Global chkAutoConnect:TCheckBox = New TCheckBox(20, 110, 250, 24, "Auto-Connect on Start", True)
-panelConnection.AddChild chkAutoConnect
-
-Global chkLowLatency:TCheckBox = New TCheckBox(290, 110, 250, 24, "Low Latency Mode", True)
-panelConnection.AddChild chkLowLatency
 
 ' --- Matchmaking Panel ---
 Local panelMatchmaking:TPanel = New TPanel(20, 185, 350, 210, "Matchmaking", PANEL_STYLE_RAISED)
@@ -506,8 +473,6 @@ panelMatchmaking.AddChild chkCrossPlatform
 Global chkFillTeam:TCheckBox = New TCheckBox(20, 140, 250, 24, "Fill Team Automatically", True)
 panelMatchmaking.AddChild chkFillTeam
 
-Global chkFriendlyFire:TCheckBox = New TCheckBox(20, 170, 250, 24, "Friendly Fire (Custom)", False)
-panelMatchmaking.AddChild chkFriendlyFire
 
 ' --- Privacy Panel ---
 Local panelPrivacy:TPanel = New TPanel(390, 185, 350, 210, "Privacy & Social", PANEL_STYLE_RAISED)
@@ -542,9 +507,6 @@ panelPrivacy.AddChild chkShowOnline
 
 Global chkAllowInvites:TCheckBox = New TCheckBox(20, 140, 250, 24, "Allow Friend Invites", True)
 panelPrivacy.AddChild chkAllowInvites
-
-Global chkShareStats:TCheckBox = New TCheckBox(20, 170, 250, 24, "Share Statistics", False)
-panelPrivacy.AddChild chkShareStats
 
 ' =============================================================================
 '                  BOTTOM BUTTONS
