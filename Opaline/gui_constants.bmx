@@ -59,6 +59,12 @@ Const TASKBAR_BUTTON_HEIGHT:Int = 30
 Const TASKBAR_BUTTON_MARGIN:Int = 5
 Const TASKBAR_CLOCK_WIDTH:Int = 70
 
+' Rotary Knob Constants
+Const ROTARY_DEFAULT_SIZE:Int = 80          	' Default diameter of knob
+Const ROTARY_DEFAULT_MIN_ANGLE:Float = 220.0   ' un peu en bas à gauche
+Const ROTARY_DEFAULT_MAX_ANGLE:Float = -40  	' un peu en bas à droite
+Const ROTARY_TICK_COUNT:Int = 30           ' Number of tick marks around knob
+
 
 ' =============================================================================
 '                          COLOR THEME
@@ -73,6 +79,22 @@ Const COLOR_TASKBAR_CLOCK_R:Int = 200
 Const COLOR_TASKBAR_CLOCK_G:Int = 220
 Const COLOR_TASKBAR_CLOCK_B:Int = 255
 
+' ROTARY Colors
+Const COLOR_ROTARY_BG_R:Int = 70
+Const COLOR_ROTARY_BG_G:Int = 90
+Const COLOR_ROTARY_BG_B:Int = 120
+
+Const COLOR_ROTARY_INDICATOR_R:Int = 255
+Const COLOR_ROTARY_INDICATOR_G:Int = 150
+Const COLOR_ROTARY_INDICATOR_B:Int = 50
+
+Const COLOR_ROTARY_TICK_R:Int = 100
+Const COLOR_ROTARY_TICK_G:Int = 150
+Const COLOR_ROTARY_TICK_B:Int = 200
+
+Const COLOR_ROTARY_TEXT_R:Int = 255
+Const COLOR_ROTARY_TEXT_G:Int = 255
+Const COLOR_ROTARY_TEXT_B:Int = 255
 
 ' Window Colors
 Const COLOR_TITLEBAR_ACTIVE_R:Int = 90
