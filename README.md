@@ -662,7 +662,7 @@ g_TaskBar.Hide()
 
 ---
 
-### 🖥️ Virtual Joystick Widget
+### 🖥️ Virtual Joystick
 
 A smooth virtual joystick for BlitzMax with analog control.  
 Returns normalized X/Y values (-1.0 to +1.0), angle (degrees) and magnitude.
@@ -683,7 +683,7 @@ Perfect for touch / mouse-controlled games using the Opaline GUI framework.
 
 ---
 
-### 🖥️ Rotary Knob Widget
+### 🖥️ Rotary Knob
 
 The TRotaryKnob widget is a circular control resembling physical audio equipment 
 knobs (volume, tone, etc.). It provides intuitive value adjustment through mouse 
