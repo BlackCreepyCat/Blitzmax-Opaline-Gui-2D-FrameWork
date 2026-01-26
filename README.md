@@ -44,7 +44,7 @@ The GUI intentionally looks "basic" - this is by design! The focus is on **behav
 
 ### Widget Library
 - **Containers**: Window, Panel, TabBar, Tabber
-- **Input Controls**: Button, CheckBox, RadioButton, TextInput, TextArea, ComboBox, Slider
+- **Input Controls**: Button, CheckBox, RadioButton, TextInput, TextArea, ComboBox, Slider, Virtual joystick, Rotating Knot and more!
 - **Display**: Label, ImageBox, ProgressBar, ListBox, TreeView
 - **Dialogs**: MessageBox, ContextMenu
 - **System**: TaskBar with auto-hide, window management
