@@ -690,33 +690,39 @@ knobs (volume, tone, etc.). It provides intuitive value adjustment through mouse
 dragging, wheel scrolling, and optional tick snapping.
 
 ```blitzmax
-'1. Value Management ✅
-'- Range: Configurable minValue to maxValue (default 0.0 to 1.0)
-'- Percentage API: SetPercent()/GetPercent() for 0-100 scale
-'- Clamping: All value changes properly clamped to valid range
+'Value Control
 '
-'2. Input Handling ✅
-'- Mouse Drag: Vertical movement controls value (up = increase, inverted Y delta)
-'- Mouse Wheel: Optional, configurable step size (default 5%)
-'- Sensitivity: Adjustable drag speed (0.1 to 5.0)
-'- No conflicts: Properly checks draggedWindow = Null before capturing input
+'- ✅ SetValue(Float) / GetValue():Float
+'-✅ SetPercent(Float) / GetPercent():Float
+'-✅ SetRange(minVal, maxVal)
+'-✅ GetAngle():Float
 '
-'3. Visual Elements ✅
-'- Tick Marks: Evenly distributed around arc, highlight near current value
-'- Indicator Line: Rotates to show current position, includes end dot
-'- Value Display: Centered percentage text
-'- 3D Effect: Darker inner circle creates depth
-'- State Feedback: Brightens on hover (+30), darkens when dragging (-20)
+'-Behavior Settings
 '
-'4. Angle System ✅
-'- Range: Configurable via SetAngleRange() (default -135° to +135° = 270° total)
-'- Conversion: Bidirectional value ↔ angle mapping
-'- Inversion: Negative angle in trig functions for natural rotation direction
+'-✅ SetAngleRange(minAng, maxAng)
+'-✅ SetSensitivity(sens) - clamped 0.1 to 5.0
+'-✅ SetSnapToTicks(snap)
+'-✅ SetTickCount(count) - clamped 2 to 50
+'-✅ SetWheelEnabled(enabled)
+'-✅ SetWheelStep(step) - clamped 0.01 to 0.5
 '
-'5. Snap to Ticks ✅
-'- Algorithm: Rounds normalized value to nearest tick index
-'- Trigger: Applied during drag and wheel if enabled
-'- Edge cases: Properly handles tickCount <= 1
+'Visual Settings
+'
+'-✅ SetShowTicks(show)
+'-✅ SetShowValue(show)
+'-✅ SetShowIndicator(show)
+'-✅ SetKnobColor(r, g, b)
+'-✅ SetIndicatorColor(r, g, b)
+'-✅ SetTickColor(r, g, b)
+'-✅ SetTextColor(r, g, b)
+'-✅ SetSize(size)
+'
+'Event Handling
+'
+'-✅ WasPressed():Int - detects click on knob
+'-✅ WasReleased():Int - detects mouse release
+'-✅ IsChanging():Int - detects value change during drag/wheel
+'-✅ ClearEvents() - cleanup
 
 ```
 
