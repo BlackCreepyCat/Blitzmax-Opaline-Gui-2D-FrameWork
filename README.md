@@ -1057,13 +1057,13 @@ Opaline is designed to be easily convertible to other languages and frameworks:
 **Free to use** with the following terms:
 
 ✅ **You CAN:**
-- Use in free or commercial projects
+- Use in free or commercial projects (compiled)
 - Modify and customize
 - Convert to other languages
 - Use in games and applications
 
 ❌ **You CANNOT:**
-- Sell the framework itself
+- Sell the framework itself (it include others langages ports)
 - Remove attribution
 
 **Please include** a small credit somewhere in your project! 😊
