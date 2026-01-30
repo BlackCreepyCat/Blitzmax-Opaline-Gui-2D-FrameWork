@@ -24,6 +24,10 @@ By Creepy Cat © 2025/2026 | [GitHub Repository](https://github.com/BlackCreepyC
 
 Opaline is a **low-level GUI kernel** designed for creating graphical interfaces from scratch in BlitzMax NG. It's intentionally kept simple and readable to facilitate easy conversion to other languages.
 
+### Example with Three.js!
+
+http://blitz3dfr.free.fr/opaline/index.html
+
 ### Why Opaline?
 
 - ✅ **Self-contained** - No complex external dependencies
