@@ -1091,7 +1091,7 @@ Special thanks to the BlitzMax NG community!
 
 ---
 
-**Version**: 1.7  
+**Version**: 1.9  
 **Last Updated**: January 2026
 
 ---
