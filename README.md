@@ -1063,7 +1063,7 @@ Opaline is designed to be easily convertible to other languages and frameworks:
 - Use in games and applications
 
 ❌ **You CANNOT:**
-- Sell the framework itself (it include others langages ports)
+- Sell the framework itself (This also includes porting/conversion to other languages.)
 - Remove attribution
 
 **Please include** a small credit somewhere in your project! 😊
