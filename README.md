@@ -4,7 +4,8 @@
 
 By Creepy Cat © 2025/2026 | [GitHub Repository](https://github.com/BlackCreepyCat/Blitzmax-Opaline-Gui-2D-FrameWork)
 
-<img width="1923" height="1108" alt="image" src="https://github.com/user-attachments/assets/f933c388-e862-4707-9a95-2e8b85685291" />
+<img width="2544" height="1306" alt="image" src="https://github.com/user-attachments/assets/f1e4baf5-be73-4a03-b1fe-3470a22b6f0d" />
+
 
 ---
 
